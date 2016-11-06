@@ -1,2 +1,3 @@
 # FGPU_V2
-FGPU is a soft GPU architecture general purpose computing
+FGPU is a soft GPU architecture for general purpose computing on FGPGAs
+
