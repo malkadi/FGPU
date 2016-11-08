@@ -1,0 +1,13 @@
+
+compiler_outputs/copy.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+copy_word:
+       0:	22 00 00 a8 	lp	r2, 1
+       4:	03 00 00 a8 	lp	r3, 0
+       8:	04 00 00 a0 	lid	r4, 0
+       c:	05 00 00 a1 	wgoff	r5, 0
+      10:	a1 10 00 10 	add	r1, r5, r4
+      14:	23 0c 00 74 	lw	r3, r3[r1]
+      18:	23 08 00 7c 	sw	r3, r2[r1]
+      1c:	00 00 00 92 	ret
