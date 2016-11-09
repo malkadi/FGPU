@@ -12,6 +12,6 @@
 #include "kernel_descriptor.h"
 
 
-void compute_on_FGPU(kernel_descriptor * kdesc, unsigned int n_runs, unsigned int *exec_time);
+void compute_on_FGPU(kernel_descriptor * kdesc, unsigned int n_runs, unsigned int *exec_time, bool check_results);
 
 #endif /* FGPU_FUNCTIONS_H_ */

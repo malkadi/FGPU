@@ -1,10 +1,26 @@
 #include "kernel_descriptor.h"
-extern unsigned int *copy_word;
 
+extern unsigned int *code;
 
-extern unsigned *first_param_ptr;
-extern unsigned *second_param_ptr;
-extern unsigned *target_ptr;
+kernel::kernel(unsigned max_size) {
+  param1 = new unsigned[max_size];
+  target = new unsigned[max_size];
+}
+
+kernel::~kernel() {
+  delete[] param1;
+  delete[] target;
+}
+void kernel::download_code()
+{
+  volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
+  unsigned int size = COPY_LEN;
+  start_addr = COPY_WORD_POS;
+  unsigned i = 0;
+  for(; i < size; i++){
+    cram_ptr[i] = code[i];
+  }
+}
 
 void kernel_descriptor_prepare(kernel_descriptor *kdesc, unsigned int size_index)
 {
@@ -36,8 +52,8 @@ void kernel_descriptor_download(kernel_descriptor *kdesc)
   hw_sch_ptr[9] = kdesc->n_wg1-1;
   hw_sch_ptr[10] = kdesc->n_wg2-1;
   hw_sch_ptr[11] = (kdesc->nParams << 28) | kdesc->wg_size;
-  hw_sch_ptr[16] = (unsigned) first_param_ptr;
-  hw_sch_ptr[17] = (unsigned) target_ptr;
+  hw_sch_ptr[16] = (unsigned) kdesc->param1;
+  hw_sch_ptr[17] = (unsigned) kdesc->target;
 }
 void kernel_descriptor_compute_all_fields(kernel_descriptor *kdesc)
 {
@@ -80,8 +96,8 @@ void initialize_memory(kernel_descriptor *kdesc)
   unsigned i;
   for(i = 0; i < 3*kdesc->size; i++) // 2 for first and second parameter, 1 for some excess access
   {
-    first_param_ptr[i] = i;
-    target_ptr[i] = 0;
+    kdesc->param1[i] = i;
+    kdesc->target[i] = 0;
   }
   Xil_DCacheFlush(); // flush data to global memory
 }
@@ -89,7 +105,6 @@ void kernel_code_download(kernel_descriptor *kdesc)
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
   unsigned int size = COPY_LEN;
-  const unsigned int *code = copy_word;
   kdesc->start_addr = COPY_WORD_POS;
   unsigned i = 0;
   for(; i < size; i++){

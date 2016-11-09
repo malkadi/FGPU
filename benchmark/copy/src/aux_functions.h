@@ -8,9 +8,6 @@
 #define AUX_FUNCTIONS_H_
 
 #define FGPU_BASEADDR         0x43C00000
-#define TARGET_ADDR           0x20000000
-#define FIRST_PARAM_ADDR      0x10000000
-#define SECOND_PARAM_ADDR     0x18000000
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,7 +44,7 @@
 
 
 
-void check_FGPU_results(u32 problemSize, u32 size, u32 size_d0, u32 size_d1);
+void check_FGPU_results(kernel_descriptor *kdesc);
 void compute_on_ARM(kernel_descriptor *kdesc, unsigned int n_runs, unsigned int *exec_time);
 void wait_ms(u64 time);
 u64 elapsed_time_us(XTime tStart, XTime tEnd);

@@ -6,9 +6,9 @@
  */
 #include "FGPU_functions.h"
 
-extern const int check_fgpu_results;
+extern const unsigned check_results;
 
-void compute_on_FGPU(kernel_descriptor * kdesc, unsigned int n_runs, unsigned int *exec_time)
+void compute_on_FGPU(kernel_descriptor * kdesc, unsigned n_runs, unsigned *exec_time, bool check_results)
 {
   unsigned int runs = 0;
   XTime tStart, tEnd;
@@ -26,8 +26,8 @@ void compute_on_FGPU(kernel_descriptor * kdesc, unsigned int n_runs, unsigned in
     XTime_GetTime(&tEnd);
     *exec_time += elapsed_time_us(tStart, tEnd);
     
-    if(check_fgpu_results)
-      check_FGPU_results(kdesc->problemSize, kdesc->size, kdesc->size0, kdesc->size1);
+    if(check_results)
+      check_FGPU_results(kdesc);
 
     xil_printf(ANSI_COLOR_GREEN "." ANSI_COLOR_RESET);
     fflush(stdout);

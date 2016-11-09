@@ -23,6 +23,7 @@ typedef struct {
   u32 start_addr;
   //extra info
   unsigned problemSize, dataSize;
+  unsigned *param1, *target;
 } kernel_descriptor;
 
 #endif /* DECLERATIONS_H_ */

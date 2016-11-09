@@ -3,15 +3,11 @@
 
 extern unsigned* const hw_sch_ptr;
 
-extern unsigned* first_param_ptr;
-extern unsigned* target_ptr;
-
-
 void compute_on_ARM(kernel_descriptor *kdesc, unsigned int n_runs, unsigned int *exec_time)
 {
-  int i;
-  unsigned *target_ptr = (unsigned*)TARGET_ADDR;
-  unsigned *first_param_ptr = (unsigned*)FIRST_PARAM_ADDR;
+  unsigned i;
+  unsigned *target_ptr = kdesc->target;
+  unsigned *first_param_ptr = kdesc->param1;
   u32 size = kdesc->size;
   unsigned int runs = 0;
   XTime tStart, tEnd;
@@ -43,11 +39,12 @@ void compute_on_ARM(kernel_descriptor *kdesc, unsigned int n_runs, unsigned int 
   }
   *exec_time /= runs;
 }
-void check_FGPU_results(u32 problemSize, u32 size, u32 size_d0, u32 size_d1)
+
+void check_FGPU_results(kernel_descriptor *kdesc)
 {
   unsigned int i, nErrors = 0;
-  for (i = 0; i < problemSize; i++)
-    if(target_ptr[i] != i)
+  for (i = 0; i < kdesc->problemSize; i++)
+    if(kdesc->target[i] != i)
     {
       #if PRINT_ERRORS
         xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, (unsigned int)target_ptr[i], i);
@@ -57,6 +54,7 @@ void check_FGPU_results(u32 problemSize, u32 size, u32 size_d0, u32 size_d1)
   if(nErrors != 0)
     xil_printf("Memory check failed (nErrors = %d)!\n\r", nErrors);
 }
+
 void wait_ms(u64 time)
 {
   XTime tStart, tEnd, now;
@@ -67,6 +65,7 @@ void wait_ms(u64 time)
   }
   while(now < tEnd);
 }
+
 u64 elapsed_time_us(XTime tStart, XTime tEnd)
 {
   u64 time_elapsed = (tEnd - tStart)*1000000;
