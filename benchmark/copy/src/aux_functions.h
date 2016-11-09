@@ -9,6 +9,7 @@
 
 #define FGPU_BASEADDR         0x43C00000
 
+// #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -24,11 +25,17 @@
 #include "assert.h"
 #include "code.h"
 #include "kernel_descriptor.h"
-#include "definitions.h"
-#include "FGPU_functions.h"
 
 #define PRINT_ERRORS            0
-#define MAX_PROBLEM_SIZE    256*1024
+#define MAX_PROBLEM_SIZE    256*1024  // The execution will break if bigger problem sizes are executed
+#define MAX_MES_TIME_S          2     // maximum execution time of a kernel at any size.
+                                      // The execution will not repeat if this number is exceeded
+
+// Control Registers of FGPU
+#define STATUS_REG_ADDR         (FGPU_BASEADDR+ 0x8000)
+#define START_REG_ADDR          (FGPU_BASEADDR+ 0x8004)
+#define CLEAN_CACHE_REG_ADDR    (FGPU_BASEADDR+ 0x8008)
+#define INITIATE_REG_ADDR       (FGPU_BASEADDR+ 0x800C)
 
 #define MAX(a, b)    ((a)>(b)?(a):(b))
 
@@ -44,8 +51,6 @@
 
 
 
-void check_FGPU_results(kernel_descriptor *kdesc);
-void compute_on_ARM(kernel_descriptor *kdesc, unsigned int n_runs, unsigned int *exec_time);
 void wait_ms(u64 time);
 u64 elapsed_time_us(XTime tStart, XTime tEnd);
 

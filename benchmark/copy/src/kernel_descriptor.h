@@ -9,7 +9,6 @@
 #define KERNEL_DESCRIPTOR_H_
 
 #include "aux_functions.h"
-#include "definitions.h"
 
 class kernel{
   // basic parameters
@@ -25,19 +24,22 @@ class kernel{
   //extra info
   unsigned problemSize, dataSize;
   unsigned *param1, *target;
-  public:
+  void compute_descriptor();
+public:
   kernel(unsigned max_size);
   ~kernel();
   void download_code();
+  void download_descriptor();
+  void prepare_descriptor(unsigned int Size);
+  unsigned get_problemSize();
+  unsigned compute_on_ARM(unsigned int n_runs);
+  void initialize_memory();
+  unsigned compute_on_FGPU(unsigned n_runs, bool check_results);
+  void check_FGPU_results();
 
 };
 
 
-void kernel_descriptor_compute_all_fields(kernel_descriptor *kdesc);
-void kernel_descriptor_download(kernel_descriptor *kdesc);
-void kernel_descriptor_prepare(kernel_descriptor *kdesc, unsigned int size_index);
-void initialize_memory(kernel_descriptor *kdesc);
-void kernel_code_download(kernel_descriptor *kdesc);
 
 
 #endif /* KERNEL_DESCRIPTOR_H_ */
