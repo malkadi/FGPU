@@ -220,11 +220,11 @@ class FGPU:
 
     def initialize_memory(self, value=-1):
         for i in range(0, self.mem_size // 4):
-            if value < -1:
+            if value < 0:
                 self.param1_u32ptr[i] = i
             else:
                 self.param1_u32ptr[i] = value
-            self.target_u32ptr = 0
+            self.target_u32ptr[i] = 0
 
     def compute_on_FGPU(self, n_runs=1):
         self.download_kernel_code()
@@ -237,5 +237,5 @@ class FGPU:
             self.mmio.write(self.initiate_reg_offset, 0xFFFF)
             self.mmio.write(self.clean_cache_reg_offset, 0xFFFF)
             self.mmio.write(self.start_reg_offset, 0x1)
-            while self.mmio.read(self.status_reg_offset, 0xFFFF) == 0:
+            while self.mmio.read(self.status_reg_offset) == 0:
                 pass

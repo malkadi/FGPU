@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 import subprocess
 import sys
 import shutil
-import pz1sofi
+import FGPU
 
 setup(
     name = "FGPU",
-    version = pz1sofi.__version__,
+    version = FGPU.__version__,
     url = 'https://github.com/malkadi/FGPU',
     license = 'All rights reserved.',
     packages = ['FGPU'],
