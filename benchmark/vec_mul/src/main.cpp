@@ -14,7 +14,7 @@ int main()
   // Executions & time measurements will be repeated nruns times 
   const unsigned nruns = 10;
   // use vector types:ushort2 instead of ushort OR uchar4 instead of byte
-  const bool use_vector_types = true;
+  const bool use_vector_types = 1;
   
   if(check_results)
     xil_printf("\n\r---Entering main (checking FGPU results is" ANSI_COLOR_GREEN" active" ANSI_COLOR_RESET ") ---\n\r");
@@ -33,32 +33,32 @@ int main()
   Xil_DCacheEnable();
   // create kernel
   unsigned maxProblemSize = 64<<test_vec_len;
-  kernel<TYPE> copy_kernel(maxProblemSize, use_vector_types);
+  kernel<TYPE> vec_mul_kernel(maxProblemSize, use_vector_types);
   // download binary to FGPU
-  copy_kernel.download_code();
+  vec_mul_kernel.download_code();
 
 
-  copy_kernel.print_name();
+  vec_mul_kernel.print_name();
   xil_printf("Problem Sizes :\n\r");
 
   for(size_index = 0; size_index < test_vec_len; size_index++)
   {
     // initiate the kernel descriptor for the required problem size
-    copy_kernel.prepare_descriptor(64 << size_index);
-    xil_printf("%-8u", copy_kernel.get_problemSize());
+    vec_mul_kernel.prepare_descriptor(64 << size_index);
+    xil_printf("%-8u", vec_mul_kernel.get_problemSize());
     fflush(stdout);
 
     // break if the requested problem size is set too big by mistake
-    if(copy_kernel.get_problemSize() > MAX_PROBLEM_SIZE){
+    if(vec_mul_kernel.get_problemSize() > MAX_PROBLEM_SIZE){
       xil_printf("Problem size exceeds limit!\n\r");
       break;
     }
 
     // compute on FGPU
-    timer_val_fgpu[size_index] = copy_kernel.compute_on_FGPU(nruns, check_results);
+    timer_val_fgpu[size_index] = vec_mul_kernel.compute_on_FGPU(nruns, check_results);
 
     // compute on ARM
-    timer_val_arm[size_index] = copy_kernel.compute_on_ARM(nruns);
+    timer_val_arm[size_index] = vec_mul_kernel.compute_on_ARM(nruns);
     
     xil_printf("\n\r");
 

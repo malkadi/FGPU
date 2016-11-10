@@ -9,5 +9,3 @@ configapp -app $name -set build-config {Release}
 configapp -app $name -set compiler-optimization {Optimize most (-O3)}
 # add math library for linking 
 configapp -app $name -add libraries {m}
-# Build project
-projects -build -type app -name $name

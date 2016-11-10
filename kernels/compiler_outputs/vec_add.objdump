@@ -1,0 +1,119 @@
+
+compiler_outputs/vec_add.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+vec_add:
+       0:	42 00 00 a8 	lp	r2, 2
+       4:	23 00 00 a8 	lp	r3, 1
+       8:	04 00 00 a8 	lp	r4, 0
+       c:	05 00 00 a0 	lid	r5, 0
+      10:	06 00 00 a1 	wgoff	r6, 0
+      14:	c1 14 00 10 	add	r1, r6, r5
+      18:	24 10 00 74 	lw	r4, r4[r1]
+      1c:	23 0c 00 74 	lw	r3, r3[r1]
+      20:	63 10 00 10 	add	r3, r3, r4
+      24:	23 08 00 7c 	sw	r3, r2[r1]
+      28:	00 00 00 92 	ret
+
+vec_add_half:
+      2c:	42 00 00 a8 	lp	r2, 2
+      30:	03 00 00 a8 	lp	r3, 0
+      34:	24 00 00 a8 	lp	r4, 1
+      38:	05 00 00 a0 	lid	r5, 0
+      3c:	06 00 00 a1 	wgoff	r6, 0
+      40:	c1 14 00 10 	add	r1, r6, r5
+      44:	25 10 00 72 	lh	r5, r4[r1]
+      48:	26 04 00 21 	slli	r6, r1, 1
+      4c:	84 18 00 10 	add	r4, r4, r6
+      50:	84 78 00 35 	xori	r4, r4, 30
+      54:	84 0c 00 21 	slli	r4, r4, 3
+      58:	a4 10 00 20 	sll	r4, r5, r4
+      5c:	65 18 00 10 	add	r5, r3, r6
+      60:	23 0c 00 72 	lh	r3, r3[r1]
+      64:	a5 78 00 35 	xori	r5, r5, 30
+      68:	a5 0c 00 21 	slli	r5, r5, 3
+      6c:	63 14 00 20 	sll	r3, r3, r5
+      70:	63 40 00 29 	srli	r3, r3, 16
+      74:	84 40 00 29 	srli	r4, r4, 16
+      78:	83 0c 00 10 	add	r3, r4, r3
+      7c:	23 08 00 7a 	sh	r3, r2[r1]
+      80:	00 00 00 92 	ret
+
+vec_add_half_improved:
+      84:	42 00 00 a8 	lp	r2, 2
+      88:	03 00 00 a8 	lp	r3, 0
+      8c:	24 00 00 a8 	lp	r4, 1
+      90:	05 00 00 a0 	lid	r5, 0
+      94:	06 00 00 a1 	wgoff	r6, 0
+      98:	c1 14 00 10 	add	r1, r6, r5
+      9c:	24 10 00 74 	lw	r4, r4[r1]
+      a0:	23 0c 00 74 	lw	r3, r3[r1]
+      a4:	65 40 00 29 	srli	r5, r3, 16
+      a8:	86 40 00 29 	srli	r6, r4, 16
+      ac:	c5 14 00 10 	add	r5, r6, r5
+      b0:	21 08 00 21 	slli	r1, r1, 2
+      b4:	41 04 00 10 	add	r1, r2, r1
+      b8:	22 08 00 11 	addi	r2, r1, 2
+      bc:	05 08 00 7a 	sh	r5, r2[r0]
+      c0:	62 fc ff 19 	li	r2, 65535
+      c4:	02 00 00 1d 	lui	r2, 0
+      c8:	62 08 00 30 	and	r2, r3, r2
+      cc:	82 08 00 10 	add	r2, r4, r2
+      d0:	02 04 00 7a 	sh	r2, r1[r0]
+      d4:	00 00 00 92 	ret
+
+vec_add_byte:
+      d8:	42 00 00 a8 	lp	r2, 2
+      dc:	03 00 00 a8 	lp	r3, 0
+      e0:	24 00 00 a8 	lp	r4, 1
+      e4:	05 00 00 a0 	lid	r5, 0
+      e8:	06 00 00 a1 	wgoff	r6, 0
+      ec:	c1 14 00 10 	add	r1, r6, r5
+      f0:	84 04 00 10 	add	r4, r4, r1
+      f4:	05 10 00 74 	lw	r5, r4[r0]
+      f8:	84 7c 00 35 	xori	r4, r4, 31
+      fc:	84 0c 00 21 	slli	r4, r4, 3
+     100:	a4 10 00 20 	sll	r4, r5, r4
+     104:	63 04 00 10 	add	r3, r3, r1
+     108:	05 0c 00 74 	lw	r5, r3[r0]
+     10c:	63 7c 00 35 	xori	r3, r3, 31
+     110:	63 0c 00 21 	slli	r3, r3, 3
+     114:	a3 0c 00 20 	sll	r3, r5, r3
+     118:	63 60 00 29 	srli	r3, r3, 24
+     11c:	84 60 00 29 	srli	r4, r4, 24
+     120:	83 0c 00 10 	add	r3, r4, r3
+     124:	23 08 00 79 	sb	r3, r2[r1]
+     128:	00 00 00 92 	ret
+
+vec_add_byte_improved:
+     12c:	42 00 00 a8 	lp	r2, 2
+     130:	03 00 00 a8 	lp	r3, 0
+     134:	24 00 00 a8 	lp	r4, 1
+     138:	05 00 00 a0 	lid	r5, 0
+     13c:	06 00 00 a1 	wgoff	r6, 0
+     140:	c1 14 00 10 	add	r1, r6, r5
+     144:	24 10 00 74 	lw	r4, r4[r1]
+     148:	23 0c 00 74 	lw	r3, r3[r1]
+     14c:	65 60 00 29 	srli	r5, r3, 24
+     150:	86 60 00 29 	srli	r6, r4, 24
+     154:	c5 14 00 10 	add	r5, r6, r5
+     158:	66 fc 03 31 	andi	r6, r3, 255
+     15c:	86 18 00 10 	add	r6, r4, r6
+     160:	21 08 00 21 	slli	r1, r1, 2
+     164:	26 08 00 79 	sb	r6, r2[r1]
+     168:	41 04 00 10 	add	r1, r2, r1
+     16c:	02 0c 00 11 	addi	r2, r0, 3
+     170:	45 04 00 79 	sb	r5, r1[r2]
+     174:	62 20 00 21 	slli	r2, r3, 8
+     178:	42 60 00 29 	srli	r2, r2, 24
+     17c:	85 40 00 29 	srli	r5, r4, 16
+     180:	a2 08 00 10 	add	r2, r5, r2
+     184:	05 08 00 11 	addi	r5, r0, 2
+     188:	a2 04 00 79 	sb	r2, r1[r5]
+     18c:	82 20 00 29 	srli	r2, r4, 8
+     190:	63 40 00 21 	slli	r3, r3, 16
+     194:	63 60 00 29 	srli	r3, r3, 24
+     198:	42 0c 00 10 	add	r2, r2, r3
+     19c:	03 04 00 11 	addi	r3, r0, 1
+     1a0:	62 04 00 79 	sb	r2, r1[r3]
+     1a4:	00 00 00 92 	ret
