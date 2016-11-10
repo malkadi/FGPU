@@ -139,7 +139,7 @@ void kernel<T>::initialize_memory()
   unsigned i;
   T *param_ptr = (T*) param1;
   T *target_ptr = (T*) target;
-  for(i = 0; i < size; i++) 
+  for(i = 0; i < problemSize; i++) 
   {
     param_ptr[i] = (T)i;
     target_ptr[i] = 0;
