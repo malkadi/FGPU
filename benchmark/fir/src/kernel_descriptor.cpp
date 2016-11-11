@@ -6,6 +6,9 @@ template<typename T>
 kernel<T>::kernel(unsigned max_size, bool vector_types)
 {
   filterLen = 12;
+  // param1 = (T *) 0x30000000;
+  // coeffs = (T *) 0x31000000;
+  // target = (T *) 0x32000000;
   param1 = new T[max_size+filterLen];
   coeffs = new T[filterLen];
   target = new T[max_size];
@@ -65,6 +68,9 @@ void kernel<T>::download_descriptor()
   lram_ptr[17] = (unsigned) coeffs;
   lram_ptr[18] = (unsigned) target;
   lram_ptr[19] = (unsigned) filterLen;
+  // printf("param1 = %d\n", (unsigned) param1);
+  // printf("coeffs = %d\n", (unsigned) coeffs);
+  // printf("target = %d\n", (unsigned) target);
 }
 template<typename T>
 void kernel<T>::prepare_descriptor(unsigned int Size)
@@ -110,7 +116,7 @@ void kernel<T>::initialize_memory()
   }
   for(i = 0; i < filterLen; i++)
   {
-    coeffs_ptr[i] = (i%2-1)*i;
+    coeffs_ptr[i] = i;
   }
   Xil_DCacheFlush(); // flush data to global memory
 }

@@ -1,0 +1,242 @@
+
+compiler_outputs/matrix_multiply.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+matrix_multiply:
+       0:	ff fb ff 11 	addi	sp, sp, -2
+       4:	42 00 00 a8 	lp	r2, 2
+       8:	06 00 00 a8 	lp	r6, 0
+       c:	24 00 00 a8 	lp	r4, 1
+      10:	23 00 00 a0 	lid	r3, 1
+      14:	25 00 00 a1 	wgoff	r5, 1
+      18:	a7 0c 00 10 	add	r7, r5, r3
+      1c:	03 00 00 a0 	lid	r3, 0
+      20:	05 00 00 a1 	wgoff	r5, 0
+      24:	a3 0c 00 10 	add	r3, r5, r3
+      28:	61 08 00 21 	slli	r1, r3, 2
+      2c:	84 04 00 10 	add	r4, r4, r1
+      30:	05 00 00 a2 	size	r5, 0
+      34:	a1 1c 00 51 	mul	r1, r5, r7
+      38:	27 08 00 21 	slli	r7, r1, 2
+      3c:	c7 1c 00 10 	add	r7, r6, r7
+      40:	06 00 00 11 	addi	r6, r0, 0
+      44:	a8 08 00 21 	slli	r8, r5, 2
+
+LBB0_1:
+      48:	09 1c 00 74 	lw	r9, r7[r0]
+      4c:	0a 10 00 74 	lw	r10, r4[r0]
+      50:	46 25 00 58 	macc	r6, r10, r9
+      54:	84 20 00 10 	add	r4, r4, r8
+      58:	e7 10 00 11 	addi	r7, r7, 4
+      5c:	a5 fc ff 11 	addi	r5, r5, -1
+      60:	05 e4 ff 63 	bne	r5, r0, -7
+      64:	21 0c 00 10 	add	r1, r1, r3
+      68:	26 08 00 7c 	sw	r6, r2[r1]
+      6c:	ff 0b 00 11 	addi	sp, sp, 2
+      70:	00 00 00 92 	ret
+
+matrix_multiply_half:
+      74:	ff f3 ff 11 	addi	sp, sp, -4
+      78:	42 00 00 a8 	lp	r2, 2
+      7c:	06 00 00 a8 	lp	r6, 0
+      80:	24 00 00 a8 	lp	r4, 1
+      84:	23 00 00 a0 	lid	r3, 1
+      88:	25 00 00 a1 	wgoff	r5, 1
+      8c:	a7 0c 00 10 	add	r7, r5, r3
+      90:	03 00 00 a0 	lid	r3, 0
+      94:	05 00 00 a1 	wgoff	r5, 0
+      98:	a3 0c 00 10 	add	r3, r5, r3
+      9c:	61 04 00 21 	slli	r1, r3, 1
+      a0:	84 04 00 10 	add	r4, r4, r1
+      a4:	05 00 00 a2 	size	r5, 0
+      a8:	a1 1c 00 51 	mul	r1, r5, r7
+      ac:	27 04 00 21 	slli	r7, r1, 1
+      b0:	c7 1c 00 10 	add	r7, r6, r7
+      b4:	06 00 00 11 	addi	r6, r0, 0
+      b8:	a8 04 00 21 	slli	r8, r5, 1
+
+LBB1_1:
+      bc:	89 78 00 35 	xori	r9, r4, 30
+      c0:	29 0d 00 21 	slli	r9, r9, 3
+      c4:	0a 10 00 74 	lw	r10, r4[r0]
+      c8:	49 25 00 20 	sll	r9, r10, r9
+      cc:	ea 78 00 35 	xori	r10, r7, 30
+      d0:	4a 0d 00 21 	slli	r10, r10, 3
+      d4:	0b 1c 00 74 	lw	r11, r7[r0]
+      d8:	6a 29 00 20 	sll	r10, r11, r10
+      dc:	4a 41 00 2d 	srai	r10, r10, 16
+      e0:	29 41 00 2d 	srai	r9, r9, 16
+      e4:	26 29 00 58 	macc	r6, r9, r10
+      e8:	84 20 00 10 	add	r4, r4, r8
+      ec:	e7 08 00 11 	addi	r7, r7, 2
+      f0:	a5 fc ff 11 	addi	r5, r5, -1
+      f4:	05 c4 ff 63 	bne	r5, r0, -15
+      f8:	21 0c 00 10 	add	r1, r1, r3
+      fc:	26 08 00 7a 	sh	r6, r2[r1]
+     100:	ff 13 00 11 	addi	sp, sp, 4
+     104:	00 00 00 92 	ret
+
+matrix_multiply_half_improved:
+     108:	ff eb ff 11 	addi	sp, sp, -6
+     10c:	42 00 00 a8 	lp	r2, 2
+     110:	23 00 00 a8 	lp	r3, 1
+     114:	05 00 00 a8 	lp	r5, 0
+     118:	24 00 00 a0 	lid	r4, 1
+     11c:	26 00 00 a1 	wgoff	r6, 1
+     120:	c6 10 00 10 	add	r6, r6, r4
+     124:	07 00 00 a0 	lid	r7, 0
+     128:	08 00 00 a1 	wgoff	r8, 0
+     12c:	04 00 00 a2 	size	r4, 0
+     130:	81 18 00 51 	mul	r1, r4, r6
+     134:	29 7c 00 29 	srli	r9, r1, 31
+     138:	89 18 00 58 	macc	r9, r4, r6
+     13c:	26 05 00 21 	slli	r6, r9, 1
+     140:	09 f0 ff 11 	addi	r9, r0, -4
+     144:	c6 24 00 30 	and	r6, r6, r9
+     148:	a6 18 00 10 	add	r6, r5, r6
+     14c:	05 1d 00 10 	add	r5, r8, r7
+     150:	88 20 00 10 	add	r8, r4, r8
+     154:	0a 1d 00 10 	add	r10, r8, r7
+     158:	07 00 00 11 	addi	r7, r0, 0
+     15c:	a8 04 00 21 	slli	r8, r5, 1
+     160:	89 08 00 21 	slli	r9, r4, 2
+     164:	4a 05 00 21 	slli	r10, r10, 1
+
+LBB2_1:
+     168:	6b 20 00 10 	add	r11, r3, r8
+     16c:	0c 2c 00 74 	lw	r12, r11[r0]
+     170:	6b 79 00 35 	xori	r11, r11, 30
+     174:	6b 0d 00 21 	slli	r11, r11, 3
+     178:	8b 2d 00 20 	sll	r11, r12, r11
+     17c:	6b 41 00 2d 	srai	r11, r11, 16
+     180:	0c 18 00 74 	lw	r12, r6[r0]
+     184:	8d 41 00 21 	slli	r13, r12, 16
+     188:	ad 41 00 2d 	srai	r13, r13, 16
+     18c:	a7 2d 00 58 	macc	r7, r13, r11
+     190:	6b 28 00 10 	add	r11, r3, r10
+     194:	0d 2c 00 74 	lw	r13, r11[r0]
+     198:	6b 79 00 35 	xori	r11, r11, 30
+     19c:	6b 0d 00 21 	slli	r11, r11, 3
+     1a0:	ab 2d 00 20 	sll	r11, r13, r11
+     1a4:	6b 41 00 2d 	srai	r11, r11, 16
+     1a8:	8c 41 00 2d 	srai	r12, r12, 16
+     1ac:	67 31 00 58 	macc	r7, r11, r12
+     1b0:	63 24 00 10 	add	r3, r3, r9
+     1b4:	c6 10 00 11 	addi	r6, r6, 4
+     1b8:	84 f8 ff 11 	addi	r4, r4, -2
+     1bc:	04 a8 ff 63 	bne	r4, r0, -22
+     1c0:	21 14 00 10 	add	r1, r1, r5
+     1c4:	27 08 00 7a 	sh	r7, r2[r1]
+     1c8:	ff 1b 00 11 	addi	sp, sp, 6
+     1cc:	00 00 00 92 	ret
+
+matrix_multiply_byte:
+     1d0:	ff f3 ff 11 	addi	sp, sp, -4
+     1d4:	42 00 00 a8 	lp	r2, 2
+     1d8:	03 00 00 a8 	lp	r3, 0
+     1dc:	25 00 00 a8 	lp	r5, 1
+     1e0:	26 00 00 a0 	lid	r6, 1
+     1e4:	27 00 00 a1 	wgoff	r7, 1
+     1e8:	04 00 00 a0 	lid	r4, 0
+     1ec:	08 00 00 a1 	wgoff	r8, 0
+     1f0:	84 20 00 10 	add	r4, r4, r8
+     1f4:	a5 10 00 10 	add	r5, r5, r4
+     1f8:	e8 18 00 10 	add	r8, r7, r6
+     1fc:	06 00 00 11 	addi	r6, r0, 0
+     200:	07 00 00 a2 	size	r7, 0
+     204:	e3 20 00 58 	macc	r3, r7, r8
+     208:	e1 20 00 51 	mul	r1, r7, r8
+     20c:	08 18 00 10 	add	r8, r0, r6
+
+LBB3_1:
+     210:	69 18 00 10 	add	r9, r3, r6
+     214:	0a 24 00 74 	lw	r10, r9[r0]
+     218:	29 7d 00 35 	xori	r9, r9, 31
+     21c:	29 0d 00 21 	slli	r9, r9, 3
+     220:	49 25 00 20 	sll	r9, r10, r9
+     224:	aa 7c 00 35 	xori	r10, r5, 31
+     228:	4a 0d 00 21 	slli	r10, r10, 3
+     22c:	0b 14 00 74 	lw	r11, r5[r0]
+     230:	6a 29 00 20 	sll	r10, r11, r10
+     234:	29 61 00 2d 	srai	r9, r9, 24
+     238:	4a 61 00 2d 	srai	r10, r10, 24
+     23c:	48 25 00 58 	macc	r8, r10, r9
+     240:	a5 1c 00 10 	add	r5, r5, r7
+     244:	c6 04 00 11 	addi	r6, r6, 1
+     248:	c7 c4 ff 63 	bne	r7, r6, -15
+     24c:	21 10 00 10 	add	r1, r1, r4
+     250:	28 08 00 79 	sb	r8, r2[r1]
+     254:	ff 13 00 11 	addi	sp, sp, 4
+     258:	00 00 00 92 	ret
+
+matrix_multiply_byte_improved:
+     25c:	ff eb ff 11 	addi	sp, sp, -6
+     260:	42 00 00 a8 	lp	r2, 2
+     264:	26 00 00 a8 	lp	r6, 1
+     268:	05 00 00 a8 	lp	r5, 0
+     26c:	23 00 00 a0 	lid	r3, 1
+     270:	24 00 00 a1 	wgoff	r4, 1
+     274:	84 0c 00 10 	add	r4, r4, r3
+     278:	07 00 00 a0 	lid	r7, 0
+     27c:	08 00 00 a1 	wgoff	r8, 0
+     280:	03 00 00 a2 	size	r3, 0
+     284:	61 10 00 51 	mul	r1, r3, r4
+     288:	29 7c 00 2d 	srai	r9, r1, 31
+     28c:	29 79 00 29 	srli	r9, r9, 30
+     290:	69 10 00 58 	macc	r9, r3, r4
+     294:	04 f0 ff 11 	addi	r4, r0, -4
+     298:	29 11 00 30 	and	r9, r9, r4
+     29c:	04 1d 00 10 	add	r4, r8, r7
+     2a0:	a5 24 00 10 	add	r5, r5, r9
+     2a4:	c6 10 00 10 	add	r6, r6, r4
+     2a8:	07 00 00 11 	addi	r7, r0, 0
+     2ac:	68 04 00 21 	slli	r8, r3, 1
+     2b0:	09 0c 00 11 	addi	r9, r0, 3
+     2b4:	69 24 00 51 	mul	r9, r3, r9
+     2b8:	6a 08 00 21 	slli	r10, r3, 2
+     2bc:	0b 1c 00 10 	add	r11, r0, r7
+
+LBB4_1:
+     2c0:	cc 7c 00 35 	xori	r12, r6, 31
+     2c4:	8c 0d 00 21 	slli	r12, r12, 3
+     2c8:	0d 18 00 74 	lw	r13, r6[r0]
+     2cc:	ac 31 00 20 	sll	r12, r13, r12
+     2d0:	8c 61 00 2d 	srai	r12, r12, 24
+     2d4:	ad 1c 00 10 	add	r13, r5, r7
+     2d8:	0d 34 00 74 	lw	r13, r13[r0]
+     2dc:	ae 61 00 21 	slli	r14, r13, 24
+     2e0:	ce 61 00 2d 	srai	r14, r14, 24
+     2e4:	cb 31 00 58 	macc	r11, r14, r12
+     2e8:	cc 0c 00 10 	add	r12, r6, r3
+     2ec:	0e 30 00 74 	lw	r14, r12[r0]
+     2f0:	8c 7d 00 35 	xori	r12, r12, 31
+     2f4:	8c 0d 00 21 	slli	r12, r12, 3
+     2f8:	cc 31 00 20 	sll	r12, r14, r12
+     2fc:	8c 61 00 2d 	srai	r12, r12, 24
+     300:	ae 41 00 21 	slli	r14, r13, 16
+     304:	ce 61 00 2d 	srai	r14, r14, 24
+     308:	8b 39 00 58 	macc	r11, r12, r14
+     30c:	cc 20 00 10 	add	r12, r6, r8
+     310:	0e 30 00 74 	lw	r14, r12[r0]
+     314:	8c 7d 00 35 	xori	r12, r12, 31
+     318:	8c 0d 00 21 	slli	r12, r12, 3
+     31c:	cc 31 00 20 	sll	r12, r14, r12
+     320:	8c 61 00 2d 	srai	r12, r12, 24
+     324:	ae 21 00 21 	slli	r14, r13, 8
+     328:	ce 61 00 2d 	srai	r14, r14, 24
+     32c:	8b 39 00 58 	macc	r11, r12, r14
+     330:	cc 24 00 10 	add	r12, r6, r9
+     334:	0e 30 00 74 	lw	r14, r12[r0]
+     338:	8c 7d 00 35 	xori	r12, r12, 31
+     33c:	8c 0d 00 21 	slli	r12, r12, 3
+     340:	cc 31 00 20 	sll	r12, r14, r12
+     344:	8c 61 00 2d 	srai	r12, r12, 24
+     348:	ad 61 00 2d 	srai	r13, r13, 24
+     34c:	8b 35 00 58 	macc	r11, r12, r13
+     350:	c6 28 00 10 	add	r6, r6, r10
+     354:	e7 10 00 11 	addi	r7, r7, 4
+     358:	e3 64 ff 63 	bne	r3, r7, -39
+     35c:	21 10 00 10 	add	r1, r1, r4
+     360:	2b 08 00 79 	sb	r11, r2[r1]
+     364:	ff 1b 00 11 	addi	sp, sp, 6
+     368:	00 00 00 92 	ret

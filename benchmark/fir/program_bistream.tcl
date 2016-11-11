@@ -3,7 +3,8 @@ connect
 
 # program bitstream
 # fpga ../../bitstreams/V2_8CUs_noAtomic_noSubInteger_250MHz.bit
-fpga ../../bitstreams/V2_8CUs_noAtomic_SubInteger_235MHz.bit
+# fpga ../../bitstreams/bd_design_wrapper.bit
+fpga ../../bitstreams/V2_8CUs_Atomic_SubInteger_235MHz.bit
 
 
 # select the first ARM core as a target

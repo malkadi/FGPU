@@ -10,9 +10,9 @@ int main()
   // The correctness of all results will be checked at the end of each execution round
   const unsigned check_results = 1; 
   // The kernel will be executed for problem sizes of 64, 64*2, ... , 64*2^(test_vec_len-1)
-  const unsigned test_vec_len = 9;
+  const unsigned test_vec_len = 13;
   // Executions & time measurements will be repeated nruns times 
-  const unsigned nruns = 1;
+  const unsigned nruns = 10;
   // use vector types:ushort2 instead of ushort OR uchar4 instead of byte
   const bool use_vector_types = 1;
   
