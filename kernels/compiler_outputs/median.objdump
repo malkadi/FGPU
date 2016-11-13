@@ -1,0 +1,157 @@
+
+compiler_outputs/median.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+median:
+       0:	ff d3 ff 11 	addi	sp, sp, -12
+       4:	22 00 00 a8 	lp	r2, 1
+       8:	03 00 00 a8 	lp	r3, 0
+       c:	24 00 00 a0 	lid	r4, 1
+      10:	25 00 00 a1 	wgoff	r5, 1
+      14:	06 00 00 a0 	lid	r6, 0
+      18:	07 00 00 a1 	wgoff	r7, 0
+      1c:	e6 18 00 10 	add	r6, r7, r6
+      20:	a4 10 00 10 	add	r4, r5, r4
+      24:	05 00 00 a2 	size	r5, 0
+      28:	81 fc ff 11 	addi	r1, r4, -1
+      2c:	07 18 00 10 	add	r7, r0, r6
+      30:	a7 04 00 58 	macc	r7, r5, r1
+      34:	81 04 00 11 	addi	r1, r4, 1
+      38:	08 18 00 10 	add	r8, r0, r6
+      3c:	a8 10 00 58 	macc	r8, r5, r4
+      40:	a6 04 00 58 	macc	r6, r5, r1
+      44:	e1 08 00 21 	slli	r1, r7, 2
+      48:	21 0c 00 10 	add	r1, r1, r3
+      4c:	21 f8 ff 11 	addi	r1, r1, -2
+      50:	04 04 00 74 	lw	r4, r1[r0]
+      54:	21 7c 00 35 	xori	r1, r1, 31
+      58:	21 0c 00 21 	slli	r1, r1, 3
+      5c:	84 04 00 20 	sll	r4, r4, r1
+      60:	c1 08 00 21 	slli	r1, r6, 2
+      64:	67 04 00 10 	add	r7, r3, r1
+      68:	01 09 00 21 	slli	r1, r8, 2
+      6c:	68 04 00 10 	add	r8, r3, r1
+      70:	83 60 00 29 	srli	r3, r4, 24
+      74:	04 f1 ff 11 	addi	r4, r8, -4
+      78:	04 10 00 74 	lw	r4, r4[r0]
+      7c:	89 fc 03 31 	andi	r9, r4, 255
+      80:	e4 f0 ff 11 	addi	r4, r7, -4
+      84:	04 10 00 74 	lw	r4, r4[r0]
+      88:	8a fc 03 31 	andi	r10, r4, 255
+      8c:	44 25 00 b6 	sltu	r4, r10, r9
+      90:	25 0d 00 b6 	sltu	r5, r9, r3
+      94:	a6 04 00 35 	xori	r6, r5, 1
+      98:	cb 10 00 10 	add	r11, r6, r4
+      9c:	84 04 00 35 	xori	r4, r4, 1
+      a0:	46 0d 00 b6 	sltu	r6, r10, r3
+      a4:	cc 04 00 35 	xori	r12, r6, 1
+      a8:	8c 11 00 10 	add	r12, r12, r4
+      ac:	c6 14 00 10 	add	r6, r6, r5
+      b0:	04 04 00 11 	addi	r4, r0, 1
+      b4:	c5 10 00 34 	xor	r5, r6, r4
+      b8:	0d 24 00 10 	add	r13, r0, r9
+      bc:	6d 14 00 48 	movz	r13, r3, r5
+      c0:	85 11 00 34 	xor	r5, r12, r4
+      c4:	4d 15 00 48 	movz	r13, r10, r5
+      c8:	05 08 00 11 	addi	r5, r0, 2
+      cc:	ce 14 00 34 	xor	r14, r6, r5
+      d0:	06 28 00 10 	add	r6, r0, r10
+      d4:	66 38 00 48 	movz	r6, r3, r14
+      d8:	23 2d 00 48 	movz	r3, r9, r11
+      dc:	43 31 00 48 	movz	r3, r10, r12
+      e0:	6a 15 00 34 	xor	r10, r11, r5
+      e4:	26 29 00 48 	movz	r6, r9, r10
+      e8:	e9 08 00 11 	addi	r9, r7, 2
+      ec:	0a 24 00 74 	lw	r10, r9[r0]
+      f0:	29 7d 00 35 	xori	r9, r9, 31
+      f4:	29 0d 00 21 	slli	r9, r9, 3
+      f8:	49 25 00 20 	sll	r9, r10, r9
+      fc:	0a 09 00 11 	addi	r10, r8, 2
+     100:	0b 28 00 74 	lw	r11, r10[r0]
+     104:	4a 7d 00 35 	xori	r10, r10, 31
+     108:	4a 0d 00 21 	slli	r10, r10, 3
+     10c:	6a 29 00 20 	sll	r10, r11, r10
+     110:	e7 18 00 11 	addi	r7, r7, 6
+     114:	0b 1c 00 74 	lw	r11, r7[r0]
+     118:	e7 7c 00 35 	xori	r7, r7, 31
+     11c:	e7 0c 00 21 	slli	r7, r7, 3
+     120:	67 1d 00 20 	sll	r7, r11, r7
+     124:	08 19 00 11 	addi	r8, r8, 6
+     128:	0b 20 00 74 	lw	r11, r8[r0]
+     12c:	08 7d 00 35 	xori	r8, r8, 31
+     130:	08 0d 00 21 	slli	r8, r8, 3
+     134:	68 21 00 20 	sll	r8, r11, r8
+     138:	0b 61 00 29 	srli	r11, r8, 24
+     13c:	e7 60 00 29 	srli	r7, r7, 24
+     140:	ec 2c 00 b6 	sltu	r12, r7, r11
+     144:	ae 30 00 12 	sub	r14, r5, r12
+     148:	c8 11 00 34 	xor	r8, r14, r4
+     14c:	0f 2c 00 10 	add	r15, r0, r11
+     150:	ef 20 00 48 	movz	r15, r7, r8
+     154:	4a 61 00 29 	srli	r10, r10, 24
+     158:	29 61 00 29 	srli	r9, r9, 24
+     15c:	30 29 00 b6 	sltu	r16, r9, r10
+     160:	b1 40 00 12 	sub	r17, r5, r16
+     164:	32 12 00 34 	xor	r18, r17, r4
+     168:	08 28 00 10 	add	r8, r0, r10
+     16c:	28 49 00 48 	movz	r8, r9, r18
+     170:	12 35 00 b6 	sltu	r18, r8, r13
+     174:	f3 35 00 b6 	sltu	r19, r15, r13
+     178:	72 4a 00 10 	add	r18, r19, r18
+     17c:	52 12 00 34 	xor	r18, r18, r4
+     180:	f4 21 00 b6 	sltu	r20, r15, r8
+     184:	a8 49 00 48 	movz	r8, r13, r18
+     188:	8d 06 00 35 	xori	r13, r20, 1
+     18c:	72 06 00 35 	xori	r18, r19, 1
+     190:	4d 36 00 10 	add	r13, r18, r13
+     194:	ad 11 00 34 	xor	r13, r13, r4
+     198:	e8 35 00 48 	movz	r8, r15, r13
+     19c:	0d 00 00 11 	addi	r13, r0, 0
+     1a0:	0f 34 00 10 	add	r15, r0, r13
+     1a4:	2f 45 00 48 	movz	r15, r9, r17
+     1a8:	49 41 00 40 	movn	r9, r10, r16
+     1ac:	0a 34 00 10 	add	r10, r0, r13
+     1b0:	ea 38 00 48 	movz	r10, r7, r14
+     1b4:	67 31 00 40 	movn	r7, r11, r12
+     1b8:	0b fc ff 11 	addi	r11, r0, -1
+     1bc:	4c 3d 00 b6 	sltu	r12, r10, r15
+     1c0:	6d 31 00 40 	movn	r13, r11, r12
+     1c4:	eb 0d 00 b6 	sltu	r11, r15, r3
+     1c8:	6b 05 00 35 	xori	r11, r11, 1
+     1cc:	6b 35 00 34 	xor	r11, r11, r13
+     1d0:	8c 05 00 35 	xori	r12, r12, 1
+     1d4:	0c 30 00 12 	sub	r12, r0, r12
+     1d8:	4d 0d 00 b6 	sltu	r13, r10, r3
+     1dc:	e3 2d 00 48 	movz	r3, r15, r11
+     1e0:	ab 05 00 35 	xori	r11, r13, 1
+     1e4:	6b 31 00 34 	xor	r11, r11, r12
+     1e8:	43 2d 00 48 	movz	r3, r10, r11
+     1ec:	2a 19 00 b6 	sltu	r10, r9, r6
+     1f0:	eb 18 00 b6 	sltu	r11, r7, r6
+     1f4:	6b 29 00 10 	add	r11, r11, r10
+     1f8:	6b 15 00 34 	xor	r11, r11, r5
+     1fc:	ec 24 00 b6 	sltu	r12, r7, r9
+     200:	c7 2c 00 48 	movz	r7, r6, r11
+     204:	46 05 00 35 	xori	r6, r10, 1
+     208:	c6 30 00 10 	add	r6, r6, r12
+     20c:	c6 14 00 34 	xor	r6, r6, r5
+     210:	27 19 00 48 	movz	r7, r9, r6
+     214:	e6 0c 00 b6 	sltu	r6, r7, r3
+     218:	09 0d 00 b6 	sltu	r9, r8, r3
+     21c:	29 19 00 10 	add	r9, r9, r6
+     220:	29 11 00 34 	xor	r9, r9, r4
+     224:	ea 20 00 b6 	sltu	r10, r7, r8
+     228:	68 24 00 48 	movz	r8, r3, r9
+     22c:	43 05 00 35 	xori	r3, r10, 1
+     230:	c6 04 00 35 	xori	r6, r6, 1
+     234:	c3 0c 00 10 	add	r3, r6, r3
+     238:	63 10 00 34 	xor	r3, r3, r4
+     23c:	e8 0c 00 48 	movz	r8, r7, r3
+     240:	03 0c 00 11 	addi	r3, r0, 3
+     244:	46 04 00 10 	add	r6, r2, r1
+     248:	68 18 00 79 	sb	r8, r6[r3]
+     24c:	a8 18 00 79 	sb	r8, r6[r5]
+     250:	88 18 00 79 	sb	r8, r6[r4]
+     254:	28 08 00 79 	sb	r8, r2[r1]
+     258:	ff 33 00 11 	addi	sp, sp, 12
+     25c:	00 00 00 92 	ret

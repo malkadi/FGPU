@@ -3,19 +3,16 @@
 extern unsigned int *code; // binary storde in code.c as an array
 
 template<typename T>
-kernel<T>::kernel(unsigned maxProblemSize, bool vector_types)
+kernel<T>::kernel(unsigned maxDim)
 {
-  param1 = new T[maxProblemSize];
-  param2 = new T[2*maxProblemSize];
-  target_fgpu = new T[2*maxProblemSize];
-  target_arm = new T[maxProblemSize];
-  use_vector_types = vector_types;
+  param1 = new T[maxDim*maxDim];
+  target_fgpu = new T[maxDim*maxDim];
+  target_arm = new T[maxDim*maxDim];
 }
 template<typename T>
 kernel<T>::~kernel() 
 {
   delete[] param1;
-  delete[] param2;
   delete[] target_fgpu;
   delete[] target_arm;
 }
@@ -23,22 +20,9 @@ template<typename T>
 void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
-  unsigned int size = XCORR_LEN;
-  if (typeid(T) == typeid(int))
-    if(use_vector_types)
-      start_addr = XCORR_IMPROVED_POS;
-    else
-      start_addr = XCORR_POS;
-  else if (typeid(T) == typeid(short)) 
-    if(use_vector_types)
-      start_addr = XCORR_HALF_IMPROVED_POS;
-    else
-      start_addr = XCORR_HALF_POS;
-  else if (typeid(T) == typeid(char))
-    if(use_vector_types)
-      start_addr = XCORR_BYTE_IMPROVED_POS;
-    else
-      start_addr = XCORR_BYTE_POS;
+  unsigned int size = MEDIAN_LEN;
+  if (typeid(T) == typeid(unsigned))
+    start_addr = MEDIAN_POS;
   else
     assert(0 && "unsupported type");
   unsigned i = 0;
@@ -66,59 +50,59 @@ void kernel<T>::download_descriptor()
   lram_ptr[10] = n_wg2-1;
   lram_ptr[11] = (nParams << 28) | wg_size;
   lram_ptr[16] = (unsigned) param1;
-  lram_ptr[17] = (unsigned) param2;
-  lram_ptr[18] = (unsigned) target_fgpu;
+  lram_ptr[17] = (unsigned) target_fgpu;
 }
 template<typename T>
 void kernel<T>::prepare_descriptor(unsigned int Size)
 {
   wg_size0 = 8;
-  problemSize = Size;
+  wg_size1 = 8;
+  rowLen = Size;
+  problemSize = Size*Size;
   offset0 = 0;
   offset1 = 0;
-  nDim = 1;
+  nDim = 2;
   size0 = Size;
-  if( typeid(T) == typeid(int)) {
-    dataSize = 4 * problemSize; // 4 bytes per word
-    if(use_vector_types)
-      size0 = Size / 4;
-  }
-  else if (typeid(T) == typeid(short)) {
-    dataSize = 2 * problemSize; // 2 bytes per word
-    if(use_vector_types)
-      size0 = Size / 2;
-  }
-  else if (typeid(T) == typeid(char)) {
-    dataSize = 1 * problemSize; // 1 bytes per word
-    if(use_vector_types)
-      size0 = Size / 4;
-  }
+  size1 = Size;
+  dataSize = 4 * problemSize; // 4 bytes per word
 
   if(size0 < 8)
     wg_size0 = size0;
+  if(size1 < 8)
+    wg_size1 = size1;
 
   compute_descriptor();
 
   offset0 = offset1 = offset2 = 0;
-  nParams = 3; // number of parameters
+  nParams = 2; // number of parameters
 }
 template<typename T>
 void kernel<T>::initialize_memory()
 {
   unsigned i;
   T *param1_ptr = (T*) param1;
-  T *param2_ptr = (T*) param2;
   T *target_ptr = (T*) target_fgpu;
   for(i = 0; i < problemSize; i++) 
   {
     param1_ptr[i] = (T)i;
-    param2_ptr[i] = (T)i;
     target_ptr[i] = 0;
   }
   Xil_DCacheFlush(); // flush data to global memory
-  for(i = problemSize; i < 2*problemSize; i++) 
-    param2_ptr[i] = 0;
-  Xil_DCacheFlush(); // flush data to global memory
+}
+inline void swap(unsigned *a, unsigned *b)
+{
+  unsigned tmp = *a;
+  *a = *b;
+  *b = tmp;
+}
+inline void sort3(unsigned *a, unsigned *b, unsigned *c)
+{
+  if(*a > *b)
+    swap(a, b);
+  if(*b > *c)
+    swap(b, c);
+  if(*a > *b)
+    swap(a, b);
 }
 template<typename T>
 unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
@@ -137,16 +121,32 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     // parametrs accessed during computations should be cashed
     T *target_ptr = target_arm;
     T *param1_ptr = param1;
-    T *param2_ptr = param2;
-    unsigned Size = problemSize;
+    unsigned Size = size0;
 
     XTime_GetTime(&tStart);
-    for(i = 0; i < Size; i++) {
-      int res = 0;
-      for(j = 0; j < Size; j++) {
-        res += param1_ptr[j]*param2_ptr[i+j];
+
+    for(j = 1; j < Size-1; j++)
+    {
+      for(i = 1;i < Size-1; i++)
+      {
+          unsigned p00 = param1_ptr[(j-1)*Size+i-1];
+          unsigned p01 = param1_ptr[j*Size+i-1];
+          unsigned p02 = param1_ptr[(j+1)*Size+i-1];
+          unsigned p10 = param1_ptr[(j-1)*Size+i];
+          unsigned p11 = param1_ptr[j*Size+i];
+          unsigned p12 = param1_ptr[(j+1)*Size+i];
+          unsigned p20 = param1_ptr[(j-1)*Size+i+1];
+          unsigned p21 = param1_ptr[j*Size+i+1];
+          unsigned p22 = param1_ptr[(j+1)*Size+i+1];
+          sort3(&p00, &p01, &p02);
+          sort3(&p10, &p11, &p12);
+          sort3(&p20, &p21, &p22);
+          sort3(&p00, &p10, &p20);
+          sort3(&p01, &p11, &p21);
+          sort3(&p02, &p12, &p22);
+          sort3(&p00, &p11, &p22);
+          target_ptr[j*Size+i] = p11;
       }
-      target_ptr[i] = res;
     }
 
     // flush the results to the global memory 
@@ -169,18 +169,19 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
 template<typename T>
 void kernel<T>::check_FGPU_results()
 {
-  unsigned i, nErrors = 0;
+  unsigned i, j, nErrors = 0;
   
-  for (i = 0; i < problemSize; i++)
-    if(target_arm[i] != target_fgpu[i])
-    {
-      // if( typeid(T) == typeid(int) ) {
-        #if PRINT_ERRORS
-          xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, (unsigned)target_fgpu[i], (unsigned) target_arm[i]);
-        #endif
-      // }
-      nErrors++;
-    }
+  for (i = 1; i < rowLen-1; i++)
+    for (j = 1; j < rowLen-1; j++)
+      if(target_arm[i*rowLen+j] != target_fgpu[i*rowLen+j])
+      {
+        if( typeid(T) == typeid(unsigned) ) {
+          #if PRINT_ERRORS
+            xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, (unsigned)target_fgpu[i], (unsigned) target_arm[i]);
+          #endif
+        }
+        nErrors++;
+      }
   if(nErrors != 0) {
     xil_printf("Memory check failed (nErrors = %d)!\n\r", nErrors);
       if( typeid(T) != typeid(int) )
@@ -222,12 +223,7 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
 template<typename T>
 void kernel<T>::print_name()
 {
-  if( typeid(T) == typeid(int) )
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is corss correlation word\n\r" ANSI_COLOR_RESET);
-  else if (typeid(T) == typeid(short))
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is corss correlation half word\n\r" ANSI_COLOR_RESET);
-  else if (typeid(T) == typeid(char))
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is corss correlation byte\n\r" ANSI_COLOR_RESET);
+  xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is median word\n\r" ANSI_COLOR_RESET);
 }
 template<typename T>
 unsigned kernel<T>::get_problemSize() 
@@ -272,6 +268,4 @@ void kernel<T>::compute_descriptor()
     nWF_WG++;
 }
 
-template class kernel<int>;
-template class kernel<short>;
-template class kernel<char>;
+template class kernel<unsigned>;
