@@ -6,8 +6,9 @@ template<typename T>
 kernel<T>::kernel(unsigned maxDim, bool vector_types)
 {
   param1 = new T[maxDim*maxDim];
-  param2 = new T[maxDim*maxDimDim*maxDim];
-  target = new T[maxDim*maxDim];
+  param2 = new T[maxDim*maxDim];
+  target_fgpu = new T[maxDim*maxDim];
+  target_arm = new T[maxDim*maxDim];
   use_vector_types = vector_types;
 }
 template<typename T>
@@ -15,21 +16,22 @@ kernel<T>::~kernel()
 {
   delete[] param1;
   delete[] param2;
-  delete[] target;
+  delete[] target_fgpu;
+  delete[] target_arm;
 }
 template<typename T>
 void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
   unsigned int size = MATRIX_MULTIPLY_LEN;
-  if (typeid(T) == typeid(unsigned))
+  if (typeid(T) == typeid(int))
     start_addr = MATRIX_MULTIPLY_POS;
-  else if (typeid(T) == typeid(unsigned short)) 
+  else if (typeid(T) == typeid(short)) 
     if(use_vector_types)
       start_addr = MATRIX_MULTIPLY_HALF_IMPROVED_POS;
     else
       start_addr = MATRIX_MULTIPLY_HALF_POS;
-  else if (typeid(T) == typeid(unsigned char))
+  else if (typeid(T) == typeid(char))
     if(use_vector_types)
       start_addr = MATRIX_MULTIPLY_BYTE_IMPROVED_POS;
     else
@@ -62,32 +64,33 @@ void kernel<T>::download_descriptor()
   lram_ptr[11] = (nParams << 28) | wg_size;
   lram_ptr[16] = (unsigned) param1;
   lram_ptr[17] = (unsigned) param2;
-  lram_ptr[18] = (unsigned) target;
+  lram_ptr[18] = (unsigned) target_fgpu;
 }
 template<typename T>
 void kernel<T>::prepare_descriptor(unsigned int Size)
 {
-  wg_size0 = 64;
-  problemSize = Size;
+  wg_size0 = 8;
+  wg_size1 = 8;
+  problemSize = Size*Size;
   offset0 = 0;
-  nDim = 1;
+  offset1 = 0;
+  nDim = 2;
   size0 = Size;
-  if( typeid(T) == typeid(unsigned)) {
+  size1 = Size;
+  if( typeid(T) == typeid(int)) {
     dataSize = 4 * problemSize; // 4 bytes per word
   }
-  else if (typeid(T) == typeid(unsigned short)) {
+  else if (typeid(T) == typeid(short)) {
     dataSize = 2 * problemSize; // 2 bytes per word
-    if(use_vector_types)
-      size0 = Size / 2;
   }
-  else if (typeid(T) == typeid(unsigned char)) {
+  else if (typeid(T) == typeid(char)) {
     dataSize = 1 * problemSize; // 1 bytes per word
-    if(use_vector_types)
-      size0 = Size / 4;
   }
 
-  if(size0 < 64)
+  if(size0 < 8)
     wg_size0 = size0;
+  if(size1 < 8)
+    wg_size1 = size1;
 
   compute_descriptor();
 
@@ -100,7 +103,7 @@ void kernel<T>::initialize_memory()
   unsigned i;
   T *param1_ptr = (T*) param1;
   T *param2_ptr = (T*) param2;
-  T *target_ptr = (T*) target;
+  T *target_ptr = (T*) target_fgpu;
   for(i = 0; i < problemSize; i++) 
   {
     param2_ptr[i] = (T)i;
@@ -112,7 +115,7 @@ void kernel<T>::initialize_memory()
 template<typename T>
 unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
 {
-  unsigned i;
+  unsigned i, j, k;
   unsigned exec_time = 0;
   unsigned runs = 0;
 
@@ -124,21 +127,28 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     Xil_DCacheInvalidate();
 
     // parametrs accessed during computations should be cashed
-    T *target_ptr = target;
+    T *target_ptr = target_arm;
     T *param1_ptr = param1;
     T *param2_ptr = param2;
-    unsigned Size = problemSize;
+    unsigned Size = size0;
 
     XTime_GetTime(&tStart);
-    for(i = 0; i < Size; i++)
-      target_ptr[i] = param1_ptr[i] + param2_ptr[i];
+    for(i = 0; i < Size; i++) {
+      for(j = 0; j < Size; j++) {
+        int res = 0;
+        for(k = 0; k < Size; k++) {
+          res += param1_ptr[i*Size + k]*param2_ptr[k*Size+j];
+        }
+        target_ptr[i*Size + j] = res;
+      }
+    }
 
     // flush the results to the global memory 
     // If the size of the data to be flushed exceeds half of the cache size, flush the whole cache. It is faster!
     if (dataSize > 16*1024)
       Xil_DCacheFlush();
     else
-      Xil_DCacheFlushRange((unsigned)target, dataSize);
+      Xil_DCacheFlushRange((unsigned)target_arm, dataSize);
     
     XTime_GetTime(&tEnd);
     exec_time += elapsed_time_us(tStart, tEnd);
@@ -153,18 +163,23 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
 template<typename T>
 void kernel<T>::check_FGPU_results()
 {
-  unsigned int i, nErrors = 0;
+  unsigned i, nErrors = 0;
   
   for (i = 0; i < problemSize; i++)
-    if(target[i] != (T)(i+i))
+    if(target_arm[i] != target_fgpu[i])
     {
-      #if PRINT_ERRORS
-        xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, (unsigned)target[i], (unsigned) i+i);
-      #endif
+      if( typeid(T) == typeid(int) ) {
+        #if PRINT_ERRORS
+          xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, (unsigned)target_fgpu[i], (unsigned) target_arm[i]);
+        #endif
+      }
       nErrors++;
     }
-  if(nErrors != 0)
+  if(nErrors != 0) {
     xil_printf("Memory check failed (nErrors = %d)!\n\r", nErrors);
+      if( typeid(T) != typeid(int) )
+        xil_printf("WARNING: Overflow may cause some mismatch between ARM and FGPU results\n");
+    }
 }
 template<typename T>
 unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
@@ -201,12 +216,12 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
 template<typename T>
 void kernel<T>::print_name()
 {
-  if( typeid(T) == typeid(unsigned) )
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is vec_add word\n\r" ANSI_COLOR_RESET);
-  else if (typeid(T) == typeid(unsigned short))
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is vec_add half word\n\r" ANSI_COLOR_RESET);
-  else if (typeid(T) == typeid(unsigned char))
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is vec_add byte\n\r" ANSI_COLOR_RESET);
+  if( typeid(T) == typeid(int) )
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is matrix_multiply word\n\r" ANSI_COLOR_RESET);
+  else if (typeid(T) == typeid(short))
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is matrix_multiply half word\n\r" ANSI_COLOR_RESET);
+  else if (typeid(T) == typeid(char))
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is matrix_multiply byte\n\r" ANSI_COLOR_RESET);
 }
 template<typename T>
 unsigned kernel<T>::get_problemSize() 
@@ -251,6 +266,6 @@ void kernel<T>::compute_descriptor()
     nWF_WG++;
 }
 
-template class kernel<unsigned>;
-template class kernel<unsigned short>;
-template class kernel<unsigned char>;
+template class kernel<int>;
+template class kernel<short>;
+template class kernel<char>;

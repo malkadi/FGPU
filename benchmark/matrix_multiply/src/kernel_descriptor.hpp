@@ -25,7 +25,7 @@ class kernel{
   unsigned start_addr;
   //extra info
   unsigned problemSize, dataSize;
-  T *param1, *param2, *target;
+  T *param1, *param2, *target_fgpu, *target_arm;
   void compute_descriptor();
   bool use_vector_types;
 public:

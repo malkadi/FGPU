@@ -1,18 +1,18 @@
 #include "aux_functions.hpp"
 using namespace std;
 
-// #define TYPE  unsigned 
-// #define TYPE  unsigned short
-#define TYPE  unsigned char
+// #define TYPE  int 
+// #define TYPE  short
+#define TYPE  char
 
 int main()
 {
   // The correctness of all results will be checked at the end of each execution round
   const unsigned check_results = 1; 
   // The kernel will be executed for problem sizes of 64, 64*2, ... , 64*2^(test_vec_len-1)
-  const unsigned test_vec_len = 13;
+  const unsigned test_vec_len = 7;
   // Executions & time measurements will be repeated nruns times 
-  const unsigned nruns = 10;
+  const unsigned nruns = 1;
   // use vector types:ushort2 instead of ushort OR uchar4 instead of byte
   const bool use_vector_types = 1;
   
@@ -54,11 +54,11 @@ int main()
       break;
     }
 
-    // compute on FGPU
-    timer_val_fgpu[size_index] = matrix_multiply_kernel.compute_on_FGPU(nruns, check_results);
-
     // compute on ARM
     timer_val_arm[size_index] = matrix_multiply_kernel.compute_on_ARM(nruns);
+    
+    // compute on FGPU
+    timer_val_fgpu[size_index] = matrix_multiply_kernel.compute_on_FGPU(nruns, check_results);
     
     xil_printf("\n\r");
 
@@ -68,7 +68,7 @@ int main()
   cout<<endl<<left<<setw(20)<<"Problem Size"<<setw(25)<<"Execution Time (us)"<<setw(25)<<           "Execution Time (us)"<<setw(25)<<"Speedup"<< endl;
   cout<<setw(32)<<ANSI_COLOR_GREEN  <<                  "FGPU"<<setw(27)<<ANSI_COLOR_RED<<setw(10)<<"ARM"<< ANSI_COLOR_RESET <<endl;
   for(i = 0; i < size_index; i++)
-    cout<<setw(28) << (64<<i) <<
+    cout<<setw(28) << (8<<i)*(8<<i) <<
       setw(25) << timer_val_fgpu[i] <<
       setw(18) << timer_val_arm[i] <<
       setw(20)<< fixed << setprecision(2) << ((float)timer_val_arm[i]/(float)timer_val_fgpu[i])<<endl;
