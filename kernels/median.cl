@@ -54,7 +54,7 @@
 //   out[x*rowLen+y] = p11;
 // }
 
-__kernel void median(__global unsigned *in, __global uchar4 *out){
+__kernel void median(__global unsigned *in, __global unsigned *out){
   unsigned x = get_global_id(1);
   unsigned y = get_global_id(0);
   unsigned rowLen = get_global_size(0);
@@ -62,16 +62,21 @@ __kernel void median(__global unsigned *in, __global uchar4 *out){
   unsigned p10, p11, p12;
   unsigned p20, p21, p22;
   unsigned res = 0;
+  
+  bool border =  x < 1 | y < 1;
+  border |= (x>rowLen-2) | (y>rowLen-2);
+  if(border) 
+    return;
 
   // read pixels
   p00 = in[(x-1)*rowLen+y-1];
-  p01 = in[x*rowLen+y-1];
-  p02 = in[(x+1)*rowLen+y-1];
-  p10 = in[(x-1)*rowLen+y];
+  p10 = in[x*rowLen+y-1];
+  p20 = in[(x+1)*rowLen+y-1];
+  p01 = in[(x-1)*rowLen+y];
   p11 = in[x*rowLen+y];
-  p12 = in[(x+1)*rowLen+y];
-  p20 = in[(x-1)*rowLen+y+1];
-  p21 = in[x*rowLen+y+1];
+  p21 = in[(x+1)*rowLen+y];
+  p02 = in[(x-1)*rowLen+y+1];
+  p12 = in[x*rowLen+y+1];
   p22 = in[(x+1)*rowLen+y+1];
 
   // calculate r values
@@ -99,32 +104,22 @@ __kernel void median(__global unsigned *in, __global uchar4 *out){
   //sort diagonal
   sort3(p00r, p11r, p22r);
 
-  out[x*rowLen+y].x = p11r;
+  res = p11r;
 
   // calculate g values
   unsigned p00g, p01g, p02g;
   unsigned p10g, p11g, p12g;
   unsigned p20g, p21g, p22g;
   
-  p00 >>= 8;
-  p10 >>= 8;
-  p20 >>= 8;
-  p10 >>= 8;
-  p11 >>= 8;
-  p12 >>= 8;
-  p20 >>= 8;
-  p21 >>= 8;
-  p22 >>= 8;
-
-  p00g = p00 & 255;
-  p01g = p01 & 255;
-  p02g = p02 & 255;
-  p10g = p10 & 255;
-  p11g = p11 & 255;
-  p12g = p12 & 255;
-  p20g = p20 & 255;
-  p21g = p21 & 255;
-  p22g = p22 & 255;
+  p00g = (p00>>8) & 255;
+  p01g = (p01>>8) & 255;
+  p02g = (p02>>8) & 255;
+  p10g = (p10>>8) & 255;
+  p11g = (p11>>8) & 255;
+  p12g = (p12>>8) & 255;
+  p20g = (p20>>8) & 255;
+  p21g = (p21>>8) & 255;
+  p22g = (p22>>8) & 255;
   // sort rows
   sort3(p00g, p01g, p02g);
   sort3(p10g, p11g, p12g);
@@ -136,7 +131,7 @@ __kernel void median(__global unsigned *in, __global uchar4 *out){
   //sort diagonal
   sort3(p00g, p11g, p22g);
 
-  out[x*rowLen+y].y = p11g;
+  res |= p11g<<8;
 
 
   // calculate b values
@@ -144,25 +139,15 @@ __kernel void median(__global unsigned *in, __global uchar4 *out){
   unsigned p10b, p11b, p12b;
   unsigned p20b, p21b, p22b;
   
-  p00 >>= 8;
-  p10 >>= 8;
-  p20 >>= 8;
-  p10 >>= 8;
-  p11 >>= 8;
-  p12 >>= 8;
-  p20 >>= 8;
-  p21 >>= 8;
-  p22 >>= 8;
-
-  p00b = p00 & 255;
-  p01b = p01 & 255;
-  p02b = p02 & 255;
-  p10b = p10 & 255;
-  p11b = p11 & 255;
-  p12b = p12 & 255;
-  p20b = p20 & 255;
-  p21b = p21 & 255;
-  p22b = p22 & 255;
+  p00b = (p00>>16) & 255;
+  p01b = (p01>>16) & 255;
+  p02b = (p02>>16) & 255;
+  p10b = (p10>>16) & 255;
+  p11b = (p11>>16) & 255;
+  p12b = (p12>>16) & 255;
+  p20b = (p20>>16) & 255;
+  p21b = (p21>>16) & 255;
+  p22b = (p22>>16) & 255;
   // sort rows
   sort3(p00b, p01b, p02b);
   sort3(p10b, p11b, p12b);
@@ -174,5 +159,7 @@ __kernel void median(__global unsigned *in, __global uchar4 *out){
   //sort diagonal
   sort3(p00b, p11b, p22b);
 
-  out[x*rowLen+y].z = p11b;
+  res |= p11b << 16;
+
+  out[x*rowLen+y] = res;
 }

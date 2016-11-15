@@ -10,7 +10,7 @@ int main()
   // The kernel will be executed for problem sizes of 64, 64*2, ... , 64*2^(test_vec_len-1)
   const unsigned test_vec_len = 7;
   // Executions & time measurements will be repeated nruns times 
-  const unsigned nruns = 1;
+  const unsigned nruns = 10;
   
   if(check_results)
     xil_printf("\n\r---Entering main (checking FGPU results is" ANSI_COLOR_GREEN" active" ANSI_COLOR_RESET ") ---\n\r");

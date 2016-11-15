@@ -2,8 +2,10 @@
 connect
 
 # program bitstream
-fpga ../../bitstreams/V2_8CUs_SubIntegr_2AXIs_230MHz.bit
-# fpga ../../bitstreams/V2_8CUs_SubIntegr_2AXIs_2TAGM_230MHz.bit
+# fpga ../../bitstreams/V2_8CUs_SubInteger_6ALUs_210MHz.bit
+fpga ../../bitstreams/bitstream_8CUs.bit
+# fpga ../../bitstreams/V2_8CUs_SubInteger_2AXIs_230MHz.bit
+# fpga ../../bitstreams/V2_8CUs_SubInteger_2AXIs_2TAGM_230MHz.bit
 # fpga ../../bitstreams/V2_8CUs_Atomic_SubInteger_235MHz.bit
 
 

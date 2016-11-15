@@ -1,5 +1,7 @@
 #include "kernel_descriptor.hpp"
 
+#define PRINT_ERRORS            1
+
 extern unsigned int *code; // binary storde in code.c as an array
 
 template<typename T>
@@ -82,9 +84,10 @@ void kernel<T>::initialize_memory()
   unsigned i;
   T *param1_ptr = (T*) param1;
   T *target_ptr = (T*) target_fgpu;
+  srand(1);
   for(i = 0; i < problemSize; i++) 
   {
-    param1_ptr[i] = (T)i;
+    param1_ptr[i] = rand();
     target_ptr[i] = 0;
   }
   Xil_DCacheFlush(); // flush data to global memory
@@ -122,30 +125,93 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     T *target_ptr = target_arm;
     T *param1_ptr = param1;
     unsigned Size = size0;
+    // printf("size0 = %d\n", Size);
 
     XTime_GetTime(&tStart);
 
-    for(j = 1; j < Size-1; j++)
+    for(i = 1; i < Size-1; i++)
     {
-      for(i = 1;i < Size-1; i++)
+      for(j = 1;j < Size-1; j++)
       {
-          unsigned p00 = param1_ptr[(j-1)*Size+i-1];
-          unsigned p01 = param1_ptr[j*Size+i-1];
-          unsigned p02 = param1_ptr[(j+1)*Size+i-1];
-          unsigned p10 = param1_ptr[(j-1)*Size+i];
-          unsigned p11 = param1_ptr[j*Size+i];
-          unsigned p12 = param1_ptr[(j+1)*Size+i];
-          unsigned p20 = param1_ptr[(j-1)*Size+i+1];
-          unsigned p21 = param1_ptr[j*Size+i+1];
-          unsigned p22 = param1_ptr[(j+1)*Size+i+1];
-          sort3(&p00, &p01, &p02);
-          sort3(&p10, &p11, &p12);
-          sort3(&p20, &p21, &p22);
-          sort3(&p00, &p10, &p20);
-          sort3(&p01, &p11, &p21);
-          sort3(&p02, &p12, &p22);
-          sort3(&p00, &p11, &p22);
-          target_ptr[j*Size+i] = p11;
+          unsigned p00 = param1_ptr[(i-1)*Size+j-1];
+          unsigned p10 = param1_ptr[i*Size+j-1];
+          unsigned p20 = param1_ptr[(i+1)*Size+j-1];
+          unsigned p01 = param1_ptr[(i-1)*Size+j];
+          unsigned p11 = param1_ptr[i*Size+j];
+          unsigned p21 = param1_ptr[(i+1)*Size+j];
+          unsigned p02 = param1_ptr[(i-1)*Size+j+1];
+          unsigned p12 = param1_ptr[i*Size+j+1];
+          unsigned p22 = param1_ptr[(i+1)*Size+j+1];
+          
+          // r channel
+          unsigned p00r, p01r, p02r;
+          unsigned p10r, p11r, p12r;
+          unsigned p20r, p21r, p22r;
+          p00r = p00 & 0xFF;
+          p01r = p01 & 0xFF;
+          p02r = p02 & 0xFF;
+          p10r = p10 & 0xFF;
+          p11r = p11 & 0xFF;
+          p12r = p12 & 0xFF;
+          p20r = p20 & 0xFF;
+          p21r = p21 & 0xFF;
+          p22r = p22 & 0xFF;
+          sort3(&p00r, &p01r, &p02r);
+          sort3(&p10r, &p11r, &p12r);
+          sort3(&p20r, &p21r, &p22r);
+          sort3(&p00r, &p10r, &p20r);
+          sort3(&p01r, &p11r, &p21r);
+          sort3(&p02r, &p12r, &p22r);
+          sort3(&p00r, &p11r, &p22r);
+
+          // g channel
+          unsigned p00g, p01g, p02g;
+          unsigned p10g, p11g, p12g;
+          unsigned p20g, p21g, p22g;
+          p00g = (p00>>8)  & 0xFF;
+          p01g = (p01>>8)  & 0xFF;
+          p02g = (p02>>8)  & 0xFF;
+          p10g = (p10>>8)  & 0xFF;
+          p11g = (p11>>8)  & 0xFF;
+          p12g = (p12>>8)  & 0xFF;
+          p20g = (p20>>8)  & 0xFF;
+          p21g = (p21>>8)  & 0xFF;
+          p22g = (p22>>8)  & 0xFF;
+          sort3(&p00g, &p01g, &p02g);
+          sort3(&p10g, &p11g, &p12g);
+          sort3(&p20g, &p21g, &p22g);
+          sort3(&p00g, &p10g, &p20g);
+          sort3(&p01g, &p11g, &p21g);
+          sort3(&p02g, &p12g, &p22g);
+          sort3(&p00g, &p11g, &p22g);
+          // if(i*Size+j == 10){
+          //   xil_printf("%10x%10x%10x\n\r%10x%10x%10x\n\r%10x%10x%10x\n\r\n\r",p00g,p01g,p02g,p10g,p11g,p12g,p20g,p21g,p22g);
+          // }
+
+          // b channel
+          unsigned p00b, p01b, p02b;
+          unsigned p10b, p11b, p12b;
+          unsigned p20b, p21b, p22b;
+          p00b = (p00>>16)  & 0xFF;
+          p01b = (p01>>16)  & 0xFF;
+          p02b = (p02>>16)  & 0xFF;
+          p10b = (p10>>16)  & 0xFF;
+          p11b = (p11>>16)  & 0xFF;
+          p12b = (p12>>16)  & 0xFF;
+          p20b = (p20>>16)  & 0xFF;
+          p21b = (p21>>16)  & 0xFF;
+          p22b = (p22>>16)  & 0xFF;
+          
+          sort3(&p00b, &p01b, &p02b);
+          sort3(&p10b, &p11b, &p12b);
+          sort3(&p20b, &p21b, &p22b);
+          sort3(&p00b, &p10b, &p20b);
+          sort3(&p01b, &p11b, &p21b);
+          sort3(&p02b, &p12b, &p22b);
+          sort3(&p00b, &p11b, &p22b);
+
+          // target_ptr[i*Size+j] = p11r | (p11g<<8) ;
+          target_ptr[i*Size+j] = p11r | (p11g<<8) | (p11b<<16);
       }
     }
 
@@ -171,22 +237,31 @@ void kernel<T>::check_FGPU_results()
 {
   unsigned i, j, nErrors = 0;
   
-  for (i = 1; i < rowLen-1; i++)
+  // xil_printf("\n\r");
+  // for(i = 0; i < rowLen; i++){
+  //   for(j = 0; j < rowLen; j++)
+  //     xil_printf("%10x", param1[i*rowLen+j]);
+  //   xil_printf("\n\r");
+  // }
+
+
+  for (i = 1; i < rowLen-1; i++) 
+  {
     for (j = 1; j < rowLen-1; j++)
-      if(target_arm[i*rowLen+j] != target_fgpu[i*rowLen+j])
+    {
+      if((target_arm[i*rowLen+j]&0x00FFFFFF) != (target_fgpu[i*rowLen+j]&0x00FFFFFF))
       {
-        if( typeid(T) == typeid(unsigned) ) {
-          #if PRINT_ERRORS
-            xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, (unsigned)target_fgpu[i], (unsigned) target_arm[i]);
-          #endif
-        }
+        #if PRINT_ERRORS
+        if(nErrors < 50)
+          xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i*rowLen+j, (unsigned)target_fgpu[i*rowLen + j], (unsigned) target_arm[i*rowLen + j]);
+        #endif
         nErrors++;
       }
+    }
+  }
   if(nErrors != 0) {
     xil_printf("Memory check failed (nErrors = %d)!\n\r", nErrors);
-      if( typeid(T) != typeid(int) )
-        xil_printf("WARNING: Overflow may cause some mismatch between ARM and FGPU results\n");
-    }
+  }
 }
 template<typename T>
 unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
