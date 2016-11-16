@@ -17,9 +17,9 @@ median:
       2c:	63 04 00 32 	or	r3, r3, r1
       30:	05 00 00 a2 	size	r5, 0
       34:	a1 f8 ff 11 	addi	r1, r5, -2
-      38:	26 08 00 b6 	sltu	r6, r1, r2
+      38:	26 10 00 b6 	sltu	r6, r1, r4
       3c:	63 18 00 32 	or	r3, r3, r6
-      40:	21 10 00 b6 	sltu	r1, r1, r4
+      40:	21 08 00 b6 	sltu	r1, r1, r2
       44:	61 04 00 32 	or	r1, r3, r1
       48:	01 3c 07 63 	bne	r1, r0, 463
       4c:	03 00 00 a8 	lp	r3, 0

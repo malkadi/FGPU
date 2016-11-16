@@ -19,40 +19,6 @@
   (c) = pos_a == 2 ? tmp_a:(c);         \
   (c) = pos_b == 2 ? tmp_b:(c);         \
 }
-// void filter_channel()
-
-
-// __kernel void median(__global unsigned *in, __global unsigned *out){
-//   unsigned x = get_global_id(1);
-//   unsigned y = get_global_id(0);
-//   unsigned rowLen = get_global_size(0);
-//   unsigned p00, p01, p02;
-//   unsigned p10, p11, p12;
-//   unsigned p20, p21, p22;
-//
-//   // read pixels
-//   p00 = in[(x-1)*rowLen+y-1];
-//   p01 = in[x*rowLen+y-1];
-//   p02 = in[(x+1)*rowLen+y-1];
-//   p10 = in[(x-1)*rowLen+y];
-//   p11 = in[x*rowLen+y];
-//   p12 = in[(x+1)*rowLen+y];
-//   p20 = in[(x-1)*rowLen+y+1];
-//   p21 = in[x*rowLen+y+1];
-//   p22 = in[(x+1)*rowLen+y+1];
-//   // sort rows
-//   sort3(p00, p01, p02);
-//   sort3(p10, p11, p12);
-//   sort3(p20, p21, p22);
-//   //sort columns
-//   sort3(p00, p10, p20);
-//   sort3(p01, p11, p21);
-//   sort3(p02, p12, p22);
-//   //sort diagonal
-//   sort3(p00, p11, p22);
-//
-//   out[x*rowLen+y] = p11;
-// }
 
 __kernel void median(__global unsigned *in, __global unsigned *out){
   unsigned x = get_global_id(1);
@@ -63,8 +29,8 @@ __kernel void median(__global unsigned *in, __global unsigned *out){
   unsigned p20, p21, p22;
   unsigned res = 0;
   
-  bool border =  x < 1 | y < 1;
-  border |= (x>rowLen-2) | (y>rowLen-2);
+  // return on boarder pixels
+  bool border =  x < 1 | y < 1 | (x>rowLen-2) | (y>rowLen-2);
   if(border) 
     return;
 

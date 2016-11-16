@@ -237,14 +237,6 @@ void kernel<T>::check_FGPU_results()
 {
   unsigned i, j, nErrors = 0;
   
-  // xil_printf("\n\r");
-  // for(i = 0; i < rowLen; i++){
-  //   for(j = 0; j < rowLen; j++)
-  //     xil_printf("%10x", param1[i*rowLen+j]);
-  //   xil_printf("\n\r");
-  // }
-
-
   for (i = 1; i < rowLen-1; i++) 
   {
     for (j = 1; j < rowLen-1; j++)

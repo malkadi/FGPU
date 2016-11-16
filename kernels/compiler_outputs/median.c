@@ -13,9 +13,9 @@ unsigned int median[] = {
 	0x32000463,
 	0xa2000005,
 	0x11fff8a1,
-	0xb6000826,
+	0xb6001026,
 	0x32001863,
-	0xb6001021,
+	0xb6000821,
 	0x32000461,
 	0x63073c01,
 	0xa8000003,
@@ -484,4 +484,3 @@ unsigned int median[] = {
 	0x11004bff,
 	0x92000000
 };
-unsigned *code = median;
