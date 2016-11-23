@@ -44,8 +44,8 @@ copy_byte:
       80:	04 00 00 a0 	lid	r4, 0
       84:	05 00 00 a1 	wgoff	r5, 0
       88:	a1 10 00 10 	add	r1, r5, r4
-      8c:	63 04 00 10 	add	r3, r3, r1
-      90:	04 0c 00 74 	lw	r4, r3[r0]
+      8c:	24 0c 00 71 	lb	r4, r3[r1]
+      90:	63 04 00 10 	add	r3, r3, r1
       94:	63 7c 00 35 	xori	r3, r3, 31
       98:	63 0c 00 21 	slli	r3, r3, 3
       9c:	83 0c 00 20 	sll	r3, r4, r3

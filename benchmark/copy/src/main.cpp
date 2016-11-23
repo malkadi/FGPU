@@ -1,9 +1,9 @@
 #include "aux_functions.hpp"
 using namespace std;
 
-#define TYPE  unsigned 
+// #define TYPE  unsigned 
 // #define TYPE  unsigned short
-// #define TYPE  unsigned char
+#define TYPE  unsigned char
 
 int main()
 {

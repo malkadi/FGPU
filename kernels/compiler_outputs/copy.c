@@ -34,8 +34,8 @@ unsigned int copy[] = {
 	0xa0000004,
 	0xa1000005,
 	0x100010a1,
+	0x71000c24,
 	0x10000463,
-	0x74000c04,
 	0x35007c63,
 	0x21000c63,
 	0x20000c83,
@@ -51,6 +51,4 @@ unsigned int copy[] = {
 	0x7c000823,
 	0x92000000
 };
-
-
-unsigned int *code = copy;
+unsigned *code = copy;

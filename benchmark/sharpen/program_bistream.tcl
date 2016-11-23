@@ -2,7 +2,6 @@
 connect
 
 # program bitstream
-# fpga ../../bitstreams/V2_8CUs_noAtomic_noSubInteger_250MHz.bit
 fpga ../../bitstreams/V2_8CUs_SubInteger_2K_LMEM_240MHz.bit
 
 
