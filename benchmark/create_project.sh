@@ -7,14 +7,15 @@ rm -rf "FGPU_hw"
 rm -rf "FGPU_bsp"
 rm -rf "SDK.log"
 rm -rf ".metadata"
-# create hardware and bsp projects
-xsct create_bsp.tcl "FGPU"
 
 if [ $# -eq 0 ]; then
+  # create hardware and bsp projects
+  xsct create_bsp.tcl "FGPU"
   
   for benchmarkDir in $(find -maxdepth 1 -mindepth 1 -type d) # iterate on all subfloders
   do
     dirNameLen=${#benchmarkDir}
+    echo $benchmarkDir
     if [ ${benchmarkDir:2:1} = "." ]; then # e.g. check x in "./xyz"
       # ignore hidden directories (Xilinx creates .Xil when compiling with the SDK)
       continue;
@@ -25,16 +26,24 @@ if [ $# -eq 0 ]; then
     fi
     benchmark=${benchmarkDir:2:$dirNameLen-2}
 
-    xsct create_project.tcl $benchmark
-
+    if [ $benchmarkDir = "./MicroBlaze" ]; then
+      # create MicroBlaze benchmark
+      xsct scripts/create_MicroBlaze_project.tcl $benchmark
+      #replace the linking script
+      cp scripts/lscript_MicroBlaze.ld $benchmark/src/lscript.ld
+    else
+      # create ARM/FGPU benchmarks
+      xsct create_project.tcl $benchmark
+      #replace the linking script
+      cp scripts/lscript.ld $benchmark/src/
+    fi
     # delete some unnecessary files that are generated on project creation
     rm $benchmark/src/main.cc
     rm $benchmark/src/Xilinx.spec
     rm $benchmark/src/README.txt
-    #replace the linking script
-    cp scripts/lscript.ld $benchmark/src/
-
+    
     ./compile.sh $benchmark
+    
   done
 else
   benchmark=$1
@@ -44,15 +53,26 @@ else
     benchmark=${benchmark:0:$benchmarkLen-1}
   fi
   
-  xsct create_project.tcl $benchmark
+  if [ $benchmark = "MicroBlaze" ]; then
+    rm -rf MicroBlaze_bsp
+    rm -rf MicroBlaze_hw
+    # create MicroBlaze benchmark
+    xsct scripts/create_MicroBlaze_project.tcl $benchmark
+    #replace the linking script
+    cp scripts/lscript_MicroBlaze.ld $benchmark/src/
+  else
+    # create hardware and bsp projects
+    xsct create_bsp.tcl "FGPU"
+    xsct create_project.tcl $benchmark
+    #replace the linking script
+    cp scripts/lscript.ld $benchmark/src/
+  fi
 
   # delete some unnecessary files that are generated on project creation
   rm $benchmark/src/main.cc
   rm $benchmark/src/Xilinx.spec
   rm $benchmark/src/README.txt
-  #replace the linking script
-  cp scripts/lscript.ld $benchmark/src/
-  
+
   ./compile.sh $benchmark
   
 fi
