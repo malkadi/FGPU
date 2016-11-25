@@ -1,6 +1,6 @@
-#define FIR_LEN                             193
-#define FIR_POS                             0
-#define FIR_HALF_POS                        19
-#define FIR_HALF_IMPROVED_POS               48
-#define FIR_BYTE_POS                        92
-#define FIR_BYTE_IMPROVED_POS               120
+#define PARALLEL_SELECTION_LEN              196
+#define PARALLELSELECTION_POS               0
+#define PARALLELSELECTION_HALF_POS          22
+#define PARALLELSELECTION_HALF_IMPROVED_POS 58
+#define PARALLELSELECTION_BYTE_IMPROVED_POS 101
+#define PARALLELSELECTION_BYTE_POS          163

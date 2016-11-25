@@ -6,38 +6,35 @@ template<typename T>
 kernel<T>::kernel(unsigned max_size, bool vector_types)
 {
   filterLen = 12;
-  // param1 = (T *) 0x30000000;
-  // coeffs = (T *) 0x31000000;
-  // target = (T *) 0x32000000;
   param1 = new T[max_size+filterLen];
-  coeffs = new T[filterLen];
-  target = new T[max_size];
+  target_fgpu = new T[max_size];
+  target_arm = new T[max_size];
   use_vector_types = vector_types;
 }
 template<typename T>
 kernel<T>::~kernel() 
 {
   delete[] param1;
-  delete[] coeffs;
-  delete[] target;
+  delete[] target_fgpu;
+  delete[] target_arm;
 }
 template<typename T>
 void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
-  unsigned int size = FIR_LEN;
+  unsigned int size = PARALLEL_SELECTION_LEN;
   if (typeid(T) == typeid(int))
-    start_addr = FIR_POS;
+    start_addr = PARALLELSELECTION_POS;
   else if (typeid(T) == typeid( short)) 
     if(use_vector_types)
-      start_addr = FIR_HALF_IMPROVED_POS;
+      start_addr = PARALLELSELECTION_HALF_IMPROVED_POS;
     else
-      start_addr = FIR_HALF_POS;
+      start_addr = PARALLELSELECTION_HALF_POS;
   else if (typeid(T) == typeid(char))
     if(use_vector_types)
-      start_addr = FIR_BYTE_IMPROVED_POS;
+      start_addr = PARALLELSELECTION_BYTE_IMPROVED_POS;
     else
-      start_addr = FIR_BYTE_POS;
+      start_addr = PARALLELSELECTION_BYTE_POS;
   else
     assert(0 && "unsupported type");
   unsigned i = 0;
@@ -65,12 +62,7 @@ void kernel<T>::download_descriptor()
   lram_ptr[10] = n_wg2-1;
   lram_ptr[11] = (nParams << 28) | wg_size;
   lram_ptr[16] = (unsigned) param1;
-  lram_ptr[17] = (unsigned) coeffs;
-  lram_ptr[18] = (unsigned) target;
-  lram_ptr[19] = (unsigned) filterLen;
-  // printf("param1 = %d\n", (unsigned) param1);
-  // printf("coeffs = %d\n", (unsigned) coeffs);
-  // printf("target = %d\n", (unsigned) target);
+  lram_ptr[17] = (unsigned) target_fgpu;
 }
 template<typename T>
 void kernel<T>::prepare_descriptor(unsigned int Size)
@@ -85,13 +77,9 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   }
   else if (typeid(T) == typeid(short)) {
     dataSize = 2 * problemSize; // 2 bytes per word
-    if(use_vector_types)
-      size0 = Size / 2;
   }
   else if (typeid(T) == typeid(char)) {
     dataSize = 1 * problemSize; // 1 bytes per word
-    if(use_vector_types)
-      size0 = Size / 4;
   }
 
   if(size0 < 64)
@@ -100,23 +88,20 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   compute_descriptor();
 
   offset0 = offset1 = offset2 = 0;
-  nParams = 4; // number of parameters
+  nParams = 2; // number of parameters
 }
 template<typename T>
 void kernel<T>::initialize_memory()
 {
   unsigned i;
   T *param1_ptr = (T*) param1;
-  T *coeffs_ptr = (T*) coeffs;
-  T *target_ptr = (T*) target;
+  T *target_ptr = (T*) target_fgpu;
+  srand(0);
   for(i = 0; i < problemSize; i++) 
   {
     param1_ptr[i] = (T)i;
+    // param1_ptr[i] = rand();
     target_ptr[i] = 0;
-  }
-  for(i = 0; i < filterLen; i++)
-  {
-    coeffs_ptr[i] = i;
   }
   Xil_DCacheFlush(); // flush data to global memory
 }
@@ -135,17 +120,19 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     Xil_DCacheInvalidate();
 
     // parametrs accessed during computations should be cashed
-    T *target_ptr = target;
+    T *target_ptr = target_arm;
     T *param1_ptr = param1;
-    T *coeffs_ptr = coeffs;
     unsigned Size = problemSize;
 
     XTime_GetTime(&tStart);
-    for(i = 0; i < Size; i++) {
-      int res = 0;
-      for(j = 0; j < filterLen; j++)
-        res += param1_ptr[i+j]*coeffs_ptr[j];
-      target_ptr[i] = res;
+    for(i = 0; i < Size; i++)
+    {
+      unsigned pos = 0;
+      T tmp = param1_ptr[i];
+      for(j = 0; j < Size; j++) {
+        pos += (param1_ptr[j] < tmp) || (param1_ptr[j]==tmp && j < i);
+      }
+      target_ptr[pos] = tmp;
     }
 
     // flush the results to the global memory 
@@ -153,7 +140,7 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     if (dataSize > 16*1024)
       Xil_DCacheFlush();
     else
-      Xil_DCacheFlushRange((unsigned)target, dataSize);
+      Xil_DCacheFlushRange((unsigned)target_arm, dataSize);
     
     XTime_GetTime(&tEnd);
     exec_time += elapsed_time_us(tStart, tEnd);
@@ -168,17 +155,14 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
 template<typename T>
 void kernel<T>::check_FGPU_results()
 {
-  unsigned int i, j, nErrors = 0;
+  unsigned int i, nErrors = 0;
   
   Xil_DCacheInvalidate();
   for (i = 0; i < problemSize; i++) {
-    int res = 0;
-    for(j = 0; j < filterLen; j++)
-      res += param1[i+j]*coeffs[j];
-    if(target[i] != (T)res)
+    if((T)target_fgpu[i] != (T)target_arm[i])
     {
       #if PRINT_ERRORS
-        xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, (int)target[i], (int) res);
+        xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, (int)target_fgpu[i], (int) target_arm[i]);
       #endif
       nErrors++;
     }
@@ -223,11 +207,11 @@ template<typename T>
 void kernel<T>::print_name()
 {
   if( typeid(T) == typeid(int) )
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is fir word\n\r" ANSI_COLOR_RESET);
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is parallel selection sort word\n\r" ANSI_COLOR_RESET);
   else if (typeid(T) == typeid(short))
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is fir half word\n\r" ANSI_COLOR_RESET);
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is parallel selection sort half word\n\r" ANSI_COLOR_RESET);
   else if (typeid(T) == typeid(char))
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is fir byte\n\r" ANSI_COLOR_RESET);
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is parallel selection sort byte\n\r" ANSI_COLOR_RESET);
 }
 template<typename T>
 unsigned kernel<T>::get_problemSize() 

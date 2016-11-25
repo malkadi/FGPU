@@ -1,4 +1,4 @@
-#define SORT_LEN                            196
+#define PARALLEL_SELECTION_LEN              196
 #define PARALLELSELECTION_POS               0
 #define PARALLELSELECTION_HALF_POS          22
 #define PARALLELSELECTION_HALF_IMPROVED_POS 58

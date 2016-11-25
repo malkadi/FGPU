@@ -1,4 +1,4 @@
-unsigned int sort[] = {
+unsigned int parallel_selection[] = {
 	0xa8000022,
 	0xa8000003,
 	0xa0000004,
@@ -196,4 +196,4 @@ unsigned int sort[] = {
 	0x79000906,
 	0x92000000
 };
-unsigned *code = sort;
+unsigned *code = parallel_selection;

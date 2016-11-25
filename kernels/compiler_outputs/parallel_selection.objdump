@@ -1,5 +1,5 @@
 
-compiler_outputs/sort.bin:	file format ELF32-fgpu
+compiler_outputs/parallel_selection.bin:	file format ELF32-fgpu
 
 Disassembly of section .text:
 ParallelSelection:
