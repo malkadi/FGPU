@@ -3,14 +3,14 @@ using namespace std;
 
 #define TYPE  int 
 // #define TYPE  short
-// #define TYPE  unsigned char
+// #define TYPE  char
 
 int main()
 {
   // The correctness of all results will be checked at the end of each execution round
   const unsigned check_results = 1; 
   // The kernel will be executed for problem sizes of 64, 64*2, ... , 64*2^(test_vec_len-1)
-  const unsigned test_vec_len = 9;
+  const unsigned test_vec_len = 1;
   // Executions & time measurements will be repeated nruns times 
   const unsigned nruns = 1;
   // use vector types:ushort2 instead of ushort OR uchar4 instead of byte
@@ -27,38 +27,39 @@ int main()
 
   unsigned *timer_val_fgpu = new unsigned[test_vec_len]();
   unsigned *timer_val_arm = new unsigned[test_vec_len]();
+  unsigned *best_reduce_factor = new unsigned[test_vec_len]();
 
   // enable ARM caches
   Xil_ICacheEnable();
   Xil_DCacheEnable();
   // create kernel
   unsigned maxProblemSize = 64<<test_vec_len;
-  kernel<TYPE> parallel_selection_kernel(maxProblemSize, use_vector_types);
+  kernel<TYPE> sum_atomic_kernel(maxProblemSize, use_vector_types);
   // download binary to FGPU
-  parallel_selection_kernel.download_code();
+  sum_atomic_kernel.download_code();
 
 
-  parallel_selection_kernel.print_name();
+  sum_atomic_kernel.print_name();
   xil_printf("Problem Sizes :\n\r");
 
   for(size_index = 0; size_index < test_vec_len; size_index++)
   {
     // initiate the kernel descriptor for the required problem size
-    parallel_selection_kernel.prepare_descriptor(64 << size_index);
-    xil_printf("%-8u", parallel_selection_kernel.get_problemSize());
+    sum_atomic_kernel.prepare_descriptor(64 << size_index);
+    xil_printf("%-8u", sum_atomic_kernel.get_problemSize());
     fflush(stdout);
 
     // break if the requested problem size is set too big by mistake
-    if(parallel_selection_kernel.get_problemSize() > MAX_PROBLEM_SIZE){
+    if(sum_atomic_kernel.get_problemSize() > MAX_PROBLEM_SIZE) {
       xil_printf("Problem size exceeds limit!\n\r");
       break;
     }
-    // compute on ARM
-    timer_val_arm[size_index] = parallel_selection_kernel.compute_on_ARM(nruns);
 
     // compute on FGPU
-    timer_val_fgpu[size_index] = parallel_selection_kernel.compute_on_FGPU(nruns, check_results);
+    timer_val_fgpu[size_index] = sum_atomic_kernel.compute_on_FGPU(nruns, check_results, best_reduce_factor[size_index]);
 
+    // compute on ARM
+    timer_val_arm[size_index] = sum_atomic_kernel.compute_on_ARM(nruns);
     
     xil_printf("\n\r");
 
@@ -79,6 +80,7 @@ int main()
 
   delete[] timer_val_fgpu;
   delete[] timer_val_arm;
+  delete[] best_reduce_factor;
 
   return 0;
 }

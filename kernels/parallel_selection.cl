@@ -53,16 +53,16 @@ __kernel void ParallelSelection_half_improved(__global short2* in,__global short
   }while(j != n);
   out[pos] = ith;
 }
-__kernel void ParallelSelection_byte_improved(__global char4* in,__global char* out){
-  int i = get_global_id(0); // current thread
-  int n = get_global_size(0); // input size
-  __global char *in_char = (__global char*) in;
-  int ith = in_char[i];
-  int pos = 0, j = 0;
+__kernel void ParallelSelection_byte_improved(__global uchar4* in,__global uchar* out){
+  unsigned i = get_global_id(0); // current thread
+  unsigned n = get_global_size(0); // input size
+  __global unsigned char *in_char = (__global unsigned char*) in;
+  unsigned ith = in_char[i];
+  unsigned pos = 0, j = 0;
   do
   {
-    char4 tmp = in[j>>2];
-    int jth = tmp.x; 
+    uchar4 tmp = in[j>>2];
+    unsigned  jth = tmp.x; 
     bool smaller = (jth < ith);
     bool equal_and_smaller = (jth == ith && j < i);
     pos += smaller||equal_and_smaller;
@@ -85,15 +85,15 @@ __kernel void ParallelSelection_byte_improved(__global char4* in,__global char* 
   }while(j != n);
   out[pos] = ith;
 }
-__kernel void ParallelSelection_byte(__global char* in,__global char* out){
+__kernel void ParallelSelection_byte(__global unsigned char* in,__global unsigned char* out){
   int i = get_global_id(0); // current thread
   int n = get_global_size(0); // input size
-  int ith = in[i];
+  unsigned ith = in[i];
   // Compute position of in[i] in output
-  int pos = 0, j = 0;
+  unsigned pos = 0, j = 0;
   do
   {
-    int jth = in[j]; // broadcasted
+    unsigned jth = in[j]; // broadcasted
     bool smaller = (jth < ith);
     bool equal_and_smaller = (jth == ith && j < i);  // in[j] < in[i] ?
     pos += smaller||equal_and_smaller;
