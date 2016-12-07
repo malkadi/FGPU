@@ -3,16 +3,16 @@ cd `dirname $0`
 source ./set_paths.sh
 
 
-rm -rf "FGPU_hw"
-rm -rf "FGPU_bsp"
-rm -rf "SDK.log"
-rm -rf ".metadata"
+rm -rf "../FGPU_hw"
+rm -rf "../FGPU_bsp"
+rm -rf "../SDK.log"
+rm -rf "../.metadata"
 
 if [ $# -eq 0 ]; then
   # create hardware and bsp projects
   xsct create_bsp.tcl "FGPU"
   
-  for benchmarkDir in $(find -maxdepth 1 -mindepth 1 -type d) # iterate on all subfloders
+  for benchmarkDir in $(find .. -maxdepth 1 -mindepth 1 -type d) # iterate on all folders in benchmark folder
   do
     dirNameLen=${#benchmarkDir}
     echo $benchmarkDir
@@ -53,25 +53,26 @@ else
     benchmark=${benchmark:0:$benchmarkLen-1}
   fi
   
-  if [ $benchmark = "MicroBlaze" ]; then
-    rm -rf MicroBlaze_bsp
-    rm -rf MicroBlaze_hw
+  if [ "${benchmark,,}" = "microblaze" ]; then
+    benchmark="MicroBlaze"
+    rm -rf ../MicroBlaze_bsp
+    rm -rf ../MicroBlaze_hw
     # create MicroBlaze benchmark
-    xsct scripts/create_MicroBlaze_project.tcl $benchmark
+    xsct create_MicroBlaze_project.tcl ../MicroBlaze
     #replace the linking script
-    cp scripts/lscript_MicroBlaze.ld $benchmark/src/
+    cp lscript_MicroBlaze.ld ../MicroBlaze/src/
   else
     # create hardware and bsp projects
     xsct create_bsp.tcl "FGPU"
     xsct create_project.tcl $benchmark
     #replace the linking script
-    cp scripts/lscript.ld $benchmark/src/
+    cp lscript.ld ../$benchmark/src/
   fi
 
   # delete some unnecessary files that are generated on project creation
-  rm $benchmark/src/main.cc
-  rm $benchmark/src/Xilinx.spec
-  rm $benchmark/src/README.txt
+  rm ../$benchmark/src/main.cc
+  rm ../$benchmark/src/Xilinx.spec
+  rm ../$benchmark/src/README.txt
 
   ./compile.sh $benchmark
   

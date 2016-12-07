@@ -1,7 +1,7 @@
 if {$argc != 1} {puts "wrong number of arguments to create_sdk_project.tcl"; puts $argc;exit 1}
 set name [lindex $argv 0]
 #Set SDK workspace path
-setws "./"
+setws "../"
 # Create application projects
 createapp -name $name -hwproject FGPU_hw -bsp FGPU_bsp -proc ps7_cortexa9_0 -os standalone -lang c++ -app {Empty Application}
 # Configure the projects for best optimization

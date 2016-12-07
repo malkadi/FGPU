@@ -1,7 +1,7 @@
 if {$argc != 1} {puts "wrong number of arguments to create_sdk_project.tcl"; puts $argc;exit 1}
 set name [lindex $argv 0]
 #Set SDK workspace path
-setws "./"
+setws "../"
 # Create the HW project
 createhw -name $name\_hw -hwspec V2.hdf
 # Create  BSP projects
