@@ -25,9 +25,9 @@ class kernel{
   unsigned start_addr;
   //extra info
   unsigned problemSize, dataSize;
-  unsigned reduce_factor;
   T *param1, *target_fgpu, *target_arm;
-
+  unsigned reduce_factor;
+  
   void compute_descriptor();
   bool use_vector_types;
 public:
@@ -39,10 +39,10 @@ public:
   unsigned get_problemSize();
   unsigned compute_on_ARM(unsigned int n_runs);
   void initialize_memory();
-  unsigned compute_on_FGPU(unsigned n_runs, bool check_results, unsigned &best_reduce_factor);
+  unsigned compute_on_FGPU(unsigned n_runs, bool check_results, unsigned &best_param);
   void check_FGPU_results();
-  void print_name();
   bool update_reduce_factor_and_download(unsigned rfactor);
+  void print_name();
 
 };
 

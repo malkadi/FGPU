@@ -3,7 +3,7 @@ target datalayout = "E-m:m-p:32:32-i8:8:32-i16:16:32-i64:64-n32-S64"
 target triple = "mips-unknown-uknown"
 
 ; Function Attrs: nounwind
-define void @sum_atomic(i32* nocapture readonly %in, i32* %out, i32 signext %reduce_factor) #0 {
+define void @sum_atomic_word(i32* nocapture readonly %in, i32* %out, i32 signext %reduce_factor) #0 {
 entry:
   %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !19
   %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !20
@@ -183,7 +183,7 @@ attributes #1 = { nounwind }
 !opencl.kernels = !{!0, !6, !9, !12, !15}
 !llvm.ident = !{!18}
 
-!0 = !{void (i32*, i32*, i32)* @sum_atomic, !1, !2, !3, !4, !5}
+!0 = !{void (i32*, i32*, i32)* @sum_atomic_word, !1, !2, !3, !4, !5}
 !1 = !{!"kernel_arg_addr_space", i32 0, i32 0, i32 0}
 !2 = !{!"kernel_arg_access_qual", !"none", !"none", !"none"}
 !3 = !{!"kernel_arg_type", !"int*", !"int*", !"uint"}
@@ -202,14 +202,14 @@ attributes #1 = { nounwind }
 !16 = !{!"kernel_arg_type", !"char4*", !"char*", !"uint"}
 !17 = !{!"kernel_arg_base_type", !"char __attribute__((ext_vector_type(4)))*", !"char*", !"uint"}
 !18 = !{!"clang version 3.7.0 (tags/RELEASE_371/final)"}
-!19 = !{i32 13165}
-!20 = !{i32 13305}
-!21 = !{i32 12944}
+!19 = !{i32 13170}
+!20 = !{i32 13310}
+!21 = !{i32 12949}
 !22 = !{!23, !23, i64 0}
 !23 = !{!"int", !24, i64 0}
 !24 = !{!"omnipotent char", !25, i64 0}
 !25 = !{!"Simple C/C++ TBAA"}
-!26 = !{i32 13542}
+!26 = !{i32 13547}
 !27 = !{!28, !28, i64 0}
 !28 = !{!"short", !24, i64 0}
 !29 = !{!24, !24, i64 0}

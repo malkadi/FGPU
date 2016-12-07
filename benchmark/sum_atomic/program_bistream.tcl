@@ -4,7 +4,7 @@ connect
 # program bitstream
 # fpga ../../bitstreams/V2_8CUs_noAtomic_noSubInteger_250MHz.bit
 # fpga ../../bitstreams/bd_design_wrapper.bit
-fpga ../../bitstreams/V2_8CUs_Atomic_noSubInteger_245MHz.bit
+fpga ../../bitstreams/V2_8CUs_Atomic_noSubInteger_240MHz.bit
 # fpga ../../bitstreams/V2_8CUs_Atomic_SubInteger_235MHz.bit
 
 

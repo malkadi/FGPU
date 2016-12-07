@@ -1,5 +1,5 @@
 #include "FGPUlib.c"
-__kernel void sum_atomic(__global int *in, __global int *out, unsigned int reduce_factor) {
+__kernel void sum_atomic_word(__global int *in, __global int *out, unsigned int reduce_factor) {
   int x = get_global_id(0);
   int size0 = get_global_size(0);
   unsigned begin = x;

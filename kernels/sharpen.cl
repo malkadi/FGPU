@@ -1,6 +1,6 @@
 #include "FGPUlib.c"
 
-// The coding style of this kernel is developed and tested for maximum performance
+// The coding style of this kernel is developed and tested for best performance
 
 __kernel void sharpen5x5(__global unsigned *in, __global unsigned *out){
   unsigned x = get_global_id(1);

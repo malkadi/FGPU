@@ -2,7 +2,7 @@
 compiler_outputs/sum_atomic.bin:	file format ELF32-fgpu
 
 Disassembly of section .text:
-sum_atomic:
+sum_atomic_word:
        0:	43 00 00 a8 	lp	r3, 2
        4:	22 00 00 a8 	lp	r2, 1
        8:	04 00 00 a8 	lp	r4, 0
