@@ -14,7 +14,9 @@ if {![file exists $path/$HW_PROJ]} {
 }
 catch {
   deleteprojects -name $name -workspace-only
-  deleteprojects -name $bsp_name -workspace-only
+}
+catch {
+  deleteprojects -name $bsp_name
 }
 # Create  BSP projects
 createbsp -name $bsp_name -hwproject $HW_PROJ -proc ps7_cortexa9_1 -os standalone
@@ -27,4 +29,5 @@ configapp -app $name -set compiler-optimization {Optimize most (-O3)}
 configapp -app $name -add libraries {m}
 # Build bsp
 projects -build -type bsp -name $bsp_name
+projects -build -type app -name $name
 

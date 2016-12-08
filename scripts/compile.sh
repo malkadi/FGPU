@@ -7,5 +7,5 @@ if [ $# -ne 1 ]; then
 fi
 benchmark=`basename $1`
 path=`dirname $1`
-xsct -eval "setws $path; projects -build -type app -name $benchmark"
+xsct -quiet -eval "setws $path; projects -build -type app -name $benchmark"
 

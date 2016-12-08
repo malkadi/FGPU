@@ -6,9 +6,6 @@ cd ../benchmark
 BENCHMARK_DIR=`pwd`
 cd $SCRIPT_DIR
 
-#import all bsps and hardware projects into workspace
-# xsct -eval "setws $BENCHMARK_DIR; importprojects $BENCHMARK_DIR/.FGPU_hw; importprojects $BENCHMARK_DIR/.FGPU_bsp"
-
 if [ $# -eq 0 ]; then
   for benchmarkPath in $(find $BENCHMARK_DIR -maxdepth 1 -mindepth 1 -type d) # iterate on all folders in benchmark folder
   do
@@ -20,12 +17,12 @@ if [ $# -eq 0 ]; then
 
     if [ $benchmark = "MicroBlaze" ]; then
       # create MicroBlaze benchmark
-      xsct create_MicroBlaze_project.tcl $BENCHMARK_DIR
+      xsct -quiet create_MicroBlaze_project.tcl $BENCHMARK_DIR
       #replace the linking script
       cp lscript_MicroBlaze.ld $BENCHMARK_DIR/MicroBlaze/src/lscript.ld
     else
       # create an ARM/FGPU benchmark
-      xsct create_project.tcl $benchmark V2 $BENCHMARK_DIR
+      xsct -quiet create_project.tcl $benchmark V2 $BENCHMARK_DIR
       #replace the linking script
       cp lscript.ld $BENCHMARK_DIR/$benchmark/src/
     fi
@@ -44,19 +41,19 @@ else
 
   if [ "$benchmark" = "MicroBlaze" ]; then
     # create MicroBlaze benchmark
-    xsct create_MicroBlaze_project.tcl $BENCHMARK_DIR
+    xsct -quiet create_MicroBlaze_project.tcl $BENCHMARK_DIR
     #replace the linking script
     cp lscript_MicroBlaze.ld $BENCHMARK_DIR/MicroBlaze/src/lscript.ld
   elif [ $# -eq 2 ]; then 
     # create an ARM/FGPU benchmark
     if [ "$2" = "V1" ]; then
-      xsct create_project.tcl $benchmark V1 $BENCHMARK_DIR
+      xsct -quiet create_project.tcl $benchmark V1 $BENCHMARK_DIR
     else
-      xsct create_project.tcl $benchmark V2 $BENCHMARK_DIR
+      xsct -quiet create_project.tcl $benchmark V2 $BENCHMARK_DIR
     fi
   else
     # create an ARM/FGPU benchmark
-    xsct create_project.tcl $benchmark V2 $BENCHMARK_DIR
+    xsct -quiet create_project.tcl $benchmark V2 $BENCHMARK_DIR
   fi
   #replace the linking script
   cp lscript.ld $BENCHMARK_DIR/$benchmark/src/

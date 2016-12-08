@@ -19,8 +19,8 @@
 #define MEASURE_SYNC1 0x00000001
 #define MEASURE_SYNC2 0x00000002
 
-#define MEASURE_REFERENCE	0
-#define REFERENCE_SAMPLES	5000
+#define MEASURE_REFERENCE	1
+#define REFERENCE_SAMPLES	1000
 /* Global definitions for peripheral driver instances
  */
 XGpioPs gpio;

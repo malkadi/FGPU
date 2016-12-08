@@ -223,11 +223,10 @@ unsigned char readCurrent(unsigned char deviceAddress, unsigned char pageAddress
 
 float readVoltage_real(unsigned char deviceAddress, unsigned char pageAddress) {
     u8 SendArray[3];
-    u16 Voltage_Data;
     u16 data;
     float voltage;
     myusleep(10000);
-    Voltage_Data = readVoltage(deviceAddress,pageAddress ,SendArray);
+    readVoltage(deviceAddress,pageAddress ,SendArray);
     data = (u16)((SendArray[0]) | (SendArray[1]) << 8);
     //voltage = (float)data*0.000244; //Done in measure.c
     voltage = (float)data;
@@ -238,14 +237,10 @@ float readVoltage_real(unsigned char deviceAddress, unsigned char pageAddress) {
 double readCurrent_real(unsigned char deviceAddress, unsigned char pageAddress) {
     double current;
     u8 SendArray[3];
-    u16 Current_Data;
-    u16 data;
     myusleep(10000);
-	Current_Data  = readCurrent(deviceAddress, pageAddress, SendArray);
-	data = (u16)((SendArray[0]) | (SendArray[1]) << 8);
-	//printf("data = %x", data);
-	current = linear11ToFloat((unsigned char)SendArray[1],(unsigned char)SendArray[0]);
-	return current;
+    readCurrent(deviceAddress, pageAddress, SendArray);
+    current = linear11ToFloat((unsigned char)SendArray[1],(unsigned char)SendArray[0]);
+    return current;
 }
 
 

@@ -4,14 +4,15 @@ set hdf  [lindex $argv 1]
 set path [lindex $argv 2]
 #Set SDK workspace path
 setws $path
-
+getws
+getprojects
 set hw_proj .$name\_hw
 set bsp_proj .$name\_bsp
 
 #delete hw and bsp projects if already exists
 catch {
-  deleteprojects -name $hw_proj -workspace-only
-  deleteprojects -name $bsp_proj -workspace-only
+  deleteprojects -name $bsp_proj
+  deleteprojects -name $hw_proj
 }
 
 # Create the HW project
@@ -24,3 +25,4 @@ if { $name == "MicroBlaze" } {
 }
 # Build bsp
 projects -build -type bsp -name $bsp_proj
+exit
