@@ -3,9 +3,12 @@ connect
 
 # program bitstream
 switch $benchmark {
-  "sum_atomic" -
   "copy" {
     set bitstream ../bitstreams/V2_8CUs_Atomic_noSubInteger_240MHz.bit
+  }
+  "sum_atomic" {
+    set bitstream ../bitstreams/V1_8CUs.bit
+    # set bitstream ../bitstreams/V2_8CUs_Atomic_noSubInteger_240MHz.bit
   }
   "vec_add" -
   "vec_mul" -
@@ -35,6 +38,6 @@ targets -set -filter {name =~ "ARM*#0"}
 rst -processor
 
 # PS7 initialization
-source ../.FGPU_hw/ps7_init.tcl
+source .FGPU_V2_hw/ps7_init.tcl
 ps7_init
 ps7_post_config

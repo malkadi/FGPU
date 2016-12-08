@@ -25,7 +25,7 @@ if [ $# -eq 0 ]; then
       cp lscript_MicroBlaze.ld $BENCHMARK_DIR/MicroBlaze/src/lscript.ld
     else
       # create an ARM/FGPU benchmark
-      xsct create_project.tcl $benchmark $BENCHMARK_DIR
+      xsct create_project.tcl $benchmark V2 $BENCHMARK_DIR
       #replace the linking script
       cp lscript.ld $BENCHMARK_DIR/$benchmark/src/
     fi
@@ -41,18 +41,25 @@ else
   benchmark=`basename $1`
   BENCHMARK_DIR=`dirname $1`
   BENCHMARK_DIR=`realpath $BENCHMARK_DIR`
-  
-  if [ "${benchmark,,}" = "microblaze" ]; then
+
+  if [ "$benchmark" = "MicroBlaze" ]; then
     # create MicroBlaze benchmark
     xsct create_MicroBlaze_project.tcl $BENCHMARK_DIR
     #replace the linking script
     cp lscript_MicroBlaze.ld $BENCHMARK_DIR/MicroBlaze/src/lscript.ld
+  elif [ $# -eq 2 ]; then 
+    # create an ARM/FGPU benchmark
+    if [ "$2" = "V1" ]; then
+      xsct create_project.tcl $benchmark V1 $BENCHMARK_DIR
+    else
+      xsct create_project.tcl $benchmark V2 $BENCHMARK_DIR
+    fi
   else
     # create an ARM/FGPU benchmark
-    xsct create_project.tcl $benchmark $BENCHMARK_DIR
-    #replace the linking script
-    cp lscript.ld $BENCHMARK_DIR/$benchmark/src/
+    xsct create_project.tcl $benchmark V2 $BENCHMARK_DIR
   fi
+  #replace the linking script
+  cp lscript.ld $BENCHMARK_DIR/$benchmark/src/
 
   # delete some unnecessary files that are generated on project creation
   rm $BENCHMARK_DIR/$benchmark/src/main.cc

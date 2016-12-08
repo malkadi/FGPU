@@ -2,10 +2,6 @@ if {$argc != 1} {puts "wrong number of arguments to create_sdk_project.tcl"; put
 set path [lindex $argv 0]
 #Set SDK workspace path
 setws $path
-# Create the HW project
-createhw -name .MicroBlaze_hw -hwspec MicroBlaze.hdf
-# Create  BSP projects
-createbsp -name .MicroBlaze_bsp -hwproject .MicroBlaze_hw -proc microblaze_0 -os standalone
 # Create application projects
 createapp -name MicroBlaze -hwproject .MicroBlaze_hw -bsp .MicroBlaze_bsp -proc microblaze_0 -os standalone -lang c -app {Empty Application}
 # Configure the projects for best optimization

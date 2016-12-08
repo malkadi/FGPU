@@ -18,3 +18,21 @@ u64 elapsed_time_us(XTime tStart, XTime tEnd)
   time_elapsed /= COUNTS_PER_SECOND;
   return time_elapsed;
 }
+
+void power_measure::set_idle() {
+  cur_state = idle;
+  *msync = 1;
+  Xil_DCacheFlushRange((unsigned) msync, 4);
+}
+
+void power_measure::start() {
+  cur_state = running;
+  *msync = 2;
+  Xil_DCacheFlushRange((unsigned) msync, 4);
+}
+
+void power_measure::stop() {
+  cur_state = finished;
+  *msync = 3;
+  Xil_DCacheFlushRange((unsigned) msync, 4);
+}

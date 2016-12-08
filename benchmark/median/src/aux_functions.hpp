@@ -8,6 +8,8 @@
 #define AUX_FUNCTIONS_H_
 
 #define FGPU_BASEADDR         0x43C00000
+// This address is used synchronize the power measurement that runs on s on the second arm core
+#define POWER_SYNC_ADDR       0x3FFFFF20  
 
 #include <iostream>
 #include <iomanip>
@@ -30,6 +32,19 @@
 #define MAX_PROBLEM_SIZE    256*1024  // The execution will break if bigger problem sizes are executed
 #define MAX_MES_TIME_S          2     // maximum execution time of a kernel at any size.
                                       // The execution will not repeat if this number is exceeded
+
+class power_measure {
+  enum state {uninitialized, idle, running, finished};
+  state cur_state;
+  unsigned *msync;
+public:
+  power_measure():msync((unsigned *)POWER_SYNC_ADDR){}
+  void set_idle();
+  void start();
+  void stop();
+};
+
+
 
 // Control Registers of FGPU
 #define STATUS_REG_ADDR         (FGPU_BASEADDR+ 0x8000)

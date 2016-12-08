@@ -1,11 +1,26 @@
-if {$argc != 2} {puts "wrong number of arguments to create_sdk_project.tcl"; puts $argc;exit 1}
+if {$argc != 3} {puts "wrong number of arguments to create_sdk_project.tcl"; puts $argc;exit 1}
 set name [lindex $argv 0]
-set path [lindex $argv 1]
+set hdf  [lindex $argv 1]
+set path [lindex $argv 2]
 #Set SDK workspace path
 setws $path
+
+set hw_proj .$name\_hw
+set bsp_proj .$name\_bsp
+
+#delete hw and bsp projects if already exists
+catch {
+  deleteprojects -name $hw_proj -workspace-only
+  deleteprojects -name $bsp_proj -workspace-only
+}
+
 # Create the HW project
-createhw -name .$name\_hw -hwspec V2.hdf
+createhw -name $hw_proj -hwspec $hdf
 # Create  BSP projects
-createbsp -name .$name\_bsp -hwproject .$name\_hw -proc ps7_cortexa9_0 -os standalone
+if { $name == "MicroBlaze" } {
+  createbsp -name $bsp_proj -hwproject $hw_proj -proc microblaze_0 -os standalone
+} else {
+  createbsp -name $bsp_proj -hwproject $hw_proj -proc ps7_cortexa9_0 -os standalone
+}
 # Build bsp
-projects -build -type bsp -name .$name\_bsp
+projects -build -type bsp -name $bsp_proj
