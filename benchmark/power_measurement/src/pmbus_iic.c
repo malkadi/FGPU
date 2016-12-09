@@ -54,7 +54,6 @@
 #include "pmbus_iic.h"
 
 XIicPs iic;
-extern XGpioPs gpio;
 
 int setupIic(void) {
     XIicPs_Config *config;
@@ -262,34 +261,11 @@ int ProgramVoltage(u8 DevAdrs, u8 PageAdrs, u8 *SendBufPtr, u8 Command)
     return XST_SUCCESS;
 }
 
-void iicMuxReset(void) {
-
-    /* The IIC mux reset_b pin is on MIO13. We also have an LED on MIO10 that we'll set
-     * along with the reset pin so that we can see its activity
-     */
-	XGpioPs_SetDirectionPin(&gpio, IIC_MUX_RESET_B_PIN, 0);
-    XGpioPs_SetDirectionPin(&gpio, IIC_MUX_RESET_B_PIN, 1);
-    XGpioPs_SetOutputEnablePin(&gpio, IIC_MUX_RESET_B_PIN, 1);
-
-    XGpioPs_WritePin(&gpio, IIC_MUX_RESET_B_PIN, 0);
-    XGpioPs_WritePin(&gpio, LED_PIN, 0);
-
-    /* Delay for the IIC reset */
-    myusleep(1000000);
-
-    XGpioPs_WritePin(&gpio, IIC_MUX_RESET_B_PIN, 1);
-    XGpioPs_WritePin(&gpio, LED_PIN, 1);
-    myusleep(100000);
-}
-
 int iicMuxSetup(unsigned char channelMask) {
     int status;
     unsigned char buffer;
 
     buffer = channelMask;
-
-    /* First we need to reset the IIC mux to bring it back to a known state */
-    iicMuxReset();
 
     /* Wait until the IIC bus is idle */
     while(XIicPs_BusIsBusy(&iic)) {

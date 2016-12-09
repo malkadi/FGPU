@@ -15,6 +15,8 @@ int main()
   const unsigned nruns = 1;
   // use vector types:ushort2 instead of ushort OR uchar4 instead of byte
   const bool use_vector_types = true;
+  // control power measurement
+  const unsigned sync_power_measurement = 0;
   
   if(check_results)
     xil_printf("\n\r---Entering main (checking FGPU results is" ANSI_COLOR_GREEN" active" ANSI_COLOR_RESET ") ---\n\r");
@@ -35,6 +37,11 @@ int main()
   // create kernel
   unsigned maxProblemSize = 64<<test_vec_len;
   kernel<TYPE> sum_atomic_kernel(maxProblemSize, use_vector_types);
+  power_measure power;
+  if( sync_power_measurement ) {
+    power.set_idle();
+  }
+
   // download binary to FGPU
   sum_atomic_kernel.download_code();
 
@@ -42,6 +49,9 @@ int main()
   sum_atomic_kernel.print_name();
   xil_printf("Problem Sizes :\n\r");
 
+  if( sync_power_measurement ) {
+    power.start();
+  }
   for(size_index = 0; size_index < test_vec_len; size_index++)
   {
     // initiate the kernel descriptor for the required problem size
@@ -56,13 +66,18 @@ int main()
     }
 
     // compute on ARM
-    timer_val_arm[size_index] = sum_atomic_kernel.compute_on_ARM(nruns);
+    if (!sync_power_measurement ) {
+      timer_val_arm[size_index] = sum_atomic_kernel.compute_on_ARM(nruns);
+    }
     
     // compute on FGPU
     timer_val_fgpu[size_index] = sum_atomic_kernel.compute_on_FGPU(nruns, check_results, best_reduce_factor[size_index]);
 
     xil_printf("\n\r");
 
+  }
+  if( sync_power_measurement ) {
+    power.stop();
   }
 
   // print execution times
@@ -76,6 +91,10 @@ int main()
       setw(13) << fixed << setprecision(2) << ((float)timer_val_arm[i]/(float)timer_val_fgpu[i]) <<
       setw(10) << best_reduce_factor[i] << endl;
   
+  if( sync_power_measurement ) {
+    power.wait_power_values();
+    power.print_values();
+  }
 
   xil_printf("---Exiting main---\n\r");
   fflush(stdout);

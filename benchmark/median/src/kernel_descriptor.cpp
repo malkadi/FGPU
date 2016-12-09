@@ -1,6 +1,6 @@
 #include "kernel_descriptor.hpp"
 
-#define PRINT_ERRORS            1
+#define PRINT_ERRORS            0
 
 extern unsigned int *code; // binary storde in code.c as an array
 
@@ -184,9 +184,6 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
           sort3(&p01g, &p11g, &p21g);
           sort3(&p02g, &p12g, &p22g);
           sort3(&p00g, &p11g, &p22g);
-          // if(i*Size+j == 10){
-          //   xil_printf("%10x%10x%10x\n\r%10x%10x%10x\n\r%10x%10x%10x\n\r\n\r",p00g,p01g,p02g,p10g,p11g,p12g,p20g,p21g,p22g);
-          // }
 
           // b channel
           unsigned p00b, p01b, p02b;

@@ -11,7 +11,7 @@
 /** Structure for Voltage Rail Parameters**
  */
 struct voltage_rail {
-	char *name;
+	const char *name;
 	unsigned char device;
 	unsigned char page;
 	double voltage;
@@ -81,7 +81,7 @@ int measure(void)
 	double power_total = 0.0f;
 	double power_now = 0.0f;
 	int num_measur = 1;
-	int i;
+	unsigned i;
 	for(i = 0; i < (sizeof(zc706_rails) / sizeof(struct voltage_rail)); i++) {
 		zc706_rails[i].average_power = 0;
 		zc706_rails[i].average_current=0;

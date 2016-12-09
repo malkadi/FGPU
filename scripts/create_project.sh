@@ -1,4 +1,14 @@
 #!/bin/sh
+
+# arg0: path to project folder
+# arg1: FGPU core version (V1 or V2). Default is V2.
+
+if [ $# -eq 2 ]; then 
+  VERSION="$2"
+else
+  VERSION="V2"
+fi
+
 cd `dirname $0`
 source ./set_paths.sh
 SCRIPT_DIR=`pwd`
@@ -20,9 +30,14 @@ if [ $# -eq 0 ]; then
       xsct -quiet create_MicroBlaze_project.tcl $BENCHMARK_DIR
       #replace the linking script
       cp lscript_MicroBlaze.ld $BENCHMARK_DIR/MicroBlaze/src/lscript.ld
+    elif [ $benchmark = "power_measurement" ]; then
+      # create power_measurement project
+      xsct -quiet create_project.tcl $benchmark $VERSION "ARM_CORE_1" $BENCHMARK_DIR
+      #replace the linking script
+      cp lscript_power_measurement.ld $BENCHMARK_DIR/$benchmark/src/lscript.ld
     else
       # create an ARM/FGPU benchmark
-      xsct -quiet create_project.tcl $benchmark V2 $BENCHMARK_DIR
+      xsct -quiet create_project.tcl $benchmark $VERSION "ARM_CORE_0" $BENCHMARK_DIR
       #replace the linking script
       cp lscript.ld $BENCHMARK_DIR/$benchmark/src/
     fi
@@ -36,27 +51,23 @@ if [ $# -eq 0 ]; then
   done
 else
   benchmark=`basename $1`
-  BENCHMARK_DIR=`dirname $1`
-  BENCHMARK_DIR=`realpath $BENCHMARK_DIR`
 
   if [ "$benchmark" = "MicroBlaze" ]; then
     # create MicroBlaze benchmark
     xsct -quiet create_MicroBlaze_project.tcl $BENCHMARK_DIR
     #replace the linking script
     cp lscript_MicroBlaze.ld $BENCHMARK_DIR/MicroBlaze/src/lscript.ld
-  elif [ $# -eq 2 ]; then 
-    # create an ARM/FGPU benchmark
-    if [ "$2" = "V1" ]; then
-      xsct -quiet create_project.tcl $benchmark V1 $BENCHMARK_DIR
-    else
-      xsct -quiet create_project.tcl $benchmark V2 $BENCHMARK_DIR
-    fi
+  elif [ "$benchmark" = "power_measurement" ]; then
+    # create power_measurement project
+    xsct -quiet create_project.tcl $benchmark $VERSION "ARM_CORE_1" $BENCHMARK_DIR
+    #replace the linking script
+    cp lscript_power_measurement.ld $BENCHMARK_DIR/$benchmark/src/lscript.ld
   else
     # create an ARM/FGPU benchmark
-    xsct -quiet create_project.tcl $benchmark V2 $BENCHMARK_DIR
+    xsct -quiet create_project.tcl $benchmark $VERSION "ARM_CORE_0" $BENCHMARK_DIR
+    #replace the linking script
+    cp lscript.ld $BENCHMARK_DIR/$benchmark/src/lscript.ld
   fi
-  #replace the linking script
-  cp lscript.ld $BENCHMARK_DIR/$benchmark/src/
 
   # delete some unnecessary files that are generated on project creation
   rm $BENCHMARK_DIR/$benchmark/src/main.cc

@@ -7,8 +7,8 @@ switch $benchmark {
     set bitstream ../bitstreams/V2_8CUs_Atomic_noSubInteger_240MHz.bit
   }
   "sum_atomic" {
-    set bitstream ../bitstreams/V1_8CUs.bit
-    # set bitstream ../bitstreams/V2_8CUs_Atomic_noSubInteger_240MHz.bit
+    # set bitstream ../bitstreams/V1_8CUs.bit
+    set bitstream ../bitstreams/V2_8CUs_Atomic_2AXI_250MHz.bit
   }
   "vec_add" -
   "vec_mul" -
@@ -21,6 +21,8 @@ switch $benchmark {
   "compass_edge_detection" {
     set bitstream ../bitstreams/V2_8CUs_SubInteger_2K_LMEM_240MHz.bit
   }
+  "power_measurement" {
+  }
 
   default {
     puts "Please select an appropriate bitstream to the $benchmark in program_bitstream.tcl"
@@ -28,11 +30,15 @@ switch $benchmark {
   }
 }
 
-fpga $bitstream
 
-
-# select the first ARM core as a target
-targets -set -filter {name =~ "ARM*#0"}
+if { $benchmark == "power_measurement" } {
+  # select the second ARM core as a target
+  targets -set -filter {name =~ "ARM*#1"}
+} else {
+  fpga $bitstream
+  # select the first ARM core as a target
+  targets -set -filter {name =~ "ARM*#0"}
+}
 
 # reset the processor
 rst -processor

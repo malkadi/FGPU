@@ -21,7 +21,7 @@ catch {
 # Create  BSP projects
 createbsp -name $bsp_name -hwproject $HW_PROJ -proc ps7_cortexa9_1 -os standalone
 # Create application projects
-createapp -name $name -hwproject $HW_PROJ -bsp $bsp_name -proc ps7_cortexa9_1 -os standalone -lang C -app {Empty Application}
+createapp -name $name -hwproject $HW_PROJ -bsp $bsp_name -proc ps7_cortexa9_1 -os standalone -lang c++ -app {Empty Application}
 # Configure the projects for best optimization
 configapp -app $name -set build-config {Release}
 configapp -app $name -set compiler-optimization {Optimize most (-O3)}
@@ -29,5 +29,4 @@ configapp -app $name -set compiler-optimization {Optimize most (-O3)}
 configapp -app $name -add libraries {m}
 # Build bsp
 projects -build -type bsp -name $bsp_name
-projects -build -type app -name $name
 
