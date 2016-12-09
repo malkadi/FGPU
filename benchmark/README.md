@@ -3,12 +3,12 @@ First, bsp and hardware projects need to be created:
 ```sh
 ../scripts/create_bsps.sh
 ```
-Then an sdk project for each benchmark in this folder will be created and compiled:
+Then, an SDK project for each benchmark folder can be created and compiled:
 ```sh
 ../scripts/create_project.sh
 ```
 # To compile a specific banchmark
-If not done previously, you may need first to create a Xilinx sdk project for the corresponding benchmark by running 
+If not done previously, you may need first to create a Xilinx SDK project for the corresponding benchmark by running 
 ```sh
 ../scripts/create_project.sh <path of the benchmark, e.g. copy>
 ```
