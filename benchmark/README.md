@@ -1,13 +1,13 @@
-# To compile an existing banchmark
+# To compile an existing application
 You may use Xilinx SDK or run the tcl script
 ```sh
-../scripts/compile.sh <path of the benchmark, e.g. copy>
+../scripts/compile.sh <path of the application, e.g. copy>
 ```
 
 # To run an applications from terminal:
 + After a successful compilation, open a terminal and run the following command:
 ```sh
-open_sdk.sh <path of the benchmark, e.g. copy>
+open_sdk.sh <path of the application, e.g. copy>
 ```
 This will open the Xilinx command line tool (xsct).
 + Program a bitstream:
@@ -26,9 +26,9 @@ source download_elf.tcl
   ```c++
     const unsigned sync_power_measurement = 1;
   ```
-  + Compile the benchmark:
+  + Compiling the application:
   ```sh
-  ../scripts/compile.sh <path of the benchmark, e.g. copy>
+  ../scripts/compile.sh <path of the application, e.g. copy>
   ```
   + Sourcing the script `measure_power.tcl` in xsct. It will program both ARM cores accordingly:
   ```sh

@@ -1,0 +1,64 @@
+
+compiler_outputs/copy.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+copy_word:
+       0:	22 00 00 a8 	lp	r2, 1
+       4:	03 00 00 a8 	lp	r3, 0
+       8:	04 00 00 a0 	lid	r4, 0
+       c:	05 00 00 a1 	wgoff	r5, 0
+      10:	a1 10 00 10 	add	r1, r5, r4
+      14:	23 0c 00 74 	lw	r3, r3[r1]
+      18:	23 08 00 7c 	sw	r3, r2[r1]
+      1c:	00 00 00 92 	ret
+
+copy_half:
+      20:	22 00 00 a8 	lp	r2, 1
+      24:	03 00 00 a8 	lp	r3, 0
+      28:	04 00 00 a0 	lid	r4, 0
+      2c:	05 00 00 a1 	wgoff	r5, 0
+      30:	a1 10 00 10 	add	r1, r5, r4
+      34:	24 04 00 21 	slli	r4, r1, 1
+      38:	64 10 00 10 	add	r4, r3, r4
+      3c:	23 0c 00 72 	lh	r3, r3[r1]
+      40:	84 78 00 35 	xori	r4, r4, 30
+      44:	84 0c 00 21 	slli	r4, r4, 3
+      48:	63 10 00 20 	sll	r3, r3, r4
+      4c:	63 40 00 29 	srli	r3, r3, 16
+      50:	23 08 00 7a 	sh	r3, r2[r1]
+      54:	00 00 00 92 	ret
+
+copy_half_improved:
+      58:	22 00 00 a8 	lp	r2, 1
+      5c:	03 00 00 a8 	lp	r3, 0
+      60:	04 00 00 a0 	lid	r4, 0
+      64:	05 00 00 a1 	wgoff	r5, 0
+      68:	a1 10 00 10 	add	r1, r5, r4
+      6c:	23 0c 00 74 	lw	r3, r3[r1]
+      70:	23 08 00 7c 	sw	r3, r2[r1]
+      74:	00 00 00 92 	ret
+
+copy_byte:
+      78:	22 00 00 a8 	lp	r2, 1
+      7c:	03 00 00 a8 	lp	r3, 0
+      80:	04 00 00 a0 	lid	r4, 0
+      84:	05 00 00 a1 	wgoff	r5, 0
+      88:	a1 10 00 10 	add	r1, r5, r4
+      8c:	24 0c 00 71 	lb	r4, r3[r1]
+      90:	63 04 00 10 	add	r3, r3, r1
+      94:	63 7c 00 35 	xori	r3, r3, 31
+      98:	63 0c 00 21 	slli	r3, r3, 3
+      9c:	83 0c 00 20 	sll	r3, r4, r3
+      a0:	63 60 00 29 	srli	r3, r3, 24
+      a4:	23 08 00 79 	sb	r3, r2[r1]
+      a8:	00 00 00 92 	ret
+
+copy_byte_improved:
+      ac:	22 00 00 a8 	lp	r2, 1
+      b0:	03 00 00 a8 	lp	r3, 0
+      b4:	04 00 00 a0 	lid	r4, 0
+      b8:	05 00 00 a1 	wgoff	r5, 0
+      bc:	a1 10 00 10 	add	r1, r5, r4
+      c0:	23 0c 00 74 	lw	r3, r3[r1]
+      c4:	23 08 00 7c 	sw	r3, r2[r1]
+      c8:	00 00 00 92 	ret

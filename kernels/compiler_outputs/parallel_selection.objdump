@@ -1,0 +1,211 @@
+
+compiler_outputs/parallel_selection.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+ParallelSelection:
+       0:	22 00 00 a8 	lp	r2, 1
+       4:	03 00 00 a8 	lp	r3, 0
+       8:	04 00 00 a0 	lid	r4, 0
+       c:	05 00 00 a1 	wgoff	r5, 0
+      10:	a4 10 00 10 	add	r4, r5, r4
+      14:	05 00 00 11 	addi	r5, r0, 0
+      18:	06 00 00 a2 	size	r6, 0
+      1c:	81 0c 00 74 	lw	r1, r3[r4]
+      20:	07 14 00 10 	add	r7, r0, r5
+
+LBB0_1:
+      24:	a8 10 00 b2 	slt	r8, r5, r4
+      28:	09 0c 00 74 	lw	r9, r3[r0]
+      2c:	2a 05 00 34 	xor	r10, r9, r1
+      30:	4a 05 00 b7 	sltiu	r10, r10, 1
+      34:	08 29 00 30 	and	r8, r8, r10
+      38:	29 05 00 b2 	slt	r9, r9, r1
+      3c:	28 21 00 32 	or	r8, r9, r8
+      40:	07 1d 00 10 	add	r7, r8, r7
+      44:	63 10 00 11 	addi	r3, r3, 4
+      48:	a5 04 00 11 	addi	r5, r5, 1
+      4c:	a6 d4 ff 63 	bne	r6, r5, -11
+      50:	e1 08 00 7c 	sw	r1, r2[r7]
+      54:	00 00 00 92 	ret
+
+ParallelSelection_half:
+      58:	22 00 00 a8 	lp	r2, 1
+      5c:	03 00 00 a8 	lp	r3, 0
+      60:	04 00 00 a0 	lid	r4, 0
+      64:	05 00 00 a1 	wgoff	r5, 0
+      68:	a4 10 00 10 	add	r4, r5, r4
+      6c:	81 04 00 21 	slli	r1, r4, 1
+      70:	61 04 00 10 	add	r1, r3, r1
+      74:	21 78 00 35 	xori	r1, r1, 30
+      78:	26 0c 00 21 	slli	r6, r1, 3
+      7c:	05 00 00 a2 	size	r5, 0
+      80:	81 0c 00 72 	lh	r1, r3[r4]
+      84:	26 18 00 20 	sll	r6, r1, r6
+      88:	01 00 00 11 	addi	r1, r0, 0
+      8c:	c6 40 00 2d 	srai	r6, r6, 16
+      90:	67 fc ff 19 	li	r7, 65535
+      94:	07 00 00 1d 	lui	r7, 0
+      98:	c7 1c 00 30 	and	r7, r6, r7
+      9c:	08 04 00 10 	add	r8, r0, r1
+
+LBB1_1:
+      a0:	69 78 00 35 	xori	r9, r3, 30
+      a4:	29 0d 00 21 	slli	r9, r9, 3
+      a8:	0a 0c 00 74 	lw	r10, r3[r0]
+      ac:	49 25 00 20 	sll	r9, r10, r9
+      b0:	2a 41 00 29 	srli	r10, r9, 16
+      b4:	4a 1d 00 34 	xor	r10, r10, r7
+      b8:	4a 05 00 b7 	sltiu	r10, r10, 1
+      bc:	2b 10 00 b2 	slt	r11, r1, r4
+      c0:	6a 29 00 30 	and	r10, r11, r10
+      c4:	29 41 00 2d 	srai	r9, r9, 16
+      c8:	29 19 00 b2 	slt	r9, r9, r6
+      cc:	29 29 00 32 	or	r9, r9, r10
+      d0:	28 21 00 10 	add	r8, r9, r8
+      d4:	63 08 00 11 	addi	r3, r3, 2
+      d8:	21 04 00 11 	addi	r1, r1, 1
+      dc:	25 c0 ff 63 	bne	r5, r1, -16
+      e0:	06 09 00 7a 	sh	r6, r2[r8]
+      e4:	00 00 00 92 	ret
+
+ParallelSelection_half_improved:
+      e8:	22 00 00 a8 	lp	r2, 1
+      ec:	03 00 00 a8 	lp	r3, 0
+      f0:	04 00 00 a0 	lid	r4, 0
+      f4:	05 00 00 a1 	wgoff	r5, 0
+      f8:	a4 10 00 10 	add	r4, r5, r4
+      fc:	81 04 00 21 	slli	r1, r4, 1
+     100:	61 04 00 10 	add	r1, r3, r1
+     104:	21 78 00 35 	xori	r1, r1, 30
+     108:	26 0c 00 21 	slli	r6, r1, 3
+     10c:	05 00 00 a2 	size	r5, 0
+     110:	81 0c 00 72 	lh	r1, r3[r4]
+     114:	26 18 00 20 	sll	r6, r1, r6
+     118:	01 00 00 11 	addi	r1, r0, 0
+     11c:	c6 40 00 2d 	srai	r6, r6, 16
+     120:	67 fc ff 19 	li	r7, 65535
+     124:	07 00 00 1d 	lui	r7, 0
+     128:	c8 1c 00 30 	and	r8, r6, r7
+     12c:	09 04 00 10 	add	r9, r0, r1
+
+LBB2_1:
+     130:	2a 0c 00 72 	lh	r10, r3[r1]
+     134:	4b 41 00 29 	srli	r11, r10, 16
+     138:	6b 21 00 34 	xor	r11, r11, r8
+     13c:	6b 05 00 b7 	sltiu	r11, r11, 1
+     140:	2c 04 00 11 	addi	r12, r1, 1
+     144:	8c 11 00 b2 	slt	r12, r12, r4
+     148:	8b 2d 00 30 	and	r11, r12, r11
+     14c:	4c 1d 00 30 	and	r12, r10, r7
+     150:	4a 41 00 2d 	srai	r10, r10, 16
+     154:	4a 19 00 b2 	slt	r10, r10, r6
+     158:	4a 2d 00 32 	or	r10, r10, r11
+     15c:	8b 21 00 34 	xor	r11, r12, r8
+     160:	6b 05 00 b7 	sltiu	r11, r11, 1
+     164:	2d 10 00 b2 	slt	r13, r1, r4
+     168:	ab 2d 00 30 	and	r11, r13, r11
+     16c:	8c 41 00 21 	slli	r12, r12, 16
+     170:	8c 41 00 2d 	srai	r12, r12, 16
+     174:	8c 19 00 b2 	slt	r12, r12, r6
+     178:	8b 2d 00 32 	or	r11, r12, r11
+     17c:	69 25 00 10 	add	r9, r11, r9
+     180:	29 29 00 10 	add	r9, r9, r10
+     184:	21 08 00 11 	addi	r1, r1, 2
+     188:	a1 a4 ff 63 	bne	r1, r5, -23
+     18c:	26 09 00 7a 	sh	r6, r2[r9]
+     190:	00 00 00 92 	ret
+
+ParallelSelection_byte_improved:
+     194:	22 00 00 a8 	lp	r2, 1
+     198:	03 00 00 a8 	lp	r3, 0
+     19c:	04 00 00 a0 	lid	r4, 0
+     1a0:	05 00 00 a1 	wgoff	r5, 0
+     1a4:	a4 10 00 10 	add	r4, r5, r4
+     1a8:	61 10 00 10 	add	r1, r3, r4
+     1ac:	21 7c 00 35 	xori	r1, r1, 31
+     1b0:	26 0c 00 21 	slli	r6, r1, 3
+     1b4:	05 00 00 a2 	size	r5, 0
+     1b8:	81 0c 00 71 	lb	r1, r3[r4]
+     1bc:	26 18 00 20 	sll	r6, r1, r6
+     1c0:	01 00 00 11 	addi	r1, r0, 0
+     1c4:	c6 60 00 29 	srli	r6, r6, 24
+     1c8:	07 04 00 10 	add	r7, r0, r1
+
+LBB3_1:
+     1cc:	28 04 00 11 	addi	r8, r1, 1
+     1d0:	08 11 00 b6 	sltu	r8, r8, r4
+     1d4:	29 0c 00 71 	lb	r9, r3[r1]
+     1d8:	2a 41 00 21 	slli	r10, r9, 16
+     1dc:	4a 61 00 29 	srli	r10, r10, 24
+     1e0:	4b 19 00 34 	xor	r11, r10, r6
+     1e4:	6b 05 00 b7 	sltiu	r11, r11, 1
+     1e8:	08 2d 00 30 	and	r8, r8, r11
+     1ec:	4a 19 00 b6 	sltu	r10, r10, r6
+     1f0:	48 21 00 32 	or	r8, r10, r8
+     1f4:	2a fd 03 31 	andi	r10, r9, 255
+     1f8:	4b 19 00 34 	xor	r11, r10, r6
+     1fc:	6b 05 00 b7 	sltiu	r11, r11, 1
+     200:	2c 10 00 b6 	sltu	r12, r1, r4
+     204:	8b 2d 00 30 	and	r11, r12, r11
+     208:	4a 19 00 b6 	sltu	r10, r10, r6
+     20c:	4a 2d 00 32 	or	r10, r10, r11
+     210:	47 1d 00 10 	add	r7, r10, r7
+     214:	e7 20 00 10 	add	r7, r7, r8
+     218:	28 08 00 11 	addi	r8, r1, 2
+     21c:	08 11 00 b6 	sltu	r8, r8, r4
+     220:	2a 21 00 21 	slli	r10, r9, 8
+     224:	4a 61 00 29 	srli	r10, r10, 24
+     228:	4b 19 00 34 	xor	r11, r10, r6
+     22c:	6b 05 00 b7 	sltiu	r11, r11, 1
+     230:	08 2d 00 30 	and	r8, r8, r11
+     234:	4a 19 00 b6 	sltu	r10, r10, r6
+     238:	48 21 00 32 	or	r8, r10, r8
+     23c:	2a 0c 00 11 	addi	r10, r1, 3
+     240:	4a 11 00 b6 	sltu	r10, r10, r4
+     244:	e7 20 00 10 	add	r7, r7, r8
+     248:	28 61 00 29 	srli	r8, r9, 24
+     24c:	09 19 00 34 	xor	r9, r8, r6
+     250:	29 05 00 b7 	sltiu	r9, r9, 1
+     254:	49 25 00 30 	and	r9, r10, r9
+     258:	08 19 00 b6 	sltu	r8, r8, r6
+     25c:	08 25 00 32 	or	r8, r8, r9
+     260:	e7 20 00 10 	add	r7, r7, r8
+     264:	21 10 00 11 	addi	r1, r1, 4
+     268:	a1 60 ff 63 	bne	r1, r5, -40
+     26c:	e6 08 00 79 	sb	r6, r2[r7]
+     270:	00 00 00 92 	ret
+
+ParallelSelection_byte:
+     274:	22 00 00 a8 	lp	r2, 1
+     278:	03 00 00 a8 	lp	r3, 0
+     27c:	04 00 00 a0 	lid	r4, 0
+     280:	05 00 00 a1 	wgoff	r5, 0
+     284:	a4 10 00 10 	add	r4, r5, r4
+     288:	61 10 00 10 	add	r1, r3, r4
+     28c:	21 7c 00 35 	xori	r1, r1, 31
+     290:	26 0c 00 21 	slli	r6, r1, 3
+     294:	05 00 00 a2 	size	r5, 0
+     298:	81 0c 00 71 	lb	r1, r3[r4]
+     29c:	26 18 00 20 	sll	r6, r1, r6
+     2a0:	01 00 00 11 	addi	r1, r0, 0
+     2a4:	c6 60 00 29 	srli	r6, r6, 24
+     2a8:	07 04 00 10 	add	r7, r0, r1
+
+LBB4_1:
+     2ac:	28 0c 00 71 	lb	r8, r3[r1]
+     2b0:	69 04 00 10 	add	r9, r3, r1
+     2b4:	29 7d 00 35 	xori	r9, r9, 31
+     2b8:	29 0d 00 21 	slli	r9, r9, 3
+     2bc:	08 25 00 20 	sll	r8, r8, r9
+     2c0:	08 61 00 29 	srli	r8, r8, 24
+     2c4:	09 19 00 b6 	sltu	r9, r8, r6
+     2c8:	08 19 00 34 	xor	r8, r8, r6
+     2cc:	08 05 00 b7 	sltiu	r8, r8, 1
+     2d0:	2a 10 00 b6 	sltu	r10, r1, r4
+     2d4:	48 21 00 30 	and	r8, r10, r8
+     2d8:	28 21 00 32 	or	r8, r9, r8
+     2dc:	07 1d 00 10 	add	r7, r8, r7
+     2e0:	21 04 00 11 	addi	r1, r1, 1
+     2e4:	25 c4 ff 63 	bne	r5, r1, -15
+     2e8:	e6 08 00 79 	sb	r6, r2[r7]
+     2ec:	00 00 00 92 	ret

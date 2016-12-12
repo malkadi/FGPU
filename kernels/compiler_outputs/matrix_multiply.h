@@ -1,0 +1,6 @@
+#define MATRIX_MULTIPLY_LEN                 208
+#define MATRIX_MULTIPLY_POS                 0
+#define MATRIX_MULTIPLY_HALF_POS            27
+#define MATRIX_MULTIPLY_HALF_IMPROVED_POS   62
+#define MATRIX_MULTIPLY_BYTE_POS            110
+#define MATRIX_MULTIPLY_BYTE_IMPROVED_POS   143
