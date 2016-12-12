@@ -136,7 +136,7 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   compute_descriptor();
 
   offset0 = offset1 = offset2 = 0;
-  nParams = 3; // number of parameters
+  nParams = 4; // number of parameters
 }
 template<typename T>
 unsigned kernel<T>::get_problemSize() 
@@ -177,7 +177,7 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     unsigned Size = problemSize;
     int res = 0;
     for(i = 0; i < Size; i++)
-      res += (param1_ptr[i]-100)*(param1_ptr[i]-100);
+      res += (param1_ptr[i]-mean)*(param1_ptr[i]-mean);
     target_ptr[0] = res;
 
     // flush the results to the global memory 
@@ -245,12 +245,16 @@ bool kernel<T>::update_reduce_factor_and_download(unsigned rfactor, bool swap_ar
     size0 /= rfactor;
     reduce_factor = rfactor;
   }
-  xil_printf("size0 = %d, reduce_factor = %d\n\r", size0, reduce_factor);
-  Xil_DCacheInvalidate();
-  unsigned i;
-  int *r =  (int*)lram_ptr[17];
-  for(i = 0; i < problemSize; i++)
-    printf("r[%d] = %d\n", i, r[i]);
+  if(swap_arrays)
+    start_addr = SUM_POS;
+  else
+    start_addr = SUM_POWER_POS;
+  // xil_printf("size0 = %d, reduce_factor = %d\n\r", size0, reduce_factor);
+  // Xil_DCacheInvalidate();
+  // unsigned i;
+  // int *r =  (int*)lram_ptr[17];
+  // for(i = 0; i < problemSize; i++)
+  //   printf("r[%d] = %d\n", i, r[i]);
   wg_size0 = size0>32?32:size0;
   wg_size = wg_size0;
   n_wg0 = size0 / wg_size0;
@@ -269,10 +273,7 @@ bool kernel<T>::update_reduce_factor_and_download(unsigned rfactor, bool swap_ar
     lram_ptr[17] = tmp;
   }
   lram_ptr[18] = reduce_factor;
-  if(!swap_arrays)
-    lram_ptr[19] = mean;
-  else
-    lram_ptr[19] = 0;
+  lram_ptr[19] = mean;
   return true;
 }
 template<typename T>
@@ -320,7 +321,6 @@ bool kernel<T>::compute_with_atomics(unsigned n_runs, unsigned rfactor, unsigned
   unsigned runs = 0;
   exec_time = 0;
   bool rfactor_allowed = update_atomic_reduce_factor_and_download(rfactor);
-  // xil_printf("compute_with_atomics entered, rfactor = %d, rfactor_allowed = %d\n\r", rfactor, rfactor_allowed);
   while(rfactor_allowed && runs < n_runs)
   {
     initialize_memory();
@@ -348,7 +348,7 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results, unsigne
 {
   unsigned exec_time = 0;
 
-  const unsigned rfactor_vec_len = 2;
+  const unsigned rfactor_vec_len = 10;
   const unsigned rfactor_begin = 1;
   
   unsigned int exec_times[rfactor_vec_len];

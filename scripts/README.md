@@ -1,5 +1,5 @@
 # Setup instructions
-+ Make sure to edit the `set_paths.sh` script to refer to your Vivado installation
++ Make sure to edit the `set_paths.sh` script to refer to your Vivado installation path
 + Create and compile the needed hardware and bsp projects by executing
 ```sh
 ./create_bsps.sh
