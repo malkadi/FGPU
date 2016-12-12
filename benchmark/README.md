@@ -23,14 +23,14 @@ source download_elf.tcl
 + The project `power_measurement` should run of the second ARM core while the application project is running on the first core.
 + The measurement can performed by:
   + Enabling this feature in the `main.cpp` file of the application that you may measure its power consumption
-```c++
-  const unsigned sync_power_measurement = 1;
-```
+  ```c++
+    const unsigned sync_power_measurement = 1;
+  ```
   + Compile the benchmark:
-```sh
-../scripts/compile.sh <path of the benchmark, e.g. copy>
-```
+  ```sh
+  ../scripts/compile.sh <path of the benchmark, e.g. copy>
+  ```
   + Sourcing the script `measure_power.tcl` in xsct. It will program both ARM cores accordingly:
-```sh
-source measure_power.tcl
-```
+  ```sh
+  source measure_power.tcl
+  ```
