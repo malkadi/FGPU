@@ -5,7 +5,7 @@ extern unsigned int *code; // binary storde in code.c as an array
 #define PRINT_ERRORS    1
 
 template<typename T>
-kernel<T>::kernel(unsigned max_size, bool vector_types, bool atomics)
+kernel<T>::kernel(unsigned max_size, bool atomics)
 {
   // The FGPU read wrong data from the dynamically allocated arrays
   // param1 = (T*)new int [max_size];
@@ -17,54 +17,36 @@ kernel<T>::kernel(unsigned max_size, bool vector_types, bool atomics)
   assert(target_arm != 0);
   assert(target_fgpu != 0);
   assert(param1 != 0);
-  use_vector_types = vector_types;
   use_atomics = atomics;
   minReduceSize = 32;
   lram_ptr = (unsigned*)FGPU_BASEADDR;
+  mean = 100;
 }
 template<typename T>
 kernel<T>::~kernel() 
 {
-  delete[] param1;
-  delete[] target_fgpu;
-  delete[] target_arm;
+  // delete[] param1;
+  // delete[] target_fgpu;
+  // delete[] target_arm;
 }
 template<typename T>
 void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
-  unsigned int size = SUM_LEN;
+  unsigned int size = SUM_POWER_LEN;
   if(use_atomics) {
     if (typeid(T) == typeid(int))
-      start_addr = SUM_ATOMIC_WORD_POS;
-    else if (typeid(T) == typeid(short)) 
-      if(use_vector_types)
-        start_addr = SUM_HALF_IMPROVED_ATOMIC_POS;
-      else
-        start_addr = SUM_HALF_ATOMIC_POS;
-    else if (typeid(T) == typeid(char))
-      if(use_vector_types)
-        start_addr = SUM_BYTE_IMPROVED_ATOMIC_POS;
-      else
-        start_addr = SUM_BYTE_ATOMIC_POS;
+      start_addr = SUM_POWER_ATOMIC_POS;
     else
       assert(0 && "unsupported type");
   } else {
     if (typeid(T) == typeid(int))
-      start_addr = SUM_POS;
-    else if (typeid(T) == typeid(short)) 
-      if(use_vector_types)
-        start_addr = SUM_HALF_IMPROVED_POS;
-      else
-        start_addr = SUM_HALF_POS;
-    else if (typeid(T) == typeid(char))
-      if(use_vector_types)
-        start_addr = SUM_BYTE_IMPROVED_POS;
-      else
-        start_addr = SUM_BYTE_POS;
+      start_addr = SUM_POWER_POS;
     else
       assert(0 && "unsupported type");
   }
+  // start_addr = COPY_POS;
+
   unsigned i = 0;
   for(; i < size; i++){
     cram_ptr[i] = code[i];
@@ -145,7 +127,7 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   else if (typeid(T) == typeid(short)) {
     dataSize = 2 * problemSize; // 2 bytes per word
   }
-  else if (typeid(T) == typeid(char)) {
+  else if (typeid(T) == typeid(signed char)) {
     dataSize = 1 * problemSize; // 1 bytes per word
   }
   if(size0 < 64)
@@ -169,7 +151,7 @@ void kernel<T>::initialize_memory()
   T *target_ptr = (T*) target_fgpu;
   for(i = 0; i < problemSize; i++) 
   {
-    param_ptr[i] = (T)2*i;
+    param_ptr[i] = (T)0;
     target_ptr[i] = 0;
   }
   Xil_DCacheFlush(); // flush data to global memory
@@ -195,7 +177,7 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     unsigned Size = problemSize;
     int res = 0;
     for(i = 0; i < Size; i++)
-      res += param1_ptr[i];
+      res += (param1_ptr[i]-100)*(param1_ptr[i]-100);
     target_ptr[0] = res;
 
     // flush the results to the global memory 
@@ -217,12 +199,14 @@ void kernel<T>::check_FGPU_results()
   unsigned int nErrors = 0;
   volatile T *res_fgpu = (T*)lram_ptr[17];
   Xil_DCacheInvalidate();
+  // unsigned i; 
+  // for(i = 0; i < 4; i++) {
+  //   printf("res_fgpu[%d] = %d\n", i, res_fgpu[i]);
+  // }
   if(*res_fgpu != target_arm[0])
   {
     #if PRINT_ERRORS
       xil_printf("res=0x%x (must be 0x%x)\n\r", target_fgpu[0], target_arm[0]);
-      printf("target_fgpu[0] = 0x%x\n", target_fgpu[0]);
-      printf("res_fgpu @ 0x%x\n", (unsigned)res_fgpu);
     #endif
     nErrors++;
   }
@@ -234,11 +218,7 @@ void kernel<T>::check_FGPU_results()
 template<typename T>
 bool kernel<T>::update_atomic_reduce_factor_and_download(unsigned rfactor)
 {
-  if( rfactor == 0 ||
-      (use_vector_types && typeid(T) == typeid(short) && (problemSize/2 < rfactor || rfactor < 2)) ||
-      (use_vector_types && typeid(T) == typeid(char) && (problemSize/4 < rfactor || rfactor < 4)) ||
-      problemSize < rfactor
-      )
+  if( rfactor == 0 || problemSize < rfactor )
     return false;
 
   size0 = problemSize/rfactor;
@@ -247,31 +227,30 @@ bool kernel<T>::update_atomic_reduce_factor_and_download(unsigned rfactor)
   assert(size0%wg_size0 == 0);
   compute_descriptor();
   download_descriptor();
+  // unsigned i;
+  // for(i = 0; i < 32; i++)
+  //   xil_printf("lram_ptr[%d] = %x\n\r", i, lram_ptr[i]);
   Xil_DCacheFlush(); // flush data to global memory
   return true;
 }
 template<typename T>
 bool kernel<T>::update_reduce_factor_and_download(unsigned rfactor, bool swap_arrays)
 {
-  // printf("updating:\n");
-  // printf("size0 = %d, ", size0);
-  // printf("rfactor = %d\n", rfactor);
-  if (size0 == 1 || 
-      rfactor == 1 || 
-      (use_vector_types && (typeid(T) == typeid(char)) && rfactor < 4) ){
+  if (size0 == 1 || rfactor == 1 )  {
     return false;
-  } else if(  size0 < minReduceSize || 
-              size0 <= rfactor ||
-              (use_vector_types && (typeid(T) == typeid(char) && size0/rfactor < 4)) || 
-              (use_vector_types && (typeid(T) == typeid(short) && size0/rfactor < 2 ))) {
+  } else if(  size0 < minReduceSize || size0 <= rfactor)  {
     reduce_factor = size0;
     size0 = 1;
   } else {
     size0 /= rfactor;
     reduce_factor = rfactor;
   }
-  assert(typeid(T) != typeid(char) || !use_vector_types || (reduce_factor >= 4 && reduce_factor%4 == 0));
-  assert(typeid(T) != typeid(short) || !use_vector_types || (reduce_factor >= 2 && reduce_factor%2 == 0));
+  xil_printf("size0 = %d, reduce_factor = %d\n\r", size0, reduce_factor);
+  Xil_DCacheInvalidate();
+  unsigned i;
+  int *r =  (int*)lram_ptr[17];
+  for(i = 0; i < problemSize; i++)
+    printf("r[%d] = %d\n", i, r[i]);
   wg_size0 = size0>32?32:size0;
   wg_size = wg_size0;
   n_wg0 = size0 / wg_size0;
@@ -290,6 +269,10 @@ bool kernel<T>::update_reduce_factor_and_download(unsigned rfactor, bool swap_ar
     lram_ptr[17] = tmp;
   }
   lram_ptr[18] = reduce_factor;
+  if(!swap_arrays)
+    lram_ptr[19] = mean;
+  else
+    lram_ptr[19] = 0;
   return true;
 }
 template<typename T>
@@ -365,7 +348,7 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results, unsigne
 {
   unsigned exec_time = 0;
 
-  const unsigned rfactor_vec_len = 10;
+  const unsigned rfactor_vec_len = 2;
   const unsigned rfactor_begin = 1;
   
   unsigned int exec_times[rfactor_vec_len];
@@ -396,21 +379,15 @@ template<typename T>
 void kernel<T>::print_name()
 {
   if( typeid(T) == typeid(int) )
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum word" ANSI_COLOR_RESET);
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum power word" ANSI_COLOR_RESET);
   else if (typeid(T) == typeid(short))
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum half word" ANSI_COLOR_RESET);
-  else if (typeid(T) == typeid(char))
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum byte" ANSI_COLOR_RESET);
-  if (use_vector_types)
-    xil_printf(" (vector types activated -");
-  else
-    xil_printf(" (vector types deactivated -");
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum power half word" ANSI_COLOR_RESET);
+  else if (typeid(T) == typeid(signed char))
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum power byte" ANSI_COLOR_RESET);
   if (use_atomics)
-    xil_printf(" atomics activated)\n\r");
+    xil_printf(" (atomics activated)\n\r");
   else
-    xil_printf(" atomics deactivated)\n\r");
+    xil_printf(" (atomics deactivated)\n\r");
 }
 
 template class kernel<int>;
-template class kernel<short>;
-template class kernel<char>;

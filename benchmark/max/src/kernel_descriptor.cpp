@@ -33,35 +33,35 @@ template<typename T>
 void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
-  unsigned int size = SUM_LEN;
+  unsigned int size = MAX_LEN;
   if(use_atomics) {
     if (typeid(T) == typeid(int))
-      start_addr = SUM_ATOMIC_WORD_POS;
+      start_addr = MAX_ATOMIC_POS;
     else if (typeid(T) == typeid(short)) 
       if(use_vector_types)
-        start_addr = SUM_HALF_IMPROVED_ATOMIC_POS;
+        start_addr = MAX_HALF_IMPROVED_ATOMIC_POS;
       else
-        start_addr = SUM_HALF_ATOMIC_POS;
-    else if (typeid(T) == typeid(char))
+        start_addr = MAX_HALF_ATOMIC_POS;
+    else if (typeid(T) == typeid(signed char))
       if(use_vector_types)
-        start_addr = SUM_BYTE_IMPROVED_ATOMIC_POS;
+        start_addr = MAX_BYTE_IMPROVED_ATOMIC_POS;
       else
-        start_addr = SUM_BYTE_ATOMIC_POS;
+        start_addr = MAX_BYTE_ATOMIC_POS;
     else
       assert(0 && "unsupported type");
   } else {
     if (typeid(T) == typeid(int))
-      start_addr = SUM_POS;
+      start_addr = MAX_WORD_POS;
     else if (typeid(T) == typeid(short)) 
       if(use_vector_types)
-        start_addr = SUM_HALF_IMPROVED_POS;
+        start_addr = MAX_HALF_IMPROVED_POS;
       else
-        start_addr = SUM_HALF_POS;
-    else if (typeid(T) == typeid(char))
+        start_addr = MAX_HALF_POS;
+    else if (typeid(T) == typeid(signed char))
       if(use_vector_types)
-        start_addr = SUM_BYTE_IMPROVED_POS;
+        start_addr = MAX_BYTE_IMPROVED_POS;
       else
-        start_addr = SUM_BYTE_POS;
+        start_addr = MAX_BYTE_POS;
     else
       assert(0 && "unsupported type");
   }
@@ -145,7 +145,7 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   else if (typeid(T) == typeid(short)) {
     dataSize = 2 * problemSize; // 2 bytes per word
   }
-  else if (typeid(T) == typeid(char)) {
+  else if (typeid(T) == typeid(signed char)) {
     dataSize = 1 * problemSize; // 1 bytes per word
   }
   if(size0 < 64)
@@ -195,7 +195,7 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     unsigned Size = problemSize;
     int res = 0;
     for(i = 0; i < Size; i++)
-      res += param1_ptr[i];
+      res = param1_ptr[i]>res ? param1_ptr[i]:res;
     target_ptr[0] = res;
 
     // flush the results to the global memory 
@@ -221,8 +221,6 @@ void kernel<T>::check_FGPU_results()
   {
     #if PRINT_ERRORS
       xil_printf("res=0x%x (must be 0x%x)\n\r", target_fgpu[0], target_arm[0]);
-      printf("target_fgpu[0] = 0x%x\n", target_fgpu[0]);
-      printf("res_fgpu @ 0x%x\n", (unsigned)res_fgpu);
     #endif
     nErrors++;
   }
@@ -236,7 +234,7 @@ bool kernel<T>::update_atomic_reduce_factor_and_download(unsigned rfactor)
 {
   if( rfactor == 0 ||
       (use_vector_types && typeid(T) == typeid(short) && (problemSize/2 < rfactor || rfactor < 2)) ||
-      (use_vector_types && typeid(T) == typeid(char) && (problemSize/4 < rfactor || rfactor < 4)) ||
+      (use_vector_types && typeid(T) == typeid(signed char) && (problemSize/4 < rfactor || rfactor < 4)) ||
       problemSize < rfactor
       )
     return false;
@@ -253,16 +251,13 @@ bool kernel<T>::update_atomic_reduce_factor_and_download(unsigned rfactor)
 template<typename T>
 bool kernel<T>::update_reduce_factor_and_download(unsigned rfactor, bool swap_arrays)
 {
-  // printf("updating:\n");
-  // printf("size0 = %d, ", size0);
-  // printf("rfactor = %d\n", rfactor);
   if (size0 == 1 || 
       rfactor == 1 || 
-      (use_vector_types && (typeid(T) == typeid(char)) && rfactor < 4) ){
+      (use_vector_types && (typeid(T) == typeid(signed char)) && rfactor < 4) ){
     return false;
   } else if(  size0 < minReduceSize || 
               size0 <= rfactor ||
-              (use_vector_types && (typeid(T) == typeid(char) && size0/rfactor < 4)) || 
+              (use_vector_types && (typeid(T) == typeid(signed char) && size0/rfactor < 4)) || 
               (use_vector_types && (typeid(T) == typeid(short) && size0/rfactor < 2 ))) {
     reduce_factor = size0;
     size0 = 1;
@@ -270,7 +265,7 @@ bool kernel<T>::update_reduce_factor_and_download(unsigned rfactor, bool swap_ar
     size0 /= rfactor;
     reduce_factor = rfactor;
   }
-  assert(typeid(T) != typeid(char) || !use_vector_types || (reduce_factor >= 4 && reduce_factor%4 == 0));
+  assert(typeid(T) != typeid(signed char) || !use_vector_types || (reduce_factor >= 4 && reduce_factor%4 == 0));
   assert(typeid(T) != typeid(short) || !use_vector_types || (reduce_factor >= 2 && reduce_factor%2 == 0));
   wg_size0 = size0>32?32:size0;
   wg_size = wg_size0;
@@ -396,11 +391,11 @@ template<typename T>
 void kernel<T>::print_name()
 {
   if( typeid(T) == typeid(int) )
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum word" ANSI_COLOR_RESET);
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is max word" ANSI_COLOR_RESET);
   else if (typeid(T) == typeid(short))
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum half word" ANSI_COLOR_RESET);
-  else if (typeid(T) == typeid(char))
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum byte" ANSI_COLOR_RESET);
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is max half word" ANSI_COLOR_RESET);
+  else if (typeid(T) == typeid(signed char))
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is max byte" ANSI_COLOR_RESET);
   if (use_vector_types)
     xil_printf(" (vector types activated -");
   else
@@ -413,4 +408,4 @@ void kernel<T>::print_name()
 
 template class kernel<int>;
 template class kernel<short>;
-template class kernel<char>;
+template class kernel<signed char>;
