@@ -9,7 +9,8 @@ switch $benchmark {
   "max_atomic" -
   "sum" {
     # set bitstream ../bitstreams/V1_8CUs.bit
-    set bitstream ../bitstreams/V2_8CUs_Atomic_2AXI_245MHz.bit
+    set bitstream ../bitstreams/V2_8CUs_Atomic_SubInteger_2AXI_220MHz.bit
+    # set bitstream ../bitstreams/V2_8CUs_Atomic_2AXI_245MHz.bit
   }
   "vec_add" -
   "vec_mul" -
@@ -20,7 +21,8 @@ switch $benchmark {
   "median" -
   "parallel_selection" -
   "compass_edge_detection" {
-    set bitstream ../bitstreams/V2_8CUs_SubInteger_2K_LMEM_240MHz.bit
+    # set bitstream ../bitstreams/V2_8CUs_SubInteger_2K_LMEM_240MHz.bit
+    set bitstream ../bitstreams/V2_8CUs_Atomic_SubInteger_2AXI_220MHz.bit
   }
   "power_measurement" {
   }

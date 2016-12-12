@@ -30,8 +30,8 @@ class kernel{
   unsigned reduce_factor;
   
   void compute_descriptor();
-  bool compute_with_atomics(unsigned n_runs, unsigned rfactor, unsigned &exec_time);
-  bool compute_without_atomics(unsigned n_runs, unsigned rfactor, unsigned &exec_time);
+  bool compute_with_atomics(unsigned n_runs, unsigned rfactor, unsigned &exec_time, bool check_results);
+  bool compute_without_atomics(unsigned n_runs, unsigned rfactor, unsigned &exec_time, bool check_results);
   bool update_reduce_factor_and_download(unsigned rfactor, bool swap_arrays);
   bool update_atomic_reduce_factor_and_download(unsigned rfactor);
   bool use_vector_types;

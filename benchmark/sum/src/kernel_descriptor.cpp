@@ -7,11 +7,19 @@ extern unsigned int *code; // binary storde in code.c as an array
 template<typename T>
 kernel<T>::kernel(unsigned max_size, bool vector_types, bool atomics)
 {
-  param1 = new T[max_size];
-  target_fgpu = new T[max_size];
-  // param1 = (T*)new int [max_size];
-  // target_fgpu = (T*) new int[max_size];
-  target_arm = new T[32];
+  // param1 = new T[max_size];
+  // target_fgpu = new T[max_size];
+  param1 = (T*)new int [max_size];
+  target_fgpu = (T*) new int[max_size];
+  // param1 = (T*) 0x10000000;
+  // target_fgpu = (T*) 0x18000000;
+  // param1 = (T*)malloc(max_size*4);
+  // target_fgpu = (T*)malloc(max_size*4);
+
+  target_arm = (T*)new unsigned[32];
+  assert(target_arm != 0);
+  assert(target_fgpu != 0);
+  assert(param1 != 0);
   use_vector_types = vector_types;
   use_atomics = atomics;
   minReduceSize = 32;
@@ -64,6 +72,7 @@ void kernel<T>::download_code()
   for(; i < size; i++){
     cram_ptr[i] = code[i];
   }
+  Xil_DCacheFlush();
 }
 template<typename T>
 void kernel<T>::download_descriptor()
@@ -163,13 +172,9 @@ void kernel<T>::initialize_memory()
   T *target_ptr = (T*) target_fgpu;
   for(i = 0; i < problemSize; i++) 
   {
-    param_ptr[i] = (T)1;
+    param_ptr[i] = (T)2*i;
     target_ptr[i] = 0;
   }
-  target_ptr[0] = 0;
-  // wait_ms(2);
-  // xil_printf("problemSize = %d\n\r", problemSize);
-  // xil_printf("param1[%d]= %d\n\r", 0, param1[0]);
   Xil_DCacheFlush(); // flush data to global memory
 }
 template<typename T>
@@ -213,18 +218,21 @@ template<typename T>
 void kernel<T>::check_FGPU_results()
 {
   unsigned int nErrors = 0;
-  T *res_fgpu = (T*)lram_ptr[17];
+  volatile T *res_fgpu = (T*)lram_ptr[17];
   Xil_DCacheInvalidate();
   if(*res_fgpu != target_arm[0])
   {
     #if PRINT_ERRORS
       xil_printf("res=0x%x (must be 0x%x)\n\r", target_fgpu[0], target_arm[0]);
-      printf("target_fgpu[0] = %d\n", target_fgpu[0]);
+      printf("target_fgpu[0] = 0x%x\n", target_fgpu[0]);
+      printf("res_fgpu @ 0x%x\n", (unsigned)res_fgpu);
     #endif
     nErrors++;
   }
   if(nErrors != 0)
     xil_printf("Memory check failed (nErrors = %d)!\n\r", nErrors);
+  // else
+  //   xil_printf("Memory check succeeded!\n\r", nErrors);
 }
 template<typename T>
 bool kernel<T>::update_atomic_reduce_factor_and_download(unsigned rfactor)
@@ -242,10 +250,7 @@ bool kernel<T>::update_atomic_reduce_factor_and_download(unsigned rfactor)
   assert(size0%wg_size0 == 0);
   compute_descriptor();
   download_descriptor();
-  // unsigned i;
-  // for(i = 0; i < 32; i++)
-  //   printf("lram[%d] = %x\n", i, lram_ptr[i]);
-  // printf("start_addr = %x\n", start_addr);
+  Xil_DCacheFlush(); // flush data to global memory
   return true;
 }
 template<typename T>
@@ -254,7 +259,9 @@ bool kernel<T>::update_reduce_factor_and_download(unsigned rfactor, bool swap_ar
   // printf("updating:\n");
   // printf("size0 = %d, ", size0);
   // printf("rfactor = %d\n", rfactor);
-  if (size0 == 1 || rfactor == 1) {
+  if (size0 == 1 || 
+      rfactor == 1 || 
+      (use_vector_types && (typeid(T) == typeid(char)) && rfactor < 4) ){
     return false;
   } else if(  size0 < minReduceSize || 
               size0 <= rfactor ||
@@ -286,14 +293,11 @@ bool kernel<T>::update_reduce_factor_and_download(unsigned rfactor, bool swap_ar
     lram_ptr[17] = tmp;
   }
   lram_ptr[18] = reduce_factor;
-  // printf("size0 = %d, ", size0);
-  // printf("reduce_factor = %d\n", reduce_factor);
   return true;
 }
 template<typename T>
-bool kernel<T>::compute_without_atomics(unsigned n_runs, unsigned rfactor, unsigned &exec_time)
+bool kernel<T>::compute_without_atomics(unsigned n_runs, unsigned rfactor, unsigned &exec_time, bool check_results)
 {
-  xil_printf("compute_without_atomics with rfactor = %d\n\r", rfactor);
   XTime tStart, tEnd;
   unsigned runs = 0;
   exec_time = 0;
@@ -320,6 +324,8 @@ bool kernel<T>::compute_without_atomics(unsigned n_runs, unsigned rfactor, unsig
     exec_time += elapsed_time_us(tStart, tEnd);
     xil_printf(ANSI_COLOR_GREEN "." ANSI_COLOR_RESET);
     fflush(stdout);
+    if (check_results)
+      check_FGPU_results();
     runs++;
     if(exec_time > 1000000*MAX_MES_TIME_S)
       break;
@@ -328,7 +334,7 @@ bool kernel<T>::compute_without_atomics(unsigned n_runs, unsigned rfactor, unsig
   return rfactor_allowed;
 }
 template<typename T>
-bool kernel<T>::compute_with_atomics(unsigned n_runs, unsigned rfactor, unsigned &exec_time)
+bool kernel<T>::compute_with_atomics(unsigned n_runs, unsigned rfactor, unsigned &exec_time, bool check_results)
 {
   XTime tStart, tEnd;
   unsigned runs = 0;
@@ -338,10 +344,6 @@ bool kernel<T>::compute_with_atomics(unsigned n_runs, unsigned rfactor, unsigned
   while(rfactor_allowed && runs < n_runs)
   {
     initialize_memory();
-    int i;
-    for(i = 0; i < 64; i++)
-      if(param1[i] != 1)
-        xil_printf("heeeere\n\r");
     XTime_GetTime(&tStart);
     REG_WRITE(START_REG_ADDR, 1);
     while(REG_READ(STATUS_REG_ADDR)==0);
@@ -350,6 +352,8 @@ bool kernel<T>::compute_with_atomics(unsigned n_runs, unsigned rfactor, unsigned
     xil_printf(ANSI_COLOR_GREEN "." ANSI_COLOR_RESET);
     fflush(stdout);
     runs++;
+    if (check_results)
+      check_FGPU_results();
     if(exec_time > 1000000*MAX_MES_TIME_S)
       break;
   }
@@ -364,24 +368,21 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results, unsigne
 {
   unsigned exec_time = 0;
 
-  const unsigned rfactor_vec_len = 1;
+  const unsigned rfactor_vec_len = 10;
   const unsigned rfactor_begin = 1;
   
   unsigned int exec_times[rfactor_vec_len];
   unsigned param_index = 0;
   unsigned int rfactor = rfactor_begin;
-  bool executed;
 
-  REG_WRITE(INITIATE_REG_ADDR, 0xFFFF); // initiate FGPU when execution starts
-  REG_WRITE(CLEAN_CACHE_REG_ADDR, 0xFFFF); // clean FGPU cache at end of execution
+  REG_WRITE(INITIATE_REG_ADDR, 1); // initiate FGPU when execution starts
+  REG_WRITE(CLEAN_CACHE_REG_ADDR, 1); // clean FGPU cache at end of execution
   for(param_index = 0; param_index < rfactor_vec_len; param_index++)
   {
     if(use_atomics)
-      executed = compute_with_atomics(n_runs, rfactor, exec_times[param_index]);
+      compute_with_atomics(n_runs, rfactor, exec_times[param_index], check_results);
     else
-      executed = compute_without_atomics(n_runs, rfactor, exec_times[param_index]);
-    if(executed && check_results)
-      check_FGPU_results();
+      compute_without_atomics(n_runs, rfactor, exec_times[param_index], check_results);
     rfactor *= 2;
   }
   exec_time = exec_times[0];

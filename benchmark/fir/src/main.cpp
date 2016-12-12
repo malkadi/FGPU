@@ -1,8 +1,8 @@
 #include "aux_functions.hpp"
 using namespace std;
 
-#define TYPE  int 
-// #define TYPE  short
+// #define TYPE  int 
+#define TYPE  short
 // #define TYPE  char
 
 int main()
@@ -16,7 +16,7 @@ int main()
   // use vector types:ushort2 instead of ushort OR uchar4 instead of byte
   const bool use_vector_types = 1;
   // control power measurement
-  const unsigned sync_power_measurement = 1;
+  const unsigned sync_power_measurement = 0;
   
   if(check_results)
     xil_printf("\n\r---Entering main (checking FGPU results is" ANSI_COLOR_GREEN" active" ANSI_COLOR_RESET ") ---\n\r");
