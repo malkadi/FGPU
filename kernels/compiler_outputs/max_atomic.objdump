@@ -1,0 +1,208 @@
+
+compiler_outputs/max_atomic.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+max_atomic:
+       0:	22 00 00 a8 	lp	r2, 1
+       4:	44 00 00 a8 	lp	r4, 2
+       8:	05 00 00 a8 	lp	r5, 0
+       c:	03 00 00 a0 	lid	r3, 0
+      10:	07 00 00 a1 	wgoff	r7, 0
+      14:	06 00 00 a2 	size	r6, 0
+      18:	e1 0c 00 10 	add	r1, r7, r3
+      1c:	23 14 00 74 	lw	r3, r5[r1]
+      20:	07 04 00 11 	addi	r7, r0, 1
+      24:	e4 2c 00 62 	beq	r4, r7, 11
+      28:	21 18 00 10 	add	r1, r1, r6
+      2c:	21 08 00 21 	slli	r1, r1, 2
+      30:	a1 04 00 10 	add	r1, r5, r1
+      34:	84 fc ff 11 	addi	r4, r4, -1
+      38:	c5 08 00 21 	slli	r5, r6, 2
+
+LBB0_2:
+      3c:	06 04 00 74 	lw	r6, r1[r0]
+      40:	67 18 00 b2 	slt	r7, r3, r6
+      44:	c3 1c 00 40 	movn	r3, r6, r7
+      48:	21 14 00 10 	add	r1, r1, r5
+      4c:	84 fc ff 11 	addi	r4, r4, -1
+      50:	04 e8 ff 63 	bne	r4, r0, -6
+
+LBB0_3:
+      54:	43 00 00 82 	amax	r3, r2, r0
+      58:	00 00 00 92 	ret
+
+max_half_atomic:
+      5c:	44 00 00 a8 	lp	r4, 2
+      60:	22 00 00 a8 	lp	r2, 1
+      64:	05 00 00 a8 	lp	r5, 0
+      68:	03 00 00 a0 	lid	r3, 0
+      6c:	07 00 00 a1 	wgoff	r7, 0
+      70:	06 00 00 a2 	size	r6, 0
+      74:	e1 0c 00 10 	add	r1, r7, r3
+      78:	23 14 00 72 	lh	r3, r5[r1]
+      7c:	27 04 00 21 	slli	r7, r1, 1
+      80:	a7 1c 00 10 	add	r7, r5, r7
+      84:	e7 78 00 35 	xori	r7, r7, 30
+      88:	e7 0c 00 21 	slli	r7, r7, 3
+      8c:	63 1c 00 20 	sll	r3, r3, r7
+      90:	63 40 00 2d 	srai	r3, r3, 16
+      94:	07 04 00 11 	addi	r7, r0, 1
+      98:	e4 3c 00 62 	beq	r4, r7, 15
+      9c:	21 18 00 10 	add	r1, r1, r6
+      a0:	21 04 00 21 	slli	r1, r1, 1
+      a4:	a1 04 00 10 	add	r1, r5, r1
+      a8:	84 fc ff 11 	addi	r4, r4, -1
+      ac:	c5 04 00 21 	slli	r5, r6, 1
+
+LBB1_2:
+      b0:	26 78 00 35 	xori	r6, r1, 30
+      b4:	c6 0c 00 21 	slli	r6, r6, 3
+      b8:	07 04 00 74 	lw	r7, r1[r0]
+      bc:	e6 18 00 20 	sll	r6, r7, r6
+      c0:	c6 40 00 2d 	srai	r6, r6, 16
+      c4:	67 18 00 b2 	slt	r7, r3, r6
+      c8:	c3 1c 00 40 	movn	r3, r6, r7
+      cc:	21 14 00 10 	add	r1, r1, r5
+      d0:	84 fc ff 11 	addi	r4, r4, -1
+      d4:	04 d8 ff 63 	bne	r4, r0, -10
+
+LBB1_3:
+      d8:	43 00 00 82 	amax	r3, r2, r0
+      dc:	00 00 00 92 	ret
+
+max_half_improved_atomic:
+      e0:	22 00 00 a8 	lp	r2, 1       r2=&out
+      e4:	45 00 00 a8 	lp	r5, 2       r5=reduce_factor
+      e8:	04 00 00 a8 	lp	r4, 0       r4=&in
+      ec:	03 00 00 a0 	lid	r3, 0       
+      f0:	07 00 00 a1 	wgoff	r7, 0
+      f4:	06 00 00 a2 	size	r6, 0       r6=size
+      f8:	e7 0c 00 10 	add	r7, r7, r3  r7=x
+      fc:	e1 10 00 74 	lw	r1, r4[r7]  r1=in[x]
+     100:	23 40 00 2d 	srai	r3, r1, 16  r3=in[x].y
+     104:	21 40 00 21 	slli	r1, r1, 16 
+     108:	21 40 00 2d 	srai	r1, r1, 16  r1=in[x].x 
+     10c:	68 04 00 b2 	slt	r8, r3, r1  r8=in[x].y<in[x].x
+     110:	23 20 00 40 	movn	r3, r1, r8  r3=in[x].x if in[x].y<in[x].x else in[x].y
+     114:	01 10 00 11 	addi	r1, r0, 4   r1=4
+     118:	a1 04 00 b6 	sltu	r1, r5, r1  r1=reduce_factor<4
+     11c:	01 48 00 63 	bne	r1, r0, 18  goto LBB2_3 if reduce_factor<4
+     120:	a1 04 00 29 	srli	r1, r5, 1   r1=reduce_factor/2
+     124:	e5 18 00 10 	add	r5, r7, r6  r5=x+size
+     128:	a5 08 00 21 	slli	r5, r5, 2   r5=(x+size)*4
+     12c:	84 14 00 10 	add	r4, r4, r5  r4=&in[x]
+     130:	05 04 00 11 	addi	r5, r0, 1   r5=1
+     134:	c6 08 00 21 	slli	r6, r6, 2   r6=size*4
+
+LBB2_2:
+     138:	07 10 00 74 	lw	r7, r4[r0]  r7=tmp
+     13c:	e8 40 00 21 	slli	r8, r7, 16  
+     140:	08 41 00 2d 	srai	r8, r8, 16  r8=tmp.x
+     144:	09 0d 00 b2 	slt	r9, r8, r3  r9=tmp.x<max
+     148:	68 24 00 40 	movn	r8, r3, r9  r8=max(tmp.x, max)
+     14c:	e3 40 00 2d 	srai	r3, r7, 16  r3=tmp.y
+     150:	67 20 00 b2 	slt	r7, r3, r8  r7=tmp.y<max
+     154:	03 1d 00 40 	movn	r3, r8, r7  r3=max(tmp.y, max)
+     158:	84 18 00 10 	add	r4, r4, r6  r4=&in[x]
+     15c:	a5 04 00 11 	addi	r5, r5, 1   r5++
+     160:	a7 04 00 b6 	sltu	r7, r5, r1  r7=i<reduce_factor/2
+     164:	07 d0 ff 63 	bne	r7, r0, -12
+
+LBB2_3:
+     168:	43 00 00 82 	amax	r3, r2, r0
+     16c:	00 00 00 92 	ret
+
+max_byte_atomic:
+     170:	45 00 00 a8 	lp	r5, 2
+     174:	22 00 00 a8 	lp	r2, 1
+     178:	06 00 00 a8 	lp	r6, 0
+     17c:	07 00 00 a0 	lid	r7, 0
+     180:	08 00 00 a1 	wgoff	r8, 0
+     184:	03 00 00 a2 	size	r3, 0
+     188:	01 1d 00 10 	add	r1, r8, r7
+     18c:	24 18 00 71 	lb	r4, r6[r1]
+     190:	c1 04 00 10 	add	r1, r6, r1
+     194:	21 7c 00 35 	xori	r1, r1, 31
+     198:	21 0c 00 21 	slli	r1, r1, 3
+     19c:	81 04 00 20 	sll	r1, r4, r1
+     1a0:	24 60 00 2d 	srai	r4, r1, 24
+     1a4:	01 04 00 11 	addi	r1, r0, 1
+     1a8:	25 38 00 62 	beq	r5, r1, 14
+     1ac:	61 1c 00 10 	add	r1, r3, r7
+     1b0:	21 20 00 10 	add	r1, r1, r8
+     1b4:	c1 04 00 10 	add	r1, r6, r1
+     1b8:	a5 fc ff 11 	addi	r5, r5, -1
+
+LBB3_2:
+     1bc:	26 7c 00 35 	xori	r6, r1, 31
+     1c0:	c6 0c 00 21 	slli	r6, r6, 3
+     1c4:	07 04 00 74 	lw	r7, r1[r0]
+     1c8:	e6 18 00 20 	sll	r6, r7, r6
+     1cc:	c6 60 00 2d 	srai	r6, r6, 24
+     1d0:	87 18 00 b2 	slt	r7, r4, r6
+     1d4:	c4 1c 00 40 	movn	r4, r6, r7
+     1d8:	21 0c 00 10 	add	r1, r1, r3
+     1dc:	a5 fc ff 11 	addi	r5, r5, -1
+     1e0:	05 d8 ff 63 	bne	r5, r0, -10
+
+LBB3_3:
+     1e4:	44 00 00 82 	amax	r4, r2, r0
+     1e8:	00 00 00 92 	ret
+
+max_byte_improved_atomic:
+     1ec:	22 00 00 a8 	lp	r2, 1
+     1f0:	45 00 00 a8 	lp	r5, 2
+     1f4:	04 00 00 a8 	lp	r4, 0
+     1f8:	03 00 00 a0 	lid	r3, 0
+     1fc:	07 00 00 a1 	wgoff	r7, 0
+     200:	06 00 00 a2 	size	r6, 0
+     204:	e7 0c 00 10 	add	r7, r7, r3
+     208:	e1 10 00 74 	lw	r1, r4[r7]
+     20c:	23 60 00 21 	slli	r3, r1, 24
+     210:	63 60 00 2d 	srai	r3, r3, 24
+     214:	28 40 00 21 	slli	r8, r1, 16
+     218:	08 61 00 2d 	srai	r8, r8, 24
+     21c:	09 0d 00 b2 	slt	r9, r8, r3
+     220:	68 24 00 40 	movn	r8, r3, r9
+     224:	23 20 00 21 	slli	r3, r1, 8
+     228:	69 60 00 2d 	srai	r9, r3, 24
+     22c:	23 21 00 b2 	slt	r3, r9, r8
+     230:	09 0d 00 40 	movn	r9, r8, r3
+     234:	23 60 00 2d 	srai	r3, r1, 24
+     238:	61 24 00 b2 	slt	r1, r3, r9
+     23c:	23 05 00 40 	movn	r3, r9, r1
+     240:	01 20 00 11 	addi	r1, r0, 8
+     244:	a1 04 00 b6 	sltu	r1, r5, r1
+     248:	01 68 00 63 	bne	r1, r0, 26
+     24c:	a1 08 00 29 	srli	r1, r5, 2
+     250:	e5 18 00 10 	add	r5, r7, r6
+     254:	a5 08 00 21 	slli	r5, r5, 2
+     258:	84 14 00 10 	add	r4, r4, r5
+     25c:	05 04 00 11 	addi	r5, r0, 1
+     260:	c6 08 00 21 	slli	r6, r6, 2
+
+LBB4_2:
+     264:	07 10 00 74 	lw	r7, r4[r0]
+     268:	e8 60 00 21 	slli	r8, r7, 24
+     26c:	08 61 00 2d 	srai	r8, r8, 24
+     270:	09 0d 00 b2 	slt	r9, r8, r3
+     274:	68 24 00 40 	movn	r8, r3, r9
+     278:	e3 40 00 21 	slli	r3, r7, 16
+     27c:	63 60 00 2d 	srai	r3, r3, 24
+     280:	69 20 00 b2 	slt	r9, r3, r8
+     284:	03 25 00 40 	movn	r3, r8, r9
+     288:	e8 20 00 21 	slli	r8, r7, 8
+     28c:	08 61 00 2d 	srai	r8, r8, 24
+     290:	09 0d 00 b2 	slt	r9, r8, r3
+     294:	68 24 00 40 	movn	r8, r3, r9
+     298:	e3 60 00 2d 	srai	r3, r7, 24
+     29c:	67 20 00 b2 	slt	r7, r3, r8
+     2a0:	03 1d 00 40 	movn	r3, r8, r7
+     2a4:	84 18 00 10 	add	r4, r4, r6
+     2a8:	a5 04 00 11 	addi	r5, r5, 1
+     2ac:	a7 04 00 b6 	sltu	r7, r5, r1
+     2b0:	07 b0 ff 63 	bne	r7, r0, -20
+
+LBB4_3:
+     2b4:	43 00 00 82 	amax	r3, r2, r0
+     2b8:	00 00 00 92 	ret

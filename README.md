@@ -2,8 +2,9 @@
 FGPU is a soft GPU-like architecture for FPGAs. It can be programmed using OpenCL and customized according to application needs.
 
 This repository contains some benchmarks that run on this architecture.
+FGPU will be open-source soon.
 
-It is planned that FGPU will be open-source soon.
++ Setup information available in the `scripts` folder
 
 ##Supported Boards
 Currently, only the ZC706 development board is supported.

@@ -1,10 +1,10 @@
 # Setup instructions
-+ Make sure to execute the Vivado setup script by editing the file set_paths.sh
-+ Create and compile needed hardware and bsp projects 
++ Make sure to edit the `set_paths.sh` script to refer to your Vivado installation
++ Create and compile the needed hardware and bsp projects by executing
 ```sh
 ./create_bsps.sh
 ```
-+ Create SDK projects for all applications in the `benchmark` folder and compile them
++ Create the SDK projects for all applications in the `benchmark` folder and compile them
 ```sh
 ./create_project.sh
 ```
