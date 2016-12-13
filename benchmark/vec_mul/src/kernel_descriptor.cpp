@@ -160,7 +160,7 @@ void kernel<T>::check_FGPU_results()
       #if PRINT_ERRORS
       if(nErrors < 10) {
         if(typeid(T) == typeid(float))
-          printf("res[0x%x]=%f (must be %f)\n\r", i, (float)target[i], (float) i*i);
+          printf("res[%x]=%f (must be %f)\n\r", i, (float)target[i], (float) i*i);
         else
           xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, (unsigned)target[i], (unsigned) i+i);
       }

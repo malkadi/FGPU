@@ -9,7 +9,7 @@ kernel<T>::kernel(unsigned max_size)
   param1 = new T[max_size];
   target_fgpu = new T[max_size];
   target_arm = new T[max_size];
-  div_val = 10;
+  div_val = 3;
 }
 template<typename T>
 kernel<T>::~kernel() 
@@ -25,6 +25,8 @@ void kernel<T>::download_code()
   unsigned int size = DIV_LEN;
   if (typeid(T) == typeid(int))
     start_addr = DIV_INT_POS;
+  else if(typeid(T) == typeid(float))
+    start_addr = DIV_FLOAT_POS;
   else
     assert(0 && "unsupported type");
   unsigned i = 0;
@@ -53,7 +55,10 @@ void kernel<T>::download_descriptor()
   lram_ptr[11] = (nParams << 28) | wg_size;
   lram_ptr[16] = (unsigned) param1;
   lram_ptr[17] = (unsigned) target_fgpu;
-  lram_ptr[18] = (unsigned) div_val;
+  if(typeid(T) == typeid(float))
+    lram_ptr[18] = (unsigned) toRep(div_val);
+  else
+    lram_ptr[18] = (unsigned) div_val;
 
 }
 template<typename T>
@@ -101,9 +106,7 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   offset0 = 0;
   nDim = 1;
   size0 = Size;
-  if( typeid(T) == typeid(int)) {
-    dataSize = 4 * problemSize; // 4 bytes per word
-  }
+  dataSize = 4 * problemSize; // 4 bytes per word
 
   if(size0 < 64)
     wg_size0 = size0;
@@ -126,7 +129,7 @@ void kernel<T>::initialize_memory()
   T *target_ptr = (T*) target_fgpu;
   for(i = 0; i < problemSize; i++) 
   {
-    param_ptr[i] = (T)rand();
+    param_ptr[i] = (T)i;
     target_ptr[i] = 0;
   }
   Xil_DCacheFlush(); // flush data to global memory
@@ -170,14 +173,16 @@ template<typename T>
 void kernel<T>::check_FGPU_results()
 {
   unsigned int i, nErrors = 0;
-  // Xil_DCacheInvalidate();
   for (i = 0; i < problemSize; i++) {
-    xil_printf("res[%d]=%d (must be %d, original value was %d)\n\r", i, target_fgpu[i], target_arm[i], param1[i]);
     if(target_arm[i] != target_fgpu[i])
     {
       #if PRINT_ERRORS
-      // if(nErrors < 10)
-      //   xil_printf("res[%d]=%d (must be %d, original value was %d)\n\r", i, target_fgpu[i], target_arm[i], param1[i]);
+      if(nErrors < 10) {
+        if(typeid(T) == typeid(float))
+          printf("res[%d]=%f (must be %f)\n\r", i, (float)target_fgpu[i], (float) target_arm[i]);
+        else
+          xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, (unsigned)target_fgpu[i], (unsigned) target_arm[i]);
+      }
       #endif
       nErrors++;
     }
@@ -220,7 +225,10 @@ template<typename T>
 void kernel<T>::print_name()
 {
   if( typeid(T) == typeid(int) )
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is div\n\r" ANSI_COLOR_RESET);
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is div int\n\r" ANSI_COLOR_RESET);
+  else if( typeid(T) == typeid(float) )
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is div float\n\r" ANSI_COLOR_RESET);
 }
 
 template class kernel<int>;
+template class kernel<float>;

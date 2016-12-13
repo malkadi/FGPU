@@ -26,7 +26,7 @@ class kernel{
   //extra info
   unsigned problemSize, dataSize;
   T *param1, *target_arm, *target_fgpu;
-  int div_val;
+  T div_val;
   void compute_descriptor();
 public:
   kernel(unsigned max_size);

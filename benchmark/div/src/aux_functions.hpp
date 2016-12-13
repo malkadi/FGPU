@@ -73,7 +73,8 @@ public:
 
 void wait_ms(u64 time);
 u64 elapsed_time_us(XTime tStart, XTime tEnd);
-
+unsigned toRep(float x);
+float fromRep(unsigned x); 
 
 
 #define ANSI_COLOR_RED     "\x1b[31m"
