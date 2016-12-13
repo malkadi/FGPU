@@ -7,6 +7,7 @@ switch $benchmark {
     set bitstream ../bitstreams/V2_8CUs_Atomic_noSubInteger_240MHz.bit
   }
   "max" -
+  "div" -
   "sum_power" -
   "sum_power_another" -
   "sum" {

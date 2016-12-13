@@ -1,9 +1,7 @@
 #include "aux_functions.hpp"
 using namespace std;
 
-#define TYPE  unsigned 
-// #define TYPE  unsigned short
-// #define TYPE  unsigned char
+#define TYPE  int
 
 int main()
 {
@@ -13,10 +11,8 @@ int main()
   const unsigned test_vec_len = 13;
   // Executions & time measurements will be repeated nruns times 
   const unsigned nruns = 10;
-  // use vector types:ushort2 instead of ushort OR uchar4 instead of byte
-  const bool use_vector_types = true;
   // control power measurement
-  const unsigned sync_power_measurement = 1;
+  const unsigned sync_power_measurement = 0;
   
   if(check_results)
     xil_printf("\n\r---Entering main (checking FGPU results is" ANSI_COLOR_GREEN" active" ANSI_COLOR_RESET ") ---\n\r");
@@ -35,16 +31,16 @@ int main()
   Xil_DCacheEnable();
   // create kernel
   unsigned maxProblemSize = 64<<test_vec_len;
-  kernel<TYPE> copy_kernel(maxProblemSize, use_vector_types);
+  kernel<TYPE> div_kernel(maxProblemSize);
   power_measure power;
   if( sync_power_measurement ) {
     power.set_idle();
   }
   // download binary to FGPU
-  copy_kernel.download_code();
+  div_kernel.download_code();
 
 
-  copy_kernel.print_name();
+  div_kernel.print_name();
   xil_printf("Problem Sizes :\n\r");
 
   if( sync_power_measurement ) {
@@ -53,24 +49,24 @@ int main()
   for(size_index = 0; size_index < test_vec_len; size_index++)
   {
     // initiate the kernel descriptor for the required problem size
-    copy_kernel.prepare_descriptor(64 << size_index);
-    xil_printf("%-8u", copy_kernel.get_problemSize());
+    div_kernel.prepare_descriptor(64 << size_index);
+    xil_printf("%-8u", div_kernel.get_problemSize());
     fflush(stdout);
 
     // break if the requested problem size is set too big by mistake
-    if(copy_kernel.get_problemSize() > MAX_PROBLEM_SIZE){
+    if(div_kernel.get_problemSize() > MAX_PROBLEM_SIZE){
       xil_printf("Problem size exceeds limit!\n\r");
       break;
     }
 
-    // compute on FGPU
-    timer_val_fgpu[size_index] = copy_kernel.compute_on_FGPU(nruns, check_results);
-
     // compute on ARM
     if (!sync_power_measurement ) {
-      timer_val_arm[size_index] = copy_kernel.compute_on_ARM(nruns);
+      timer_val_arm[size_index] = div_kernel.compute_on_ARM(nruns);
     }
     
+    // compute on FGPU
+    timer_val_fgpu[size_index] = div_kernel.compute_on_FGPU(nruns, check_results);
+
     xil_printf("\n\r");
 
   }

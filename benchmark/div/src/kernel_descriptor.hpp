@@ -25,11 +25,11 @@ class kernel{
   unsigned start_addr;
   //extra info
   unsigned problemSize, dataSize;
-  T *param1, *target;
+  T *param1, *target_arm, *target_fgpu;
+  int div_val;
   void compute_descriptor();
-  bool use_vector_types;
 public:
-  kernel(unsigned max_size, bool vector_types);
+  kernel(unsigned max_size);
   ~kernel();
   void download_code();
   void download_descriptor();

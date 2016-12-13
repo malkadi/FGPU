@@ -1,37 +1,30 @@
 #include "kernel_descriptor.hpp"
 
+#define PRINT_ERRORS  1
 extern unsigned int *code; // binary storde in code.c as an array
 
 template<typename T>
-kernel<T>::kernel(unsigned max_size, bool vector_types)
+kernel<T>::kernel(unsigned max_size)
 {
   param1 = new T[max_size];
-  target = new T[max_size];
-  use_vector_types = vector_types;
+  target_fgpu = new T[max_size];
+  target_arm = new T[max_size];
+  div_val = 3;
 }
 template<typename T>
 kernel<T>::~kernel() 
 {
   delete[] param1;
-  delete[] target;
+  delete[] target_arm;
+  delete[] target_fgpu;
 }
 template<typename T>
 void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
-  unsigned int size = COPY_LEN;
-  if (typeid(T) == typeid(unsigned))
-    start_addr = COPY_WORD_POS;
-  else if (typeid(T) == typeid(unsigned short)) 
-    if(use_vector_types)
-      start_addr = COPY_HALF_IMPROVED_POS;
-    else
-      start_addr = COPY_HALF_POS;
-  else if (typeid(T) == typeid(unsigned char))
-    if(use_vector_types)
-      start_addr = COPY_BYTE_IMPROVED_POS;
-    else
-      start_addr = COPY_BYTE_POS;
+  unsigned int size = DIV_LEN;
+  if (typeid(T) == typeid(int))
+    start_addr = DIV_INT_POS;
   else
     assert(0 && "unsupported type");
   unsigned i = 0;
@@ -59,7 +52,9 @@ void kernel<T>::download_descriptor()
   lram_ptr[10] = n_wg2-1;
   lram_ptr[11] = (nParams << 28) | wg_size;
   lram_ptr[16] = (unsigned) param1;
-  lram_ptr[17] = (unsigned) target;
+  lram_ptr[17] = (unsigned) target_fgpu;
+  lram_ptr[18] = (unsigned) div_val;
+
 }
 template<typename T>
 void kernel<T>::compute_descriptor()
@@ -106,18 +101,8 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   offset0 = 0;
   nDim = 1;
   size0 = Size;
-  if( typeid(T) == typeid(unsigned)) {
+  if( typeid(T) == typeid(int)) {
     dataSize = 4 * problemSize; // 4 bytes per word
-  }
-  else if (typeid(T) == typeid(unsigned short)) {
-    dataSize = 2 * problemSize; // 2 bytes per word
-    if(use_vector_types)
-      size0 = Size / 2;
-  }
-  else if (typeid(T) == typeid(unsigned char)) {
-    dataSize = 1 * problemSize; // 1 bytes per word
-    if(use_vector_types)
-      size0 = Size / 4;
   }
 
   if(size0 < 64)
@@ -126,7 +111,7 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   compute_descriptor();
 
   offset0 = offset1 = offset2 = 0;
-  nParams = 2; // number of parameters
+  nParams = 3; // number of parameters
 }
 template<typename T>
 unsigned kernel<T>::get_problemSize() 
@@ -138,10 +123,10 @@ void kernel<T>::initialize_memory()
 {
   unsigned i;
   T *param_ptr = (T*) param1;
-  T *target_ptr = (T*) target;
+  T *target_ptr = (T*) target_fgpu;
   for(i = 0; i < problemSize; i++) 
   {
-    param_ptr[i] = (T)i;
+    param_ptr[i] = (T)rand();
     target_ptr[i] = 0;
   }
   Xil_DCacheFlush(); // flush data to global memory
@@ -162,18 +147,18 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     XTime_GetTime(&tStart);
 
     // parametrs accessed during computations should be cashed
-    T *target_ptr = target;
+    T *target_ptr = target_arm;
     T *param1_ptr = param1;
     unsigned Size = problemSize;
     for(i = 0; i < Size; i++)
-      target_ptr[i] = param1_ptr[i];
+      target_ptr[i] = param1_ptr[i]/div_val;
 
     // flush the results to the global memory 
     // If the size of the data to be flushed exceeds half of the cache size, flush the whole cache. It is faster!
     if (dataSize > 16*1024)
       Xil_DCacheFlush();
     else
-      Xil_DCacheFlushRange((unsigned)target, dataSize);
+      Xil_DCacheFlushRange((unsigned)target_arm, dataSize);
     
     XTime_GetTime(&tEnd);
     exec_time += elapsed_time_us(tStart, tEnd);
@@ -191,10 +176,10 @@ void kernel<T>::check_FGPU_results()
   unsigned int i, nErrors = 0;
   // Xil_DCacheInvalidate();
   for (i = 0; i < problemSize; i++)
-    if(target[i] != (T)i)
+    if(target_arm[i] != target_fgpu[i])
     {
       #if PRINT_ERRORS
-        xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, (unsigned int)target[i], i);
+        xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, target_fgpu[i], target_arm[i]);
       #endif
       nErrors++;
     }
@@ -210,7 +195,6 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
 
   while(runs < n_runs)
   {
-    initialize_memory();
     download_descriptor();
     REG_WRITE(INITIATE_REG_ADDR, 0xFFFF); // initiate FGPU when execution starts
     REG_WRITE(CLEAN_CACHE_REG_ADDR, 0xFFFF); // clean FGPU cache at end of execution
@@ -236,14 +220,8 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
 template<typename T>
 void kernel<T>::print_name()
 {
-  if( typeid(T) == typeid(unsigned) )
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is copy word\n\r" ANSI_COLOR_RESET);
-  else if (typeid(T) == typeid(unsigned short))
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is copy half word\n\r" ANSI_COLOR_RESET);
-  else if (typeid(T) == typeid(unsigned char))
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is copy byte\n\r" ANSI_COLOR_RESET);
+  if( typeid(T) == typeid(int) )
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is div\n\r" ANSI_COLOR_RESET);
 }
 
-template class kernel<unsigned>;
-template class kernel<unsigned short>;
-template class kernel<unsigned char>;
+template class kernel<int>;
