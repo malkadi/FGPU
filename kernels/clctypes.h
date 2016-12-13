@@ -1,3 +1,5 @@
+// This file is originally a part of the compiler-RT/LLVM compiler infrastructure
+
 /* 6.1.1 Built-in Scalar Data Types */
 
 typedef unsigned char uchar;

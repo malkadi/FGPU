@@ -21,4 +21,8 @@ __kernel void div_int(__global int *in, __global int *out, int val) {
     int x = get_global_id(0);
     out[x] = in[x]/val;
 }
-
+#include "divsf3.c"
+__kernel void div_float(__global float *in1, float val, __global float *out) {
+  int x = get_global_id(0);
+  out[x] = in1[x]/val;
+}

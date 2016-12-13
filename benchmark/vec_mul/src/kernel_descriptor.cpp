@@ -1,5 +1,6 @@
 #include "kernel_descriptor.hpp"
 
+#define PRINT_ERRORS    1
 extern unsigned int *code; // binary storde in code.c as an array
 
 template<typename T>
@@ -22,18 +23,20 @@ void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
   unsigned int size = VEC_MUL_LEN;
-  if (typeid(T) == typeid(unsigned))
+  if (typeid(T) == typeid(int))
     start_addr = VEC_MUL_POS;
-  else if (typeid(T) == typeid(unsigned short)) 
+  else if (typeid(T) == typeid(short)) 
     if(use_vector_types)
       start_addr = VEC_MUL_HALF_IMPROVED_POS;
     else
       start_addr = VEC_MUL_HALF_POS;
-  else if (typeid(T) == typeid(unsigned char))
+  else if (typeid(T) == typeid(char))
     if(use_vector_types)
       start_addr = VEC_MUL_BYTE_IMPROVED_POS;
     else
       start_addr = VEC_MUL_BYTE_POS;
+  else if (typeid(T) == typeid(float))
+    start_addr = MUL_FLOAT_POS;
   else
     assert(0 && "unsupported type");
   unsigned i = 0;
@@ -72,15 +75,15 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   offset0 = 0;
   nDim = 1;
   size0 = Size;
-  if( typeid(T) == typeid(unsigned)) {
+  if( typeid(T) == typeid(int) || typeid(T) == typeid(float)) {
     dataSize = 4 * problemSize; // 4 bytes per word
   }
-  else if (typeid(T) == typeid(unsigned short)) {
+  else if (typeid(T) == typeid(short)) {
     dataSize = 2 * problemSize; // 2 bytes per word
     if(use_vector_types)
       size0 = Size / 2;
   }
-  else if (typeid(T) == typeid(unsigned char)) {
+  else if (typeid(T) == typeid(char)) {
     dataSize = 1 * problemSize; // 1 bytes per word
     if(use_vector_types)
       size0 = Size / 4;
@@ -134,11 +137,7 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
       target_ptr[i] = param1_ptr[i] * param2_ptr[i];
 
     // flush the results to the global memory 
-    // If the size of the data to be flushed exceeds half of the cache size, flush the whole cache. It is faster!
-    if (dataSize > 16*1024)
-      Xil_DCacheFlush();
-    else
-      Xil_DCacheFlushRange((unsigned)target, dataSize);
+    Xil_DCacheFlushRange((unsigned)target, dataSize);
     
     XTime_GetTime(&tEnd);
     exec_time += elapsed_time_us(tStart, tEnd);
@@ -156,10 +155,15 @@ void kernel<T>::check_FGPU_results()
   unsigned int i, nErrors = 0;
   // Xil_DCacheInvalidate();
   for (i = 0; i < problemSize; i++)
-    if(target[i] != (T)(i*i))
+    if(target[i] != (T)((T)i*(T)i))
     {
       #if PRINT_ERRORS
-        xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, (unsigned)target[i], (T)(i*i));
+      if(nErrors < 10) {
+        if(typeid(T) == typeid(float))
+          printf("res[0x%x]=%f (must be %f)\n\r", i, (float)target[i], (float) i*i);
+        else
+          xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, (unsigned)target[i], (unsigned) i+i);
+      }
       #endif
       nErrors++;
     }
@@ -201,12 +205,14 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
 template<typename T>
 void kernel<T>::print_name()
 {
-  if( typeid(T) == typeid(unsigned) )
+  if( typeid(T) == typeid(int) )
     xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is vec_mul word\n\r" ANSI_COLOR_RESET);
-  else if (typeid(T) == typeid(unsigned short))
+  else if (typeid(T) == typeid(short))
     xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is vec_mul half word\n\r" ANSI_COLOR_RESET);
-  else if (typeid(T) == typeid(unsigned char))
+  else if (typeid(T) == typeid(char))
     xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is vec_mul byte\n\r" ANSI_COLOR_RESET);
+  else if (typeid(T) == typeid(float))
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is vec_mul float\n\r" ANSI_COLOR_RESET);
 }
 template<typename T>
 unsigned kernel<T>::get_problemSize() 
@@ -251,6 +257,7 @@ void kernel<T>::compute_descriptor()
     nWF_WG++;
 }
 
-template class kernel<unsigned>;
-template class kernel<unsigned short>;
-template class kernel<unsigned char>;
+template class kernel<int>;
+template class kernel<float>;
+template class kernel<short>;
+template class kernel<char>;

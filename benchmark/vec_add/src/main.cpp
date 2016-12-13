@@ -1,7 +1,8 @@
 #include "aux_functions.hpp"
 using namespace std;
 
-#define TYPE  unsigned 
+#define TYPE  float
+// #define TYPE  unsigned 
 // #define TYPE  unsigned short
 // #define TYPE  unsigned char
 
@@ -10,13 +11,13 @@ int main()
   // The correctness of all results will be checked at the end of each execution round
   const unsigned check_results = 1; 
   // The kernel will be executed for problem sizes of 64, 64*2, ... , 64*2^(test_vec_len-1)
-  const unsigned test_vec_len = 13;
+  const unsigned test_vec_len = 1;
   // Executions & time measurements will be repeated nruns times 
-  const unsigned nruns = 10;
+  const unsigned nruns = 1;
   // use vector types:ushort2 instead of ushort OR uchar4 instead of byte
   const bool use_vector_types = 1;
   // control power measurement
-  const unsigned sync_power_measurement = 1;
+  const unsigned sync_power_measurement = 0;
   
   if(check_results)
     xil_printf("\n\r---Entering main (checking FGPU results is" ANSI_COLOR_GREEN" active" ANSI_COLOR_RESET ") ---\n\r");

@@ -1,2 +1,0 @@
-#define COMPASS_EDGE_DETECTION_LEN          108
-#define COMPASS_EDGE_DETECTION_POS          0

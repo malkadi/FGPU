@@ -403,14 +403,14 @@ LBB7_20:
      59c:	00 00 00 92 	ret
 
 mul_float:
-     5a0:	49 00 00 a8 	lp	r9, 2
-     5a4:	22 00 00 a8 	lp	r2, 1
-     5a8:	03 00 00 a8 	lp	r3, 0
-     5ac:	04 00 00 a0 	lid	r4, 0
-     5b0:	05 00 00 a1 	wgoff	r5, 0
-     5b4:	aa 10 00 10 	add	r10, r5, r4
-     5b8:	41 0d 00 74 	lw	r1, r3[r10]
-     5bc:	42 09 00 74 	lw	r2, r2[r10]
-     5c0:	00 ac fc 64 	jsub	-213
-     5c4:	41 25 00 7c 	sw	r1, r9[r10]
+     5a0:	42 00 00 a8 	lp	r2, 2
+     5a4:	03 00 00 a8 	lp	r3, 0
+     5a8:	24 00 00 a8 	lp	r4, 1
+     5ac:	05 00 00 a0 	lid	r5, 0
+     5b0:	06 00 00 a1 	wgoff	r6, 0
+     5b4:	c1 14 00 10 	add	r1, r6, r5
+     5b8:	24 10 00 74 	lw	r4, r4[r1]
+     5bc:	23 0c 00 74 	lw	r3, r3[r1]
+     5c0:	63 10 00 c1 	fmul	r3, r3, r4
+     5c4:	23 08 00 7c 	sw	r3, r2[r1]
      5c8:	00 00 00 92 	ret

@@ -9,7 +9,7 @@ kernel<T>::kernel(unsigned max_size)
   param1 = new T[max_size];
   target_fgpu = new T[max_size];
   target_arm = new T[max_size];
-  div_val = 3;
+  div_val = 10;
 }
 template<typename T>
 kernel<T>::~kernel() 
@@ -154,11 +154,7 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
       target_ptr[i] = param1_ptr[i]/div_val;
 
     // flush the results to the global memory 
-    // If the size of the data to be flushed exceeds half of the cache size, flush the whole cache. It is faster!
-    if (dataSize > 16*1024)
-      Xil_DCacheFlush();
-    else
-      Xil_DCacheFlushRange((unsigned)target_arm, dataSize);
+    Xil_DCacheFlushRange((unsigned)target_arm, dataSize);
     
     XTime_GetTime(&tEnd);
     exec_time += elapsed_time_us(tStart, tEnd);
@@ -175,14 +171,17 @@ void kernel<T>::check_FGPU_results()
 {
   unsigned int i, nErrors = 0;
   // Xil_DCacheInvalidate();
-  for (i = 0; i < problemSize; i++)
+  for (i = 0; i < problemSize; i++) {
+    xil_printf("res[%d]=%d (must be %d, original value was %d)\n\r", i, target_fgpu[i], target_arm[i], param1[i]);
     if(target_arm[i] != target_fgpu[i])
     {
       #if PRINT_ERRORS
-        xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, target_fgpu[i], target_arm[i]);
+      // if(nErrors < 10)
+      //   xil_printf("res[%d]=%d (must be %d, original value was %d)\n\r", i, target_fgpu[i], target_arm[i], param1[i]);
       #endif
       nErrors++;
     }
+  }
   if(nErrors != 0)
     xil_printf("Memory check failed (nErrors = %d)!\n\r", nErrors);
 }
