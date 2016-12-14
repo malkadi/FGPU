@@ -49,7 +49,7 @@ int main()
   for(size_index = 0; size_index < test_vec_len; size_index++)
   {
     // initiate the kernel descriptor for the required problem size
-    LUdecomposition_kernel.prepare_descriptor(4 << size_index);
+    LUdecomposition_kernel.prepare_descriptor(8 << size_index);
     xil_printf("%-8u", LUdecomposition_kernel.get_problemSize());
     fflush(stdout);
 

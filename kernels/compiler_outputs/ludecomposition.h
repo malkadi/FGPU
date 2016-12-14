@@ -1,2 +1,2 @@
-#define LUDECOMPOSITION_LEN                 906
-#define LUDECOMPOSITION_PASS_POS            866
+#define LUDECOMPOSITION_LEN                 1163
+#define LUDECOMPOSITION_PASS_POS            1123

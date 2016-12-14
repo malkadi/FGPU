@@ -7,24 +7,26 @@ template<typename T>
 kernel<T>::kernel(unsigned maxDim)
 {
   param1 = new T[maxDim*maxDim];
-  target_fgpu = new T[maxDim*maxDim];
-  target_arm = new T[maxDim*maxDim];
-  L_fgpu = new T[maxDim*maxDim];
-  L_arm = new T[maxDim*maxDim];
+  target_fgpu = new T[maxDim*maxDim]();
+  target_arm = new T[maxDim*maxDim]();
+  L_fgpu = new T[maxDim*maxDim]();
+  L_arm = new T[maxDim*maxDim]();
   assert(L_arm != 0);
-  // param1= (float*) 0x10000000;
-  // target_fgpu=  (float*)0x18000000;
-  // target_arm=  (float*)0x1C000000;
+  // param1= (float*) 0x11000000;
+  // target_fgpu=  (float*)0x12000000;
+  // target_arm=  (float*)0x13000000;
+  // L_fgpu=  (float*)0x14000000;
+  // L_arm=  (float*)0x15000000;
   lram_ptr = (unsigned*) FGPU_BASEADDR;
 }
 template<typename T>
 kernel<T>::~kernel() 
 {
-  delete[] param1;
-  delete[] target_arm;
-  delete[] target_fgpu;
-  delete[] L_fgpu;
-  delete[] L_arm;
+  // delete[] param1;
+  // delete[] target_arm;
+  // delete[] target_fgpu;
+  // delete[] L_fgpu;
+  // delete[] L_arm;
 }
 template<typename T>
 void kernel<T>::download_code()
@@ -59,12 +61,9 @@ void kernel<T>::download_descriptor()
   lram_ptr[10] = n_wg2-1;
   lram_ptr[11] = (nParams << 28) | wg_size;
   lram_ptr[16] = (unsigned) target_fgpu;
-  cout << "target_fgpu = " << target_fgpu << endl;
   lram_ptr[17] = (unsigned) L_fgpu;
-  lram_ptr[16] = (unsigned) size0;
-  lram_ptr[17] = (unsigned) passIndx;
-  for(unsigned i = 0; i < 32; i++)
-    cout<< "lram[" << i << "] = " << hex << lram_ptr[i] << dec << endl;
+  lram_ptr[18] = (unsigned) size0;
+  lram_ptr[19] = (unsigned) passIndx;
 }
 template<typename T>
 void kernel<T>::compute_descriptor()
@@ -109,16 +108,15 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   wg_size0 = 8;
   wg_size1 = 8;
   problemSize = Size*Size;
-  offset0 = 0;
   nDim = 2;
   size0 = size1 = Size;
-  passIndx = 0;
   dataSize = sizeof(T) * problemSize;
   if(wg_size0 > Size)
     wg_size0 = wg_size1 = Size;
 
   compute_descriptor();
 
+  passIndx = 0;
   offset0 = passIndx;// offset of k (the work-items @passIndx will write the L matrix), others will update U
   offset1 = passIndx+1;
   offset2 = 0;
@@ -205,35 +203,52 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
 template<typename T>
 void kernel<T>::check_FGPU_results()
 {
-  unsigned int i, nErrors = 0;
+  unsigned nErrors = 0;
   Xil_DCacheInvalidate();
+  for (unsigned i = 0; i < problemSize; i++) {
+    for(unsigned j = 0; j < size0; j++) {
+      if(i >= j)
+        continue;
+      if(target_arm[i*size0+j] != target_fgpu[i*size0+j])
+      {
+        #if PRINT_ERRORS
+        if(nErrors < 10)
+          cout << "res[" << i*size0+j << "]=" << target_fgpu[i*size0+j] << " must be(" << target_arm[i*size0+j] << ")" << endl;
+        #endif
+        nErrors++;
+      }
+    }
+  }
   printf("original = \n");
   for(unsigned i = 0; i < size0; i++) {
     for(unsigned j = 0; j < size1; j++)
-      printf("%4.4F ", param1[i*size0+j]);
+      printf("%9.2F ", param1[i*size0+j]);
     printf("\n");
   }
   printf("target_fgpu = \n");
   for(unsigned i = 0; i < size0; i++) {
     for(unsigned j = 0; j < size1; j++)
-      printf("%4.4F ", target_fgpu[i*size0+j]);
+      printf("%9.2f ", target_fgpu[i*size0+j]);
     printf("\n");
   }
   printf("target_arm = \n");
   for(unsigned i = 0; i < size0; i++) {
     for(unsigned j = 0; j < size1; j++)
-      printf("%4.4F ", target_arm[i*size0+j]);
+      printf("%9.2F ", target_arm[i*size0+j]);
     printf("\n");
   }
-  for (i = 0; i < problemSize; i++)
-    if(target_arm[i] != target_fgpu[i])
-    {
-      #if PRINT_ERRORS
-      if(nErrors < 10)
-        cout << "res[" << i << "]=" << target_fgpu[i] << " must be(" << target_arm[i] << ")" << endl;
-      #endif
-      nErrors++;
-    }
+  printf("L_fgpu = \n");
+  for(unsigned i = 0; i < size0; i++) {
+    for(unsigned j = 0; j < size1; j++)
+      printf("%9.2F ", L_fgpu[i*size0+j]);
+    printf("\n");
+  }
+  printf("L_arm = \n");
+  for(unsigned i = 0; i < size0; i++) {
+    for(unsigned j = 0; j < size1; j++)
+      printf("%9.2F ", L_arm[i*size0+j]);
+    printf("\n");
+  }
   if(nErrors != 0)
     xil_printf("Memory check failed (nErrors = %d)!\n\r", nErrors);
 }
@@ -274,6 +289,10 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
   while(runs < n_runs)
   {
     size0 = size1 = size0_buffer; // reset size0 and size1
+    passIndx = 0;
+    offset0 = passIndx;// offset of k (the work-items @passIndx will write the L matrix), others will update U
+    offset1 = passIndx+1;
+    compute_descriptor();
     download_descriptor();
     memcpy(target_fgpu, param1, dataSize);
     Xil_DCacheFlush();
