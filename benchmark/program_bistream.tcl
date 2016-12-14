@@ -7,6 +7,7 @@ switch $benchmark {
     set bitstream ../bitstreams/V2_8CUs_Atomic_noSubInteger_240MHz.bit
   }
   "bitonic" -
+  "fft" -
   "max" -
   "div" -
   "sum_power" -
