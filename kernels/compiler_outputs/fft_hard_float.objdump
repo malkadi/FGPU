@@ -1,0 +1,56 @@
+
+compiler_outputs/fft_hard_float.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+butterfly_hard:
+       0:	42 00 00 a8 	lp	r2, 2
+       4:	03 00 00 a8 	lp	r3, 0
+       8:	24 00 00 a8 	lp	r4, 1
+       c:	05 00 00 a0 	lid	r5, 0
+      10:	06 00 00 a1 	wgoff	r6, 0
+      14:	c1 14 00 10 	add	r1, r6, r5
+      18:	84 7c 00 31 	andi	r4, r4, 31
+      1c:	05 04 00 11 	addi	r5, r0, 1
+      20:	a5 10 00 20 	sll	r5, r5, r4
+      24:	a6 fc ff 11 	addi	r6, r5, -1
+      28:	26 18 00 30 	and	r6, r1, r6
+      2c:	21 10 00 28 	srl	r1, r1, r4
+      30:	a1 04 00 51 	mul	r1, r5, r1
+      34:	21 04 00 21 	slli	r1, r1, 1
+      38:	21 18 00 10 	add	r1, r1, r6
+      3c:	25 14 00 10 	add	r5, r1, r5
+      40:	a5 0c 00 21 	slli	r5, r5, 3
+      44:	21 0c 00 21 	slli	r1, r1, 3
+      48:	67 04 00 10 	add	r7, r3, r1
+      4c:	63 14 00 10 	add	r3, r3, r5
+      50:	05 00 00 a2 	size	r5, 0
+      54:	a1 10 00 28 	srl	r1, r5, r4
+      58:	21 18 00 51 	mul	r1, r1, r6
+      5c:	21 0c 00 21 	slli	r1, r1, 3
+      60:	41 04 00 10 	add	r1, r2, r1
+      64:	62 10 00 11 	addi	r2, r3, 4
+      68:	04 08 00 74 	lw	r4, r2[r0]
+      6c:	e5 10 00 11 	addi	r5, r7, 4
+      70:	06 14 00 74 	lw	r6, r5[r0]
+      74:	08 0c 00 74 	lw	r8, r3[r0]
+      78:	09 04 00 74 	lw	r9, r1[r0]
+      7c:	21 10 00 11 	addi	r1, r1, 4
+      80:	01 04 00 74 	lw	r1, r1[r0]
+      84:	0a 05 00 c1 	fmul	r10, r8, r1
+      88:	4b 19 00 c0 	fadd	r11, r10, r6
+      8c:	8c 24 00 c1 	fmul	r12, r4, r9
+      90:	8b 2d 00 c0 	fadd	r11, r12, r11
+      94:	0d 1c 00 74 	lw	r13, r7[r0]
+      98:	0b 14 00 7c 	sw	r11, r5[r0]
+      9c:	81 04 00 c1 	fmul	r1, r4, r1
+      a0:	04 25 00 c1 	fmul	r4, r8, r9
+      a4:	85 34 00 c0 	fadd	r5, r4, r13
+      a8:	a5 04 00 c8 	fsub	r5, r5, r1
+      ac:	05 1c 00 7c 	sw	r5, r7[r0]
+      b0:	c5 28 00 c8 	fsub	r5, r6, r10
+      b4:	a5 30 00 c8 	fsub	r5, r5, r12
+      b8:	05 08 00 7c 	sw	r5, r2[r0]
+      bc:	a2 11 00 c8 	fsub	r2, r13, r4
+      c0:	21 08 00 c0 	fadd	r1, r1, r2
+      c4:	01 0c 00 7c 	sw	r1, r3[r0]
+      c8:	00 00 00 92 	ret
