@@ -8,9 +8,9 @@ int main()
   // The correctness of all results will be checked at the end of each execution round
   const unsigned check_results = 1; 
   // The kernel will be executed for problem sizes of 8*8, 16*16, ... 
-  const unsigned test_vec_len = 1;
+  const unsigned test_vec_len = 7;
   // Executions & time measurements will be repeated nruns times 
-  const unsigned nruns = 1;
+  const unsigned nruns = 3;
   // control power measurement
   const unsigned sync_power_measurement = 0;
   
@@ -49,7 +49,7 @@ int main()
   for(size_index = 0; size_index < test_vec_len; size_index++)
   {
     // initiate the kernel descriptor for the required problem size
-    LUdecomposition_kernel.prepare_descriptor(8 << size_index);
+    LUdecomposition_kernel.prepare_descriptor(4 << size_index);
     xil_printf("%-8u", LUdecomposition_kernel.get_problemSize());
     fflush(stdout);
 

@@ -27,7 +27,8 @@ class kernel{
   //extra info
   unsigned problemSize, dataSize;
   unsigned passIndx;
-  T *param1, *target_arm, *target_fgpu, *L_fgpu, *L_arm;
+  T *param1, *target_arm, *L_arm;
+  T *target_fgpu, *L_fgpu;
   void compute_descriptor();
   void update_and_download();
 public:

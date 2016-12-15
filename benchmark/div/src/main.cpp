@@ -1,8 +1,8 @@
 #include "aux_functions.hpp"
 using namespace std;
 
-#define TYPE  float
-// #define TYPE  int
+// #define TYPE  float
+#define TYPE  int
 
 int main()
 {

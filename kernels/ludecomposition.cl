@@ -16,6 +16,7 @@ __kernel void ludecomposition_pass(__global float *mat,__global float *L, unsign
   unsigned j = get_global_id(0);
 
   float tmp = mat[i*size + k] / mat[k*size + k];
+  float res = mat[i*size+j] - tmp*mat[k*size + j];
   
   if (i < size) {
     if (j == k) {
@@ -25,7 +26,7 @@ __kernel void ludecomposition_pass(__global float *mat,__global float *L, unsign
       }
     } else if(j < size) {
       // mat[i*size+j] = 1;
-      mat[i*size+j] -= tmp*mat[k*size + j];
+      mat[i*size+j] = res;
       // mat[i*size+j] = mat[i*size+j] + 1;
       // L[i*size+j] = mat[i*size+j] - tmp*mat[k*size + j];
          // mat[i*size+j] =k;

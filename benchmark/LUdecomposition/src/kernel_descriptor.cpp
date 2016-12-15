@@ -113,7 +113,7 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   dataSize = sizeof(T) * problemSize;
   if(wg_size0 > Size)
     wg_size0 = wg_size1 = Size;
-
+  
   compute_descriptor();
 
   passIndx = 0;
@@ -152,7 +152,7 @@ void LUDecomposition(unsigned n, float *mat, float *L)
         mat[i*n+j] -= L[i*n + k]*mat[k*n + j];
       }
     }
-    break;
+    // break;
   }
   /* printf("LUDecomposition function result\n"); */
   /* printf("U:\n"); */
@@ -182,7 +182,7 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     initialize_memory();
     memcpy(target_arm, param1, dataSize);
     Xil_DCacheFlush();
-    Xil_DCacheInvalidate();
+    // Xil_DCacheInvalidate();
     
     XTime_GetTime(&tStart);
     LUDecomposition(size0, target_arm, L_arm);
@@ -204,51 +204,62 @@ template<typename T>
 void kernel<T>::check_FGPU_results()
 {
   unsigned nErrors = 0;
-  Xil_DCacheInvalidate();
-  for (unsigned i = 0; i < problemSize; i++) {
-    for(unsigned j = 0; j < size0; j++) {
-      if(i >= j)
-        continue;
-      if(target_arm[i*size0+j] != target_fgpu[i*size0+j])
-      {
-        #if PRINT_ERRORS
-        if(nErrors < 10)
-          cout << "res[" << i*size0+j << "]=" << target_fgpu[i*size0+j] << " must be(" << target_arm[i*size0+j] << ")" << endl;
-        #endif
-        nErrors++;
+  // Xil_DCacheInvalidate();
+  for (unsigned i = 0; i < size0; i++) {
+    for(unsigned j = 0; j < size1; j++) {
+      if(i >= j) {
+        // L part
+        if(L_arm[i*size0+j] != L_fgpu[i*size0+j])
+        {
+          #if PRINT_ERRORS
+          if(nErrors < 10)
+            cout << "L[" << i << "][" << j << "]=" << L_fgpu[i*size0+j] << " must be(" << L_arm[i*size0+j] << ")" << endl;
+          #endif
+          nErrors++;
+        }
+      } else {
+        // U part
+        if(target_arm[i*size0+j] != target_fgpu[i*size0+j])
+        {
+          #if PRINT_ERRORS
+          if(nErrors < 10)
+            cout << "U[" << i << "][" << j << "]=" << target_fgpu[i*size0+j] << " must be(" << target_arm[i*size0+j] << ")" << endl;
+          #endif
+          nErrors++;
+        }
       }
     }
   }
-  printf("original = \n");
-  for(unsigned i = 0; i < size0; i++) {
-    for(unsigned j = 0; j < size1; j++)
-      printf("%9.2F ", param1[i*size0+j]);
-    printf("\n");
-  }
-  printf("target_fgpu = \n");
-  for(unsigned i = 0; i < size0; i++) {
-    for(unsigned j = 0; j < size1; j++)
-      printf("%9.2f ", target_fgpu[i*size0+j]);
-    printf("\n");
-  }
-  printf("target_arm = \n");
-  for(unsigned i = 0; i < size0; i++) {
-    for(unsigned j = 0; j < size1; j++)
-      printf("%9.2F ", target_arm[i*size0+j]);
-    printf("\n");
-  }
-  printf("L_fgpu = \n");
-  for(unsigned i = 0; i < size0; i++) {
-    for(unsigned j = 0; j < size1; j++)
-      printf("%9.2F ", L_fgpu[i*size0+j]);
-    printf("\n");
-  }
-  printf("L_arm = \n");
-  for(unsigned i = 0; i < size0; i++) {
-    for(unsigned j = 0; j < size1; j++)
-      printf("%9.2F ", L_arm[i*size0+j]);
-    printf("\n");
-  }
+  // printf("original = \n");
+  // for(unsigned i = 0; i < size0; i++) {
+  //   for(unsigned j = 0; j < size1; j++)
+  //     printf("%9.2F ", param1[i*size0+j]);
+  //   printf("\n");
+  // }
+  // printf("target_fgpu = \n");
+  // for(unsigned i = 0; i < size0; i++) {
+  //   for(unsigned j = 0; j < size1; j++)
+  //     printf("%9.2f ", target_fgpu[i*size0+j]);
+  //   printf("\n");
+  // }
+  // printf("target_arm = \n");
+  // for(unsigned i = 0; i < size0; i++) {
+  //   for(unsigned j = 0; j < size1; j++)
+  //     printf("%9.2F ", target_arm[i*size0+j]);
+  //   printf("\n");
+  // }
+  // printf("L_fgpu = \n");
+  // for(unsigned i = 0; i < size0; i++) {
+  //   for(unsigned j = 0; j < size1; j++)
+  //     printf("%9.2F ", L_fgpu[i*size0+j]);
+  //   printf("\n");
+  // }
+  // printf("L_arm = \n");
+  // for(unsigned i = 0; i < size0; i++) {
+  //   for(unsigned j = 0; j < size1; j++)
+  //     printf("%9.2F ", L_arm[i*size0+j]);
+  //   printf("\n");
+  // }
   if(nErrors != 0)
     xil_printf("Memory check failed (nErrors = %d)!\n\r", nErrors);
 }
@@ -294,8 +305,14 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
     offset1 = passIndx+1;
     compute_descriptor();
     download_descriptor();
-    memcpy(target_fgpu, param1, dataSize);
+    memcpy((void*)target_fgpu, param1, dataSize);
     Xil_DCacheFlush();
+    // printf("original = \n");
+    // for(unsigned i = 0; i < size0; i++) {
+    //   for(unsigned j = 0; j < size1; j++)
+    //     printf("%9.2F ", param1[i*size0+j]);
+    //   printf("\n");
+    // }
     XTime_GetTime(&tStart);
     
     do
@@ -312,8 +329,21 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
       // if(stageIndx == nStages-1 && passIndx == nStages-1){
       //   REG_WRITE(CLEAN_CACHE_REG_ADDR, 1); // clean cache for the last iteration
       // }
-      printf("passIndx = %d\n", passIndx);
-      break;
+      // Xil_DCacheInvalidate();
+      // printf("target_fgpu = \n");
+      // for(unsigned i = 0; i < size0_buffer; i++) {
+      //   for(unsigned j = 0; j < size0_buffer; j++)
+      //     printf("%9.2f ", target_fgpu[i*size0_buffer+j]);
+      //   printf("\n");
+      // }
+      // printf("L_fgpu = \n");
+      // for(unsigned i = 0; i < size0_buffer; i++) {
+      //   for(unsigned j = 0; j < size0_buffer; j++)
+      //     printf("%9.2F ", L_fgpu[i*size0_buffer+j]);
+      //   printf("\n");
+      // }
+      // printf("passIndx = %d\n", passIndx);
+      // break;
     }while(passIndx != 0);
     
     XTime_GetTime(&tEnd);
