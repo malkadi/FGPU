@@ -28,7 +28,7 @@ class kernel{
   unsigned problemSize, dataSize;
   T *param1, *target_fgpu, *target_arm;
   unsigned reduce_factor;
-  int mean;
+  T mean;
   
   void compute_descriptor();
   bool compute_with_atomics(unsigned n_runs, unsigned rfactor, unsigned &exec_time, bool check_results);

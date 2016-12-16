@@ -25,28 +25,32 @@ kernel<T>::kernel(unsigned max_size, bool vector_types, bool atomics)
 template<typename T>
 kernel<T>::~kernel() 
 {
-  delete[] param1;
-  delete[] target_fgpu;
-  delete[] target_arm;
+  // delete[] param1;
+  // delete[] target_fgpu;
+  // delete[] target_arm;
 }
 template<typename T>
 void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
   unsigned int size = SUM_LEN;
-  if(use_atomics) {
+  if(typeid(T) == typeid(float))
+      start_addr = SUM_FLOAT_POS;
+  else if(use_atomics) {
     if (typeid(T) == typeid(int))
       start_addr = SUM_ATOMIC_WORD_POS;
-    else if (typeid(T) == typeid(short)) 
+    else if (typeid(T) == typeid(short)) {
       if(use_vector_types)
         start_addr = SUM_HALF_IMPROVED_ATOMIC_POS;
       else
         start_addr = SUM_HALF_ATOMIC_POS;
-    else if (typeid(T) == typeid(char))
+    }
+    else if (typeid(T) == typeid(char)) {
       if(use_vector_types)
         start_addr = SUM_BYTE_IMPROVED_ATOMIC_POS;
       else
         start_addr = SUM_BYTE_ATOMIC_POS;
+    }
     else
       assert(0 && "unsupported type");
   } else {
@@ -139,15 +143,7 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   nDim = 1;
   size0 = Size;
   reduce_factor = 1;
-  if( typeid(T) == typeid(int)) {
-    dataSize = 4 * problemSize; // 4 bytes per word
-  }
-  else if (typeid(T) == typeid(short)) {
-    dataSize = 2 * problemSize; // 2 bytes per word
-  }
-  else if (typeid(T) == typeid(char)) {
-    dataSize = 1 * problemSize; // 1 bytes per word
-  }
+  dataSize = sizeof(T) * problemSize;
   if(size0 < 64)
     wg_size0 = size0;
 
@@ -193,10 +189,17 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     T *target_ptr = target_arm;
     T *param1_ptr = param1;
     unsigned Size = problemSize;
-    int res = 0;
-    for(i = 0; i < Size; i++)
-      res += param1_ptr[i];
-    target_ptr[0] = res;
+    if(typeid(T) == typeid(float)) {
+      float res = 0;
+      for(i = 0; i < Size; i++)
+        res += param1_ptr[i];
+      target_ptr[0] = res;
+    } else {
+      int res = 0;
+      for(i = 0; i < Size; i++)
+        res += param1_ptr[i];
+      target_ptr[0] = res;
+    }
 
     // flush the results to the global memory 
     Xil_DCacheFlushRange((unsigned)target_arm, 4);
@@ -216,20 +219,29 @@ void kernel<T>::check_FGPU_results()
 {
   unsigned int nErrors = 0;
   volatile T *res_fgpu = (T*)lram_ptr[17];
-  Xil_DCacheInvalidate();
-  if(*res_fgpu != target_arm[0])
-  {
-    #if PRINT_ERRORS
-      xil_printf("res=0x%x (must be 0x%x)\n\r", target_fgpu[0], target_arm[0]);
-      printf("target_fgpu[0] = 0x%x\n", target_fgpu[0]);
-      printf("res_fgpu @ 0x%x\n", (unsigned)res_fgpu);
-    #endif
-    nErrors++;
+
+  // printf("res=%6.2f (must be %6.2f)\n\r", (float)res_fgpu[0], (float)target_arm[0]);
+  // For floating point operations:
+  // The results of ARM and FGPU will not match when large data arrays are proccessed
+  // Therefore, we will tolreate a mismatch of up to 0.01% 
+
+  if(typeid(T) == typeid(float)) {
+    float upper = target_arm[0]*1.0001;
+    float lower = target_arm[0]*0.9999;
+    if(res_fgpu[0] < lower || res_fgpu[0] > upper) {
+      if(PRINT_ERRORS && typeid(T) == typeid(float))
+        printf("res=%6.2f (must be %6.2f)\n\r", (float)res_fgpu[0], (float)target_arm[0]);
+      nErrors++;
+    }
+  } else {
+    if(res_fgpu[0] != target_arm[0]) {
+      if(PRINT_ERRORS && typeid(T) == typeid(float))
+        xil_printf("res=0x%x (must be 0x%x)\n\r", res_fgpu[0], target_arm[0]);
+      nErrors++;
+    }
   }
   if(nErrors != 0)
     xil_printf("Memory check failed (nErrors = %d)!\n\r", nErrors);
-  // else
-  //   xil_printf("Memory check succeeded!\n\r", nErrors);
 }
 template<typename T>
 bool kernel<T>::update_atomic_reduce_factor_and_download(unsigned rfactor)
@@ -395,6 +407,10 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results, unsigne
 template<typename T>
 void kernel<T>::print_name()
 {
+  if(typeid(T) == typeid(float)) {
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum float" ANSI_COLOR_RESET);
+    return;
+  }
   if( typeid(T) == typeid(int) )
     xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum word" ANSI_COLOR_RESET);
   else if (typeid(T) == typeid(short))
@@ -414,3 +430,4 @@ void kernel<T>::print_name()
 template class kernel<int>;
 template class kernel<short>;
 template class kernel<char>;
+template class kernel<float>;

@@ -25,16 +25,18 @@ kernel<T>::kernel(unsigned max_size, bool vector_types, bool atomics)
 template<typename T>
 kernel<T>::~kernel() 
 {
-  delete[] param1;
-  delete[] target_fgpu;
-  delete[] target_arm;
+  // delete[] param1;
+  // delete[] target_fgpu;
+  // delete[] target_arm;
 }
 template<typename T>
 void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
   unsigned int size = MAX_LEN;
-  if(use_atomics) {
+  if(typeid(T) == typeid(float)){
+    start_addr = MAX_FLOAT_POS;
+  } else if(use_atomics) {
     if (typeid(T) == typeid(int))
       start_addr = MAX_ATOMIC_POS;
     else if (typeid(T) == typeid(short)) 
@@ -139,15 +141,8 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   nDim = 1;
   size0 = Size;
   reduce_factor = 1;
-  if( typeid(T) == typeid(int)) {
-    dataSize = 4 * problemSize; // 4 bytes per word
-  }
-  else if (typeid(T) == typeid(short)) {
-    dataSize = 2 * problemSize; // 2 bytes per word
-  }
-  else if (typeid(T) == typeid(signed char)) {
-    dataSize = 1 * problemSize; // 1 bytes per word
-  }
+  dataSize = sizeof(T) * problemSize;
+  
   if(size0 < 64)
     wg_size0 = size0;
 
@@ -169,7 +164,7 @@ void kernel<T>::initialize_memory()
   T *target_ptr = (T*) target_fgpu;
   for(i = 0; i < problemSize; i++) 
   {
-    param_ptr[i] = (T)2*i;
+    param_ptr[i] = (T)i;
     target_ptr[i] = 0;
   }
   Xil_DCacheFlush(); // flush data to global memory
@@ -193,10 +188,17 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     T *target_ptr = target_arm;
     T *param1_ptr = param1;
     unsigned Size = problemSize;
-    int res = 0;
-    for(i = 0; i < Size; i++)
-      res = param1_ptr[i]>res ? param1_ptr[i]:res;
-    target_ptr[0] = res;
+    if(typeid(T) == typeid(float)) {
+      float res = 0;
+      for(i = 0; i < Size; i++)
+        res = param1_ptr[i]>res ? param1_ptr[i]:res;
+      target_ptr[0] = res;
+    } else {
+      int res = 0;
+      for(i = 0; i < Size; i++)
+        res = param1_ptr[i]>res ? param1_ptr[i]:res;
+      target_ptr[0] = res;
+    }
 
     // flush the results to the global memory 
     Xil_DCacheFlushRange((unsigned)target_arm, 4);
@@ -216,14 +218,31 @@ void kernel<T>::check_FGPU_results()
 {
   unsigned int nErrors = 0;
   volatile T *res_fgpu = (T*)lram_ptr[17];
-  Xil_DCacheInvalidate();
-  if(*res_fgpu != target_arm[0])
-  {
-    #if PRINT_ERRORS
-      xil_printf("res=0x%x (must be 0x%x)\n\r", target_fgpu[0], target_arm[0]);
-    #endif
-    nErrors++;
+  
+  // for(unsigned i = 0; i < problemSize; i++)
+  //   printf("@%d: %f\n", i, (float) param1[i]);
+  // printf("res=%6.2f (must be %6.2f)\n\r", (float)res_fgpu[0], (float)target_arm[0]);
+
+  
+  // For floating point operations:
+  // The results of ARM and FGPU will not match when large data arrays are proccessed
+  // Therefore, we will tolreate a mismatch of up to 0.01% 
+  if(typeid(T) == typeid(float)) {
+    float upper = target_arm[0]*1.0001;
+    float lower = target_arm[0]*0.9999;
+    if(res_fgpu[0] < lower || res_fgpu[0] > upper) {
+      if(PRINT_ERRORS && typeid(T) == typeid(float))
+        printf("res=%6.2f (must be %6.2f)\n\r", (float)res_fgpu[0], (float)target_arm[0]);
+      nErrors++;
+    }
+  } else {
+    if(res_fgpu[0] != target_arm[0]) {
+      if(PRINT_ERRORS && typeid(T) == typeid(float))
+        xil_printf("res=0x%x (must be 0x%x)\n\r", res_fgpu[0], target_arm[0]);
+      nErrors++;
+    }
   }
+
   if(nErrors != 0)
     xil_printf("Memory check failed (nErrors = %d)!\n\r", nErrors);
   // else
@@ -371,7 +390,7 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results, unsigne
   REG_WRITE(CLEAN_CACHE_REG_ADDR, 1); // clean FGPU cache at end of execution
   for(param_index = 0; param_index < rfactor_vec_len; param_index++)
   {
-    if(use_atomics)
+    if(use_atomics && typeid(T) != typeid(float))
       compute_with_atomics(n_runs, rfactor, exec_times[param_index], check_results);
     else
       compute_without_atomics(n_runs, rfactor, exec_times[param_index], check_results);
@@ -390,6 +409,10 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results, unsigne
 template<typename T>
 void kernel<T>::print_name()
 {
+  if(typeid(T) == typeid(float)) {
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is max float\n\r" ANSI_COLOR_RESET);
+    return;
+  }
   if( typeid(T) == typeid(int) )
     xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is max word" ANSI_COLOR_RESET);
   else if (typeid(T) == typeid(short))
@@ -404,8 +427,10 @@ void kernel<T>::print_name()
     xil_printf(" atomics activated)\n\r");
   else
     xil_printf(" atomics deactivated)\n\r");
+  xil_printf( ANSI_COLOR_RESET);
 }
 
 template class kernel<int>;
+template class kernel<float>;
 template class kernel<short>;
 template class kernel<signed char>;

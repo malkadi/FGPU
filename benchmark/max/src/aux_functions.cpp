@@ -11,33 +11,32 @@ void wait_ms(u64 time)
   }
   while(now < tEnd);
 }
-
 u64 elapsed_time_us(XTime tStart, XTime tEnd)
 {
   u64 time_elapsed = (tEnd - tStart)*1000000;
   time_elapsed /= COUNTS_PER_SECOND;
   return time_elapsed;
 }
-
-void power_measure::set_idle() {
+void power_measure::set_idle() 
+{
   cur_state = idle;
   *msync = 1;
   Xil_DCacheFlushRange((unsigned) msync, 4);
 }
-
-void power_measure::start() {
+void power_measure::start()
+{
   cur_state = running;
   *msync = 2;
   Xil_DCacheFlushRange((unsigned) msync, 4);
 }
-
-void power_measure::stop() {
+void power_measure::stop()
+{
   cur_state = finished;
   *msync = 3;
   Xil_DCacheFlushRange((unsigned) msync, 4);
 }
-
-void power_measure::print_values() {
+void power_measure::print_values() 
+{
   printf("\nAverage Values: (#%d samples)\n", (unsigned) res[0]);
   printf("VccInt-> U: %2.4fV ,  I: %2.4fA ,  P: %f W\n", res[1], res[2], res[3]);
   printf("VccAux-> U: %2.4fV ,  I: %2.4fA ,  P: %f W\n", res[4], res[5], res[6]);
@@ -47,8 +46,18 @@ void power_measure::print_values() {
   float total_power = res[3]+res[6]+res[9]+res[12]+res[15];
   printf("Total->                              P: %f W\n", total_power);
 }
-
-void power_measure::wait_power_values() {
+void power_measure::wait_power_values() 
+{
   cout << endl << "Waiting for power values to be written from second core.." << endl;
   while(*msync != 4);
+}
+unsigned toRep(float x) 
+{
+    const union { float f; unsigned i; } rep = {.f = x};
+    return rep.i;
+}
+float fromRep(unsigned x) 
+{
+    const union { float f; unsigned i; } rep = {.i = x};
+    return rep.f;
 }

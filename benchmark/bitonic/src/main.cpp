@@ -13,7 +13,7 @@ int main()
   // Executions & time measurements will be repeated nruns times 
   const unsigned nruns = 1;
   // control power measurement
-  const unsigned sync_power_measurement = 1;
+  const unsigned sync_power_measurement = 0;
   
   if(check_results)
     xil_printf("\n\r---Entering main (checking FGPU results is" ANSI_COLOR_GREEN" active" ANSI_COLOR_RESET ") ---\n\r");

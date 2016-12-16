@@ -1,7 +1,8 @@
 #include "aux_functions.hpp"
 using namespace std;
 
-#define TYPE  int
+// #define TYPE  int
+#define TYPE  float
 
 int main()
 {
@@ -10,7 +11,7 @@ int main()
   // The kernel will be executed for problem sizes of 64, 64*2, ... , 64*2^(test_vec_len-1)
   const unsigned test_vec_len = 13;
   // Executions & time measurements will be repeated nruns times 
-  const unsigned nruns = 10;
+  const unsigned nruns = 1;
   // use the kernel with atomics or do iterative reduction
   const bool use_atomics = 1;
   // control power measurement

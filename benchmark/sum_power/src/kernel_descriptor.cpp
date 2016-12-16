@@ -34,7 +34,9 @@ void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
   unsigned int size = SUM_POWER_LEN;
-  if(use_atomics) {
+  if(typeid(T) == typeid(float)) {
+    start_addr = SUM_POWER_FLOAT_POS;
+  }else if(use_atomics) {
     if (typeid(T) == typeid(int))
       start_addr = SUM_POWER_ATOMIC_POS;
     else
@@ -45,7 +47,6 @@ void kernel<T>::download_code()
     else
       assert(0 && "unsupported type");
   }
-  // start_addr = COPY_POS;
 
   unsigned i = 0;
   for(; i < size; i++){
@@ -121,15 +122,8 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   nDim = 1;
   size0 = Size;
   reduce_factor = 1;
-  if( typeid(T) == typeid(int)) {
-    dataSize = 4 * problemSize; // 4 bytes per word
-  }
-  else if (typeid(T) == typeid(short)) {
-    dataSize = 2 * problemSize; // 2 bytes per word
-  }
-  else if (typeid(T) == typeid(signed char)) {
-    dataSize = 1 * problemSize; // 1 bytes per word
-  }
+  dataSize = sizeof(T) * problemSize;
+  
   if(size0 < 64)
     wg_size0 = size0;
 
@@ -151,7 +145,7 @@ void kernel<T>::initialize_memory()
   T *target_ptr = (T*) target_fgpu;
   for(i = 0; i < problemSize; i++) 
   {
-    param_ptr[i] = (T)0;
+    param_ptr[i] = (T)i;
     target_ptr[i] = 0;
   }
   Xil_DCacheFlush(); // flush data to global memory
@@ -175,10 +169,19 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     T *target_ptr = target_arm;
     T *param1_ptr = param1;
     unsigned Size = problemSize;
-    int res = 0;
-    for(i = 0; i < Size; i++)
-      res += (param1_ptr[i]-mean)*(param1_ptr[i]-mean);
-    target_ptr[0] = res;
+    if(typeid(T) == typeid(float)) {
+      float res = 0;
+      float mean_val = (float)mean;
+      for(i = 0; i < Size; i++)
+        res += (param1_ptr[i]-mean_val)*(param1_ptr[i]-mean_val);
+      target_ptr[0] = res;
+    } else {
+      int res = 0;
+      int mean_val = (int) mean;
+      for(i = 0; i < Size; i++)
+        res += (param1_ptr[i]-mean_val)*(param1_ptr[i]-mean_val);
+      target_ptr[0] = res;
+    }
 
     // flush the results to the global memory 
     Xil_DCacheFlushRange((unsigned)target_arm, 4);
@@ -198,18 +201,28 @@ void kernel<T>::check_FGPU_results()
 {
   unsigned int nErrors = 0;
   volatile T *res_fgpu = (T*)lram_ptr[17];
-  Xil_DCacheInvalidate();
-  // unsigned i; 
-  // for(i = 0; i < 4; i++) {
-  //   printf("res_fgpu[%d] = %d\n", i, res_fgpu[i]);
-  // }
-  if(*res_fgpu != target_arm[0])
-  {
-    #if PRINT_ERRORS
-      xil_printf("res=0x%x (must be 0x%x)\n\r", target_fgpu[0], target_arm[0]);
-    #endif
-    nErrors++;
+  
+  // printf("res=%6.2f (must be %6.2f)\n\r", (float)res_fgpu[0], (float)target_arm[0]);
+  
+  // For floating point operations:
+  // The results of ARM and FGPU will not match when large data arrays are proccessed
+  // Therefore, we will tolreate a mismatch of up to 0.01% 
+  if(typeid(T) == typeid(float)) {
+    float upper = target_arm[0]*1.0001;
+    float lower = target_arm[0]*0.9999;
+    if(res_fgpu[0] < lower || res_fgpu[0] > upper) {
+      if(PRINT_ERRORS && typeid(T) == typeid(float))
+        printf("res=%6.2f (must be %6.2f)\n\r", (float)res_fgpu[0], (float)target_arm[0]);
+      nErrors++;
+    }
+  } else {
+    if(res_fgpu[0] != target_arm[0]) {
+      if(PRINT_ERRORS && typeid(T) == typeid(float))
+        xil_printf("res=0x%x (must be 0x%x)\n\r", res_fgpu[0], target_arm[0]);
+      nErrors++;
+    }
   }
+  
   if(nErrors != 0)
     xil_printf("Memory check failed (nErrors = %d)!\n\r", nErrors);
   // else
@@ -245,10 +258,17 @@ bool kernel<T>::update_reduce_factor_and_download(unsigned rfactor, bool swap_ar
     size0 /= rfactor;
     reduce_factor = rfactor;
   }
-  if(swap_arrays)
-    start_addr = SUM_POS;
-  else
-    start_addr = SUM_POWER_POS;
+  if(typeid(T) == typeid(float)) {
+    if(swap_arrays)
+      start_addr = SUM_FLOAT_POS;
+    else
+      start_addr = SUM_POWER_FLOAT_POS;
+  } else {
+    if(swap_arrays)
+      start_addr = SUM_POS;
+    else
+      start_addr = SUM_POWER_POS;
+  }
   // xil_printf("size0 = %d, reduce_factor = %d\n\r", size0, reduce_factor);
   // Xil_DCacheInvalidate();
   // unsigned i;
@@ -273,7 +293,7 @@ bool kernel<T>::update_reduce_factor_and_download(unsigned rfactor, bool swap_ar
     lram_ptr[17] = tmp;
   }
   lram_ptr[18] = reduce_factor;
-  lram_ptr[19] = mean;
+  lram_ptr[19] = (unsigned) toRep(mean);
   return true;
 }
 template<typename T>
@@ -294,12 +314,17 @@ bool kernel<T>::compute_without_atomics(unsigned n_runs, unsigned rfactor, unsig
     prepare_descriptor(problemSize); // resets original index space size and target addresses for a new computation round
     download_descriptor();
     rfactor_allowed = update_reduce_factor_and_download(rfactor, false);
+    if(size0 != 1)
+      REG_WRITE(CLEAN_CACHE_REG_ADDR, 0); // do not clean FGPU cache at end of execution
     XTime_GetTime(&tStart);
     do
     {
       REG_WRITE(START_REG_ADDR, 1);
       while(REG_READ(STATUS_REG_ADDR)==0);
       rfactor_allowed = update_reduce_factor_and_download(rfactor, true);
+      if(size0 == 1){
+        REG_WRITE(CLEAN_CACHE_REG_ADDR, 1); // clean FGPU cache for the last iteration
+      }
     } while(rfactor_allowed);
     XTime_GetTime(&tEnd);
     exec_time += elapsed_time_us(tStart, tEnd);
@@ -359,7 +384,7 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results, unsigne
   REG_WRITE(CLEAN_CACHE_REG_ADDR, 1); // clean FGPU cache at end of execution
   for(param_index = 0; param_index < rfactor_vec_len; param_index++)
   {
-    if(use_atomics)
+    if(use_atomics && typeid(T) != typeid(float))
       compute_with_atomics(n_runs, rfactor, exec_times[param_index], check_results);
     else
       compute_without_atomics(n_runs, rfactor, exec_times[param_index], check_results);
@@ -378,16 +403,22 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results, unsigne
 template<typename T>
 void kernel<T>::print_name()
 {
+  if(typeid(T) == typeid(float)) {
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum power float");
+    xil_printf(ANSI_COLOR_RESET"\n\r");
+    return;
+  }
   if( typeid(T) == typeid(int) )
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum power word" ANSI_COLOR_RESET);
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum power word");
   else if (typeid(T) == typeid(short))
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum power half word" ANSI_COLOR_RESET);
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum power half word");
   else if (typeid(T) == typeid(signed char))
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum power byte" ANSI_COLOR_RESET);
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum power byte");
   if (use_atomics)
     xil_printf(" (atomics activated)\n\r");
   else
     xil_printf(" (atomics deactivated)\n\r");
+  xil_printf(ANSI_COLOR_RESET);
 }
-
 template class kernel<int>;
+template class kernel<float>;

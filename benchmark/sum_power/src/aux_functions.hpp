@@ -21,7 +21,6 @@
 #include <assert.h>
 #include <sys/reent.h>
 #include <xil_cache.h>
-#include <xil_mmu.h>
 #include <xil_types.h>
 #include <xtime_l.h>
 #include "xparameters.h"
@@ -32,7 +31,7 @@
 #include "kernel_descriptor.hpp"
 using namespace std;
 
-#define MAX_PROBLEM_SIZE    1024*1024  // The execution will break if bigger problem sizes are executed
+#define MAX_PROBLEM_SIZE    256*1024  // The execution will break if bigger problem sizes are executed
 #define MAX_MES_TIME_S          2     // maximum execution time of a kernel at any size.
                                       // The execution will not repeat if this number is exceeded
 
@@ -74,7 +73,8 @@ public:
 
 void wait_ms(u64 time);
 u64 elapsed_time_us(XTime tStart, XTime tEnd);
-
+unsigned toRep(float x);
+float fromRep(unsigned x); 
 
 
 #define ANSI_COLOR_RED     "\x1b[31m"

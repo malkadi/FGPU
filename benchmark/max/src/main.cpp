@@ -1,9 +1,10 @@
 #include "aux_functions.hpp"
 using namespace std;
 
+#define TYPE  float
 // #define TYPE  int
 // #define TYPE  short
-#define TYPE  signed char
+// #define TYPE  signed char
 
 int main()
 {
@@ -14,9 +15,9 @@ int main()
   // Executions & time measurements will be repeated nruns times 
   const unsigned nruns = 1;
   // use the kernel with atomics or do iterative reduction
-  const bool use_atomics = 1;
+  const bool use_atomics = 0;
   // use vector types:short2 instead of short OR char4 instead of char
-  const bool use_vector_types = 1;
+  const bool use_vector_types = 0;
   // control power measurement
   const unsigned sync_power_measurement = 0;
 
