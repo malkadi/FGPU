@@ -42,7 +42,35 @@
 // and it has been edited to fit to FGPU
 
 #include "fp_lib.h"
-inline enum LE_RESULT __less(float a, float b) {
+unsigned __eqsf2(float a, float b) {
+  const int aInt = toRep(a);
+  const int bInt = toRep(b);
+  const unsigned aAbs = aInt & absMask;
+  const unsigned bAbs = bInt & absMask;
+  unsigned res;
+    
+  res = aInt==bInt ? 1:0;
+    
+  // If a and b are both zeros, they are equal.
+  res = (aAbs | bAbs) == 0 ? 1:res;
+
+  return res;
+}
+unsigned __nesf2(float a, float b) {
+  const int aInt = toRep(a);
+  const int bInt = toRep(b);
+  const unsigned aAbs = aInt & absMask;
+  const unsigned bAbs = bInt & absMask;
+  unsigned res;
+    
+  res = aInt==bInt ? 0:1;
+    
+  // If a and b are both zeros, they are equal.
+  res = (aAbs | bAbs) == 0 ? 0:res;
+
+  return res;
+}
+unsigned __lesf2(float a, float b) {
   const int aInt = toRep(a);
   const int bInt = toRep(b);
   const unsigned aAbs = aInt & absMask;
@@ -52,27 +80,49 @@ inline enum LE_RESULT __less(float a, float b) {
   // If at least one of a and b is positive, we get the same result comparing
   // a and b as signed integers as we would with a fp_ting-point compare.
   unsigned res_one_positive;
-  res_one_positive = aInt<bInt ? LE_LESS:LE_GREATER;
+  res_one_positive = aInt<bInt ? 1:0;
   // Otherwise, both are negative, so we need to flip the sense of the
   // comparison to get the correct result.  (This assumes a twos- or ones-
   // complement integer representation; if integers are represented in a
   // sign-magnitude representation, then this flip is incorrect).
   unsigned res_two_negatives;
-  res_two_negatives = aInt>bInt ? LE_LESS:LE_GREATER;
+  res_two_negatives = aInt>bInt ? 1:0;
 
   res = (aInt&bInt) >= 0 ? res_one_positive:res_two_negatives;
-  res = aInt==bInt ? LE_EQUAL:res;
+  res = aInt==bInt ? 1:res;
     
   // If a and b are both zeros, they are equal.
-  res = (aAbs | bAbs) == 0 ? LE_EQUAL:res;
+  res = (aAbs | bAbs) == 0 ? 1:res;
 
-  // If either a or b is NaN, they are unordered.
-  unsigned resNaN = aAbs > infRep || bAbs > infRep;
-  res = resNaN ? LE_UNORDERED:res;
-  
   return res;
 }
-inline enum GE_RESULT __greater(float a, float b) {
+unsigned __ltsf2(float a, float b) {
+  const int aInt = toRep(a);
+  const int bInt = toRep(b);
+  const unsigned aAbs = aInt & absMask;
+  const unsigned bAbs = bInt & absMask;
+  unsigned res;
+    
+  // If at least one of a and b is positive, we get the same result comparing
+  // a and b as signed integers as we would with a fp_ting-point compare.
+  unsigned res_one_positive;
+  res_one_positive = aInt<bInt ? 1:0;
+  // Otherwise, both are negative, so we need to flip the sense of the
+  // comparison to get the correct result.  (This assumes a twos- or ones-
+  // complement integer representation; if integers are represented in a
+  // sign-magnitude representation, then this flip is incorrect).
+  unsigned res_two_negatives;
+  res_two_negatives = aInt>bInt ? 1:0;
+
+  res = (aInt&bInt) >= 0 ? res_one_positive:res_two_negatives;
+  res = aInt==bInt ? 0:res;
+    
+  // If a and b are both zeros, they are equal.
+  res = (aAbs | bAbs) == 0 ? 0:res;
+
+  return res;
+}
+unsigned __gesf2(float a, float b) {
   const int aInt = toRep(a);
   const int bInt = toRep(b);
   const unsigned aAbs = aInt & absMask;
@@ -80,40 +130,34 @@ inline enum GE_RESULT __greater(float a, float b) {
   unsigned res;
 
   unsigned res_one_positive;
-  res_one_positive = aInt<bInt ? GE_LESS:GE_GREATER;
+  res_one_positive = aInt<bInt ? 0:1;
   unsigned res_two_negatives;
-  res_two_negatives = aInt>bInt ? GE_LESS:GE_GREATER;
+  res_two_negatives = aInt>bInt ? 0:1;
 
   res = (aInt&bInt) >= 0 ? res_one_positive:res_two_negatives;
-  res = aInt==bInt ? GE_EQUAL:res;
+  res = aInt==bInt ? 1:res;
     
-  res = (aAbs | bAbs) == 0 ? GE_EQUAL:res;
-  unsigned resNaN = aAbs > infRep || bAbs > infRep;
-  res = resNaN ? GE_UNORDERED:res;
+  res = (aAbs | bAbs) == 0 ? 1:res;
 
   return res;
 }
-enum LE_RESULT __eqsf2(float a, float b) {
-  return __less(a,b);
-}
-enum LE_RESULT __nesf2(float a, float b) {
-  return __less(a,b);
-}
-enum LE_RESULT __lesf2(float a, float b) {
-  return __less(a,b);
-}
-enum LE_RESULT __ltsf2(float a, float b) {
-  return __less(a,b);
-}
-enum GE_RESULT __gesf2(float a, float b) {
-  return __greater(a, b);
-}
-enum GE_RESULT __gtsf2(float a, float b) {
-  return __greater(a, b);
-}
-int __unordsf2(float a, float b) {
-    const unsigned aAbs = toRep(a) & absMask;
-    const unsigned bAbs = toRep(b) & absMask;
-    return aAbs > infRep || bAbs > infRep;
+unsigned __gtsf2(float a, float b) {
+  const int aInt = toRep(a);
+  const int bInt = toRep(b);
+  const unsigned aAbs = aInt & absMask;
+  const unsigned bAbs = bInt & absMask;
+  unsigned res;
+
+  unsigned res_one_positive;
+  res_one_positive = aInt<bInt ? 0:1;
+  unsigned res_two_negatives;
+  res_two_negatives = aInt>bInt ? 0:1;
+
+  res = (aInt&bInt) >= 0 ? res_one_positive:res_two_negatives;
+  res = aInt==bInt ? 0:res;
+    
+  res = (aAbs | bAbs) == 0 ? 0:res;
+
+  return res;
 }
 

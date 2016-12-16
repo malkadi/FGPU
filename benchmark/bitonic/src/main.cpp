@@ -1,7 +1,8 @@
 #include "aux_functions.hpp"
 using namespace std;
 
-#define TYPE  int
+#define TYPE  float
+// #define TYPE  int
 
 int main()
 {
@@ -65,7 +66,10 @@ int main()
     }
     
     // compute on FGPU
-    timer_val_fgpu[size_index] = bitonic_kernel.compute_on_FGPU(nruns, check_results);
+    if (!sync_power_measurement ) 
+      timer_val_fgpu[size_index] = bitonic_kernel.compute_on_FGPU(nruns, check_results);
+    else
+      timer_val_fgpu[size_index] = bitonic_kernel.compute_on_FGPU(nruns, false);;
 
     xil_printf("\n\r");
 

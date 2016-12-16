@@ -25,6 +25,8 @@ void kernel<T>::download_code()
   unsigned int size = BITONIC_LEN;
   if (typeid(T) == typeid(int))
     start_addr = BITONICSORT_POS;
+  else if (typeid(T) == typeid(float))
+    start_addr = BITONICSORT_FLOAT_POS;
   else
     assert(0 && "unsupported type");
   unsigned i = 0;
@@ -104,9 +106,7 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   nStages = log2_int(problemSize);
   stageIndx = 0;
   passIndx = 0;
-  if( typeid(T) == typeid(int)) {
-    dataSize = 4 * problemSize; // 4 bytes per word
-  }
+  dataSize = sizeof(T) * problemSize; // 4 bytes per word
 
   if(size0 < 32)
     wg_size0 = size0;
@@ -124,21 +124,24 @@ unsigned kernel<T>::get_problemSize()
 template<typename T>
 void kernel<T>::initialize_memory()
 {
-  unsigned i;
+  int i;
   T *param_ptr = (T*) param1;
   T *target_fgpu_ptr = (T*) target_fgpu;
   T *target_arm_ptr = (T*) target_arm;
-  for(i = 0; i < problemSize; i++) 
+  for(i = 0; i < (int)problemSize; i++) 
   {
-    target_arm_ptr[i] = target_fgpu_ptr[i] = param_ptr[i] = (T)rand();
+    target_arm_ptr[i] = target_fgpu_ptr[i] = param_ptr[i] = (T)i+1;
+    // target_arm_ptr[i] = target_fgpu_ptr[i] = param_ptr[i] = (T)rand();
   }
   Xil_DCacheFlush(); // flush data to global memory
 }
-void bitonicSort(unsigned problemSize, int *array)
+template<typename T>
+void bitonicSort(unsigned problemSize, T *array)
 {
   unsigned i, j, k, nStages = 0;
-  int pairDistance, blockWidth, leftIndex, rightIndex, leftElement, rightElement;
-  unsigned sameDirectionBlock, greater, lesser;
+  int pairDistance, blockWidth, leftIndex, rightIndex, sameDirectionBlock;
+  T leftElement, rightElement;
+  T greater, lesser;
   nStages = log2_int(problemSize);
   /* xil_printf("nStages = %d\n\r", nStages); */
   /* xil_printf("size = %d, problemSize = %d\n\r", size, problemSize); */
@@ -159,28 +162,13 @@ void bitonicSort(unsigned problemSize, int *array)
         leftElement = array[leftIndex];
         rightElement = array[rightIndex];
 
-        if(leftElement > rightElement)
-        {
-          greater = leftElement;
-          lesser = rightElement;
-        }
-        else
-        {
-          greater = rightElement;
-          lesser = leftElement;
-        }
-        if((k/sameDirectionBlock) % 2 == 1)
-        { 
-          //flip direction
-          leftElement = greater;
-          rightElement = lesser;
-        }
-        else
-        {
-          //same direction
-          leftElement = lesser;
-          rightElement = greater;
-        }
+        greater = leftElement>rightElement ? leftElement:rightElement;
+        lesser = leftElement>rightElement ? rightElement:leftElement;
+        
+        unsigned flipDirection = (k/sameDirectionBlock) % 2 == 1;
+        leftElement = flipDirection ? greater:lesser;
+        rightElement = flipDirection ? lesser:greater;
+        
         array[leftIndex] = leftElement;
         array[rightIndex] = rightElement;
       }
@@ -201,7 +189,7 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     Xil_DCacheInvalidate();
     XTime_GetTime(&tStart);
 
-    bitonicSort(problemSize, target_arm);
+    bitonicSort<T>(problemSize, target_arm);
 
     // flush the results to the global memory 
     Xil_DCacheFlushRange((unsigned)target_arm, dataSize);
@@ -222,14 +210,17 @@ void kernel<T>::check_FGPU_results()
   unsigned int i, nErrors = 0;
   // Xil_DCacheInvalidate();
   // xil_printf("problemSize = %d\n\r", problemSize);
-  // for(i = 0; i < 8; i++) {
-  //   printf("@%d: original = %d, arm = %d, fgpu = %d\n", i, param1[i], target_arm[i], target_fgpu[i]);
+  // for(i = 0; i < problemSize; i++) {
+  //   printf("@%d: original = %f, arm = %f, fgpu = %f\n", i, (float)param1[i], (float)target_arm[i], (float)target_fgpu[i]);
   // }
   for (i = 0; i < problemSize; i++)
     if(target_arm[i] != target_fgpu[i])
     {
       #if PRINT_ERRORS
-        xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, target_fgpu[i], target_arm[i]);
+      if(typeid(T) == typeid(float))
+        printf("res[%d]=%6.2f (must be %6.2f)\n\r", i, (float)target_fgpu[i], (float)target_arm[i]);
+      else
+        xil_printf("res[%d]=0x%x (must be 0x%x)\n\r", i, target_fgpu[i], target_arm[i]);
       #endif
       nErrors++;
     }
@@ -271,11 +262,17 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
     {
       REG_WRITE(START_REG_ADDR, 1);
       while(REG_READ(STATUS_REG_ADDR)==0);
+      // cout << "stageIndx = " << stageIndx << ", passIndx = " << passIndx << endl;
+      // for(unsigned i = 0; i < problemSize; i++) {
+      //   printf("@%d: original = %f, arm = %f, fgpu = %f\n", i, (float)param1[i], (float)target_arm[i], (float)target_fgpu[i]);
+      // }
+      // cout<<endl;
       update_and_download();
       REG_WRITE(INITIATE_REG_ADDR, 0); // do not initiate FGPU for next iterations
       if(stageIndx == nStages-1 && passIndx == nStages-1){
         REG_WRITE(CLEAN_CACHE_REG_ADDR, 1); // clean cache for the last iteration
       }
+
     }while(size0 > 0);
     
     XTime_GetTime(&tEnd);
@@ -301,3 +298,4 @@ void kernel<T>::print_name()
 }
 
 template class kernel<int>;
+template class kernel<float>;

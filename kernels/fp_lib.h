@@ -99,17 +99,4 @@ inline void wideRightShiftWithSticky(unsigned *hi, unsigned *lo, unsigned int co
     }
 }
 
-
-enum LE_RESULT {
-    LE_LESS      = -1,
-    LE_EQUAL     =  0,
-    LE_GREATER   =  1,
-    LE_UNORDERED =  1
-};
-enum GE_RESULT {
-    GE_LESS      = -1,
-    GE_EQUAL     =  0,
-    GE_GREATER   =  1,
-    GE_UNORDERED = -1   // Note: different from LE_UNORDERED
-};
 #endif // FP_LIB_HEADER

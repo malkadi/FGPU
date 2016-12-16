@@ -1,5 +1,5 @@
 #include "FGPUlib.c"
-__kernel void bitonicSort(__global unsigned *a, unsigned stage, unsigned passOfStage, unsigned direction)
+__kernel void bitonicSort(__global int *a, unsigned stage, unsigned passOfStage, unsigned direction)
 {
     unsigned sortIncreasing = direction;
     unsigned index = get_global_id(0);
@@ -11,16 +11,15 @@ __kernel void bitonicSort(__global unsigned *a, unsigned stage, unsigned passOfS
 
     unsigned rightIndex = leftIndex + pairDistance;
     
-    unsigned leftElement = a[leftIndex];
-    unsigned rightElement = a[rightIndex];
+    int leftElement = a[leftIndex];
+    int rightElement = a[rightIndex];
     
     unsigned sameDirectionBlockWidth = 1 << stage;
     
     if((index/sameDirectionBlockWidth) % 2 == 1)
         sortIncreasing = 1 - sortIncreasing;
 
-    unsigned greater;
-    unsigned lesser;
+    int greater, lesser;
     unsigned leftBigger = leftElement > rightElement;
     greater = leftBigger?leftElement:rightElement;
     lesser = leftBigger?rightElement:leftElement;
@@ -55,8 +54,19 @@ __kernel void bitonicSort_float(__global float *a, unsigned stage, unsigned pass
     float greater;
     float lesser;
     unsigned leftBigger = leftElement > rightElement;
-    greater = leftBigger?leftElement:rightElement;
-    lesser = leftBigger?rightElement:leftElement;
+    // if(leftElement > rightElement) {
+    //   greater = leftElement;
+    //   lesser = rightElement;
+    // } else {
+    //   greater = rightElement;
+    //   lesser = leftElement;
+    // } 
+    
+    // greater = leftBigger?leftElement:rightElement;
+    // lesser = leftBigger?rightElement:leftElement;
+
+    greater = leftBigger>0?leftElement:rightElement;
+    lesser = leftBigger>0?rightElement:leftElement;
     
     leftElement = sortIncreasing ? lesser:greater;
     rightElement = sortIncreasing ? greater:lesser;
