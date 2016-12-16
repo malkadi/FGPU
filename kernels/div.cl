@@ -1,4 +1,5 @@
 #include "FGPUlib.c"
+#include "divsf3.c"
 unsigned int __udivsi3(unsigned int a, unsigned int b) {
   unsigned q = 0, r = 0;
   // int i; 
@@ -182,7 +183,6 @@ __kernel void div_int(__global int *in, __global int *out, int val) {
     int x = get_global_id(0);
     out[x] = in[x]/val;
 }
-#include "divsf3.c"
 __kernel void div_float(__global float *in1, __global float *out, float val) {
   int x = get_global_id(0);
   out[x] = in1[x]/val;

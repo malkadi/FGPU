@@ -223,7 +223,6 @@ void kernel<T>::check_FGPU_results()
   //   printf("@%d: %f\n", i, (float) param1[i]);
   // printf("res=%6.2f (must be %6.2f)\n\r", (float)res_fgpu[0], (float)target_arm[0]);
 
-  
   // For floating point operations:
   // The results of ARM and FGPU will not match when large data arrays are proccessed
   // Therefore, we will tolreate a mismatch of up to 0.01% 
@@ -324,12 +323,17 @@ bool kernel<T>::compute_without_atomics(unsigned n_runs, unsigned rfactor, unsig
     prepare_descriptor(problemSize); // resets original index space size and target addresses for a new computation round
     download_descriptor();
     rfactor_allowed = update_reduce_factor_and_download(rfactor, false);
+    if(size0 != 1)
+      REG_WRITE(CLEAN_CACHE_REG_ADDR, 0); // do not clean FGPU cache at end of execution
     XTime_GetTime(&tStart);
     do
     {
       REG_WRITE(START_REG_ADDR, 1);
       while(REG_READ(STATUS_REG_ADDR)==0);
       rfactor_allowed = update_reduce_factor_and_download(rfactor, true);
+      if(size0 == 1){
+        REG_WRITE(CLEAN_CACHE_REG_ADDR, 1); // clean FGPU cache for the last iteration
+      }
     } while(rfactor_allowed);
     XTime_GetTime(&tEnd);
     exec_time += elapsed_time_us(tStart, tEnd);
@@ -351,7 +355,6 @@ bool kernel<T>::compute_with_atomics(unsigned n_runs, unsigned rfactor, unsigned
   unsigned runs = 0;
   exec_time = 0;
   bool rfactor_allowed = update_atomic_reduce_factor_and_download(rfactor);
-  // xil_printf("compute_with_atomics entered, rfactor = %d, rfactor_allowed = %d\n\r", rfactor, rfactor_allowed);
   while(rfactor_allowed && runs < n_runs)
   {
     initialize_memory();

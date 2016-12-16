@@ -44,13 +44,25 @@ define i32 @__eqsf2(float %a, float %b) #1 {
 entry:
   %0 = bitcast float %a to i32
   %1 = bitcast float %b to i32
-  %cmp = icmp eq i32 %0, %1
-  %cond = zext i1 %cmp to i32
-  %and13 = or i32 %1, %0
-  %or = and i32 %and13, 2147483647
-  %cmp3 = icmp eq i32 %or, 0
-  %cond4 = select i1 %cmp3, i32 1, i32 %cond
-  ret i32 %cond4
+  %and.i = and i32 %0, 2147483647
+  %and2.i = and i32 %1, 2147483647
+  %cmp.i = icmp slt i32 %0, %1
+  %cond.i = select i1 %cmp.i, i32 -1, i32 1
+  %cmp3.i = icmp sgt i32 %0, %1
+  %cond4.i = select i1 %cmp3.i, i32 -1, i32 1
+  %and5.i = and i32 %1, %0
+  %cmp6.i = icmp sgt i32 %and5.i, -1
+  %cond7.i = select i1 %cmp6.i, i32 %cond.i, i32 %cond4.i
+  %cmp8.i = icmp eq i32 %0, %1
+  %or.i = or i32 %and2.i, %and.i
+  %cmp13.i = icmp eq i32 %or.i, 0
+  %2 = or i1 %cmp8.i, %cmp13.i
+  %cond17.i = select i1 %2, i32 0, i32 %cond7.i
+  %cmp18.i = icmp ugt i32 %and.i, 2139095040
+  %cmp19.i = icmp ugt i32 %and2.i, 2139095040
+  %3 = or i1 %cmp18.i, %cmp19.i
+  %cond23.i = select i1 %3, i32 1, i32 %cond17.i
+  ret i32 %cond23.i
 }
 
 ; Function Attrs: nounwind readnone
@@ -58,13 +70,25 @@ define i32 @__nesf2(float %a, float %b) #1 {
 entry:
   %0 = bitcast float %a to i32
   %1 = bitcast float %b to i32
-  %not.cmp = icmp ne i32 %0, %1
-  %cond = zext i1 %not.cmp to i32
-  %and13 = or i32 %1, %0
-  %or = and i32 %and13, 2147483647
-  %cmp3 = icmp eq i32 %or, 0
-  %cond4 = select i1 %cmp3, i32 0, i32 %cond
-  ret i32 %cond4
+  %and.i = and i32 %0, 2147483647
+  %and2.i = and i32 %1, 2147483647
+  %cmp.i = icmp slt i32 %0, %1
+  %cond.i = select i1 %cmp.i, i32 -1, i32 1
+  %cmp3.i = icmp sgt i32 %0, %1
+  %cond4.i = select i1 %cmp3.i, i32 -1, i32 1
+  %and5.i = and i32 %1, %0
+  %cmp6.i = icmp sgt i32 %and5.i, -1
+  %cond7.i = select i1 %cmp6.i, i32 %cond.i, i32 %cond4.i
+  %cmp8.i = icmp eq i32 %0, %1
+  %or.i = or i32 %and2.i, %and.i
+  %cmp13.i = icmp eq i32 %or.i, 0
+  %2 = or i1 %cmp8.i, %cmp13.i
+  %cond17.i = select i1 %2, i32 0, i32 %cond7.i
+  %cmp18.i = icmp ugt i32 %and.i, 2139095040
+  %cmp19.i = icmp ugt i32 %and2.i, 2139095040
+  %3 = or i1 %cmp18.i, %cmp19.i
+  %cond23.i = select i1 %3, i32 1, i32 %cond17.i
+  ret i32 %cond23.i
 }
 
 ; Function Attrs: nounwind readnone
@@ -72,19 +96,25 @@ define i32 @__lesf2(float %a, float %b) #1 {
 entry:
   %0 = bitcast float %a to i32
   %1 = bitcast float %b to i32
-  %cmp = icmp slt i32 %0, %1
-  %cmp3 = icmp sgt i32 %0, %1
-  %and5 = and i32 %1, %0
-  %cmp6 = icmp sgt i32 %and5, -1
-  %cond7.v = select i1 %cmp6, i1 %cmp, i1 %cmp3
-  %cond7 = zext i1 %cond7.v to i32
-  %cmp8 = icmp eq i32 %0, %1
-  %and35 = or i32 %1, %0
-  %or = and i32 %and35, 2147483647
-  %cmp13 = icmp eq i32 %or, 0
-  %2 = or i1 %cmp8, %cmp13
-  %cond17 = select i1 %2, i32 1, i32 %cond7
-  ret i32 %cond17
+  %and.i = and i32 %0, 2147483647
+  %and2.i = and i32 %1, 2147483647
+  %cmp.i = icmp slt i32 %0, %1
+  %cond.i = select i1 %cmp.i, i32 -1, i32 1
+  %cmp3.i = icmp sgt i32 %0, %1
+  %cond4.i = select i1 %cmp3.i, i32 -1, i32 1
+  %and5.i = and i32 %1, %0
+  %cmp6.i = icmp sgt i32 %and5.i, -1
+  %cond7.i = select i1 %cmp6.i, i32 %cond.i, i32 %cond4.i
+  %cmp8.i = icmp eq i32 %0, %1
+  %or.i = or i32 %and2.i, %and.i
+  %cmp13.i = icmp eq i32 %or.i, 0
+  %2 = or i1 %cmp8.i, %cmp13.i
+  %cond17.i = select i1 %2, i32 0, i32 %cond7.i
+  %cmp18.i = icmp ugt i32 %and.i, 2139095040
+  %cmp19.i = icmp ugt i32 %and2.i, 2139095040
+  %3 = or i1 %cmp18.i, %cmp19.i
+  %cond23.i = select i1 %3, i32 1, i32 %cond17.i
+  ret i32 %cond23.i
 }
 
 ; Function Attrs: nounwind readnone
@@ -92,19 +122,25 @@ define i32 @__ltsf2(float %a, float %b) #1 {
 entry:
   %0 = bitcast float %a to i32
   %1 = bitcast float %b to i32
-  %cmp = icmp slt i32 %0, %1
-  %cmp3 = icmp sgt i32 %0, %1
-  %and5 = and i32 %1, %0
-  %cmp6 = icmp sgt i32 %and5, -1
-  %cond7.v = select i1 %cmp6, i1 %cmp, i1 %cmp3
-  %cond7 = zext i1 %cond7.v to i32
-  %cmp8 = icmp eq i32 %0, %1
-  %and35 = or i32 %1, %0
-  %or = and i32 %and35, 2147483647
-  %cmp13 = icmp eq i32 %or, 0
-  %2 = or i1 %cmp8, %cmp13
-  %cond17 = select i1 %2, i32 0, i32 %cond7
-  ret i32 %cond17
+  %and.i = and i32 %0, 2147483647
+  %and2.i = and i32 %1, 2147483647
+  %cmp.i = icmp slt i32 %0, %1
+  %cond.i = select i1 %cmp.i, i32 -1, i32 1
+  %cmp3.i = icmp sgt i32 %0, %1
+  %cond4.i = select i1 %cmp3.i, i32 -1, i32 1
+  %and5.i = and i32 %1, %0
+  %cmp6.i = icmp sgt i32 %and5.i, -1
+  %cond7.i = select i1 %cmp6.i, i32 %cond.i, i32 %cond4.i
+  %cmp8.i = icmp eq i32 %0, %1
+  %or.i = or i32 %and2.i, %and.i
+  %cmp13.i = icmp eq i32 %or.i, 0
+  %2 = or i1 %cmp8.i, %cmp13.i
+  %cond17.i = select i1 %2, i32 0, i32 %cond7.i
+  %cmp18.i = icmp ugt i32 %and.i, 2139095040
+  %cmp19.i = icmp ugt i32 %and2.i, 2139095040
+  %3 = or i1 %cmp18.i, %cmp19.i
+  %cond23.i = select i1 %3, i32 1, i32 %cond17.i
+  ret i32 %cond23.i
 }
 
 ; Function Attrs: nounwind readnone
@@ -112,19 +148,25 @@ define i32 @__gesf2(float %a, float %b) #1 {
 entry:
   %0 = bitcast float %a to i32
   %1 = bitcast float %b to i32
-  %not.cmp = icmp sge i32 %0, %1
-  %not.cmp3 = icmp sle i32 %0, %1
-  %and5 = and i32 %1, %0
-  %cmp6 = icmp sgt i32 %and5, -1
-  %cond7.v = select i1 %cmp6, i1 %not.cmp, i1 %not.cmp3
-  %cond7 = zext i1 %cond7.v to i32
-  %cmp8 = icmp eq i32 %0, %1
-  %and35 = or i32 %1, %0
-  %or = and i32 %and35, 2147483647
-  %cmp13 = icmp eq i32 %or, 0
-  %2 = or i1 %cmp8, %cmp13
-  %cond17 = select i1 %2, i32 1, i32 %cond7
-  ret i32 %cond17
+  %and.i = and i32 %0, 2147483647
+  %and2.i = and i32 %1, 2147483647
+  %cmp.i = icmp slt i32 %0, %1
+  %cond.i = select i1 %cmp.i, i32 -1, i32 1
+  %cmp3.i = icmp sgt i32 %0, %1
+  %cond4.i = select i1 %cmp3.i, i32 -1, i32 1
+  %and5.i = and i32 %1, %0
+  %cmp6.i = icmp sgt i32 %and5.i, -1
+  %cond7.i = select i1 %cmp6.i, i32 %cond.i, i32 %cond4.i
+  %cmp8.i = icmp eq i32 %0, %1
+  %or.i = or i32 %and2.i, %and.i
+  %cmp13.i = icmp eq i32 %or.i, 0
+  %2 = or i1 %cmp8.i, %cmp13.i
+  %cond17.i = select i1 %2, i32 0, i32 %cond7.i
+  %cmp18.i = icmp ugt i32 %and.i, 2139095040
+  %cmp19.i = icmp ugt i32 %and2.i, 2139095040
+  %3 = or i1 %cmp18.i, %cmp19.i
+  %cond23.i = select i1 %3, i32 -1, i32 %cond17.i
+  ret i32 %cond23.i
 }
 
 ; Function Attrs: nounwind readnone
@@ -132,19 +174,39 @@ define i32 @__gtsf2(float %a, float %b) #1 {
 entry:
   %0 = bitcast float %a to i32
   %1 = bitcast float %b to i32
-  %not.cmp = icmp sge i32 %0, %1
-  %not.cmp3 = icmp sle i32 %0, %1
-  %and5 = and i32 %1, %0
-  %cmp6 = icmp sgt i32 %and5, -1
-  %cond7.v = select i1 %cmp6, i1 %not.cmp, i1 %not.cmp3
-  %cond7 = zext i1 %cond7.v to i32
-  %cmp8 = icmp eq i32 %0, %1
-  %and35 = or i32 %1, %0
-  %or = and i32 %and35, 2147483647
-  %cmp13 = icmp eq i32 %or, 0
-  %2 = or i1 %cmp8, %cmp13
-  %cond17 = select i1 %2, i32 0, i32 %cond7
-  ret i32 %cond17
+  %and.i = and i32 %0, 2147483647
+  %and2.i = and i32 %1, 2147483647
+  %cmp.i = icmp slt i32 %0, %1
+  %cond.i = select i1 %cmp.i, i32 -1, i32 1
+  %cmp3.i = icmp sgt i32 %0, %1
+  %cond4.i = select i1 %cmp3.i, i32 -1, i32 1
+  %and5.i = and i32 %1, %0
+  %cmp6.i = icmp sgt i32 %and5.i, -1
+  %cond7.i = select i1 %cmp6.i, i32 %cond.i, i32 %cond4.i
+  %cmp8.i = icmp eq i32 %0, %1
+  %or.i = or i32 %and2.i, %and.i
+  %cmp13.i = icmp eq i32 %or.i, 0
+  %2 = or i1 %cmp8.i, %cmp13.i
+  %cond17.i = select i1 %2, i32 0, i32 %cond7.i
+  %cmp18.i = icmp ugt i32 %and.i, 2139095040
+  %cmp19.i = icmp ugt i32 %and2.i, 2139095040
+  %3 = or i1 %cmp18.i, %cmp19.i
+  %cond23.i = select i1 %3, i32 -1, i32 %cond17.i
+  ret i32 %cond23.i
+}
+
+; Function Attrs: nounwind readnone
+define i32 @__unordsf2(float %a, float %b) #1 {
+entry:
+  %0 = bitcast float %a to i32
+  %and = and i32 %0, 2147483647
+  %1 = bitcast float %b to i32
+  %and2 = and i32 %1, 2147483647
+  %cmp = icmp ugt i32 %and, 2139095040
+  %cmp3 = icmp ugt i32 %and2, 2139095040
+  %2 = or i1 %cmp, %cmp3
+  %lor.ext = zext i1 %2 to i32
+  ret i32 %lor.ext
 }
 
 ; Function Attrs: nounwind

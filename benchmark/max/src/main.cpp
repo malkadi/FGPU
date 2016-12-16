@@ -15,9 +15,9 @@ int main()
   // Executions & time measurements will be repeated nruns times 
   const unsigned nruns = 1;
   // use the kernel with atomics or do iterative reduction
-  const bool use_atomics = 0;
+  const bool use_atomics = 1;
   // use vector types:short2 instead of short OR char4 instead of char
-  const bool use_vector_types = 0;
+  const bool use_vector_types = 1;
   // control power measurement
   const unsigned sync_power_measurement = 0;
 

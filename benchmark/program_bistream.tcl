@@ -7,7 +7,7 @@ switch $benchmark {
     set bitstream ../bitstreams/V2_8CUs_Atomic_noSubInteger_240MHz.bit
   }
   "LUdecomposition" -
-  "flodywarshall" -
+  "floydwarshall" -
   "bitonic" -
   "fft" -
   "max" -

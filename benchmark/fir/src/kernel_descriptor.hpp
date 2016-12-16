@@ -25,7 +25,7 @@ class kernel{
   unsigned start_addr;
   //extra info
   unsigned problemSize, dataSize;
-  T *param1, *coeffs, *target;
+  T *param1, *coeffs, *target_fgpu, *target_arm;
   unsigned filterLen;
 
   void compute_descriptor();

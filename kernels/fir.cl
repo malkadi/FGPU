@@ -1,5 +1,16 @@
 #include "FGPUlib.c"
-
+#include "addsf3.c"
+#include "mulsf3.c"
+__kernel void fir_float(__global float *in, __global float *coeff, __global float *out, int filter_len) {
+  int index = get_global_id(0);
+  int i = 0;
+  float acc = 0;
+  do{
+    acc += in[index+i] * coeff[i];
+    i++;
+  } while(i != filter_len);
+  out[index] = acc;
+}
 __kernel void fir(__global int *in, __global int *coeff, __global int *out, int filter_len) {
   int index = get_global_id(0);
   int i = 0, acc = 0;

@@ -1,4 +1,5 @@
 #include "FGPUlib.c"
+#include "addsf3.c"
 __kernel void vec_add(__global int *in1, __global int *in2, __global int *out) {
     int index = get_global_id(0);
     out[index] = in1[index] + in2[index];
@@ -19,7 +20,6 @@ __kernel void vec_add_byte_improved(__global char4 *in1, __global char4 *in2, __
     int index = get_global_id(0);
     out[index] = in1[index] + in2[index];
 }
-#include "addsf3.c"
 __kernel void add_float(__global float *in1, __global float *in2, __global float *out) {
   int indx = get_global_id(0);
   out[indx] = in1[indx] + in2[indx];

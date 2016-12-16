@@ -1,4 +1,5 @@
 #include "FGPUlib.c"
+#include "addsf3.c"
 __kernel void sum_atomic_word(__global int *in, __global int *out, unsigned int reduce_factor) {
   int x = get_global_id(0);
   int size0 = get_global_size(0);
@@ -130,7 +131,6 @@ __kernel void sum_byte_improved(__global char4 *in, __global char *out, unsigned
   }
   out[x] = sum;
 }
-#include "addsf3.c"
 __kernel void sum_float(__global float *in, __global float *out, unsigned int reduce_factor){
   int x = get_global_id(0);
   int size0 = get_global_size(0);
