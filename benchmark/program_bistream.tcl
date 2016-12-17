@@ -19,8 +19,10 @@ switch $benchmark {
     set bitstream ../bitstreams/V2_8CUs_Atomic_SubInteger_2AXI_220MHz.bit
     # set bitstream ../bitstreams/V2_8CUs_Atomic_2AXI_245MHz.bit
   }
-  "vec_add" -
   "vec_mul" -
+  "vec_add" {
+    set bitstream ../bitstreams/V2_8CUs_float_240MHz.bit
+  }
   "xcorr" -
   "fir" -
   "sharpen" -

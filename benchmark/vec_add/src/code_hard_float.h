@@ -1,2 +1,2 @@
-#define VEC_ADD_HARD_LEN                    375
-#define ADD_FLOAT_HARD_POS                  364
+#define VEC_ADD_HARD_FLOAT_LEN              11
+#define ADD_HARD_FLOAT_POS                  0

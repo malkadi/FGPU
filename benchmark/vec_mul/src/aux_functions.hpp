@@ -28,6 +28,7 @@
 #include "xil_exception.h"
 #include "assert.h"
 #include "code.h"
+#include "code_hard_float.h"
 #include "kernel_descriptor.hpp"
 using namespace std;
 
