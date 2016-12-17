@@ -3,6 +3,9 @@ connect
 
 # program bitstream
 switch $benchmark {
+  "nbody" {
+    set bitstream ../bitstreams/V2_4CUs_float_250MHz.bit
+  }
   "copy" {
     set bitstream ../bitstreams/V2_8CUs_Atomic_noSubInteger_240MHz.bit
   }

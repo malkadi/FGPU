@@ -218,8 +218,13 @@ void kernel<T>::print_name()
     xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is vec_add half word\n\r" ANSI_COLOR_RESET);
   else if (typeid(T) == typeid(unsigned char))
     xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is vec_add byte\n\r" ANSI_COLOR_RESET);
-  else if (typeid(T) == typeid(float))
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is vec_add float\n\r" ANSI_COLOR_RESET);
+  else if (typeid(T) == typeid(float)) {
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is vec_add float ");
+    if(use_hard_float)
+      xil_printf(" (hard)\n\r" ANSI_COLOR_RESET);
+    else
+      xil_printf(" (float)\n\r" ANSI_COLOR_RESET);
+  }
 }
 template<typename T>
 unsigned kernel<T>::get_problemSize() 

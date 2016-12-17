@@ -1,0 +1,107 @@
+
+compiler_outputs/nbody.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+nbody_iter:
+       0:	a3 00 00 a8 	lp	r3, 5
+       4:	86 00 00 a8 	lp	r6, 4
+       8:	29 00 00 a8 	lp	r9, 1
+       c:	42 00 00 a8 	lp	r2, 2
+      10:	6b 00 00 a8 	lp	r11, 3
+      14:	0c 00 00 a8 	lp	r12, 0
+      18:	04 00 00 a0 	lid	r4, 0
+      1c:	05 00 00 a1 	wgoff	r5, 0
+      20:	a1 10 00 10 	add	r1, r5, r4
+      24:	0d 00 00 11 	addi	r13, r0, 0
+      28:	25 10 00 21 	slli	r5, r1, 4
+      2c:	88 15 00 10 	add	r8, r12, r5
+      30:	04 00 00 19 	li	r4, 0
+      34:	04 00 00 1d 	lui	r4, 0
+      38:	0e 00 00 a2 	size	r14, 0
+      3c:	07 20 00 74 	lw	r7, r8[r0]
+      40:	01 21 00 11 	addi	r1, r8, 8
+      44:	0a 04 00 74 	lw	r10, r1[r0]
+      48:	01 11 00 11 	addi	r1, r8, 4
+      4c:	0f 04 00 74 	lw	r15, r1[r0]
+      50:	10 00 00 19 	li	r16, 0
+      54:	10 00 fe 1d 	lui	r16, 16256
+      58:	08 10 00 10 	add	r8, r0, r4
+      5c:	01 10 00 10 	add	r1, r0, r4
+
+LBB0_1:
+      60:	91 11 00 11 	addi	r17, r12, 4
+      64:	11 44 00 74 	lw	r17, r17[r0]
+      68:	31 3e 00 c8 	fsub	r17, r17, r15
+      6c:	12 30 00 74 	lw	r18, r12[r0]
+      70:	52 1e 00 c8 	fsub	r18, r18, r7
+      74:	53 4a 00 c1 	fmul	r19, r18, r18
+      78:	34 46 00 c1 	fmul	r20, r17, r17
+      7c:	73 52 00 c0 	fadd	r19, r19, r20
+      80:	94 21 00 11 	addi	r20, r12, 8
+      84:	14 50 00 74 	lw	r20, r20[r0]
+      88:	94 2a 00 c8 	fsub	r20, r20, r10
+      8c:	95 52 00 c1 	fmul	r21, r20, r20
+      90:	b3 4e 00 c0 	fadd	r19, r21, r19
+      94:	73 2e 00 c0 	fadd	r19, r19, r11
+      98:	73 4e 00 c4 	fsqrt	r19, r19
+      9c:	13 4e 00 c2 	fdiv	r19, r16, r19
+      a0:	75 4e 00 c1 	fmul	r21, r19, r19
+      a4:	73 56 00 c1 	fmul	r19, r19, r21
+      a8:	95 31 00 11 	addi	r21, r12, 12
+      ac:	15 54 00 74 	lw	r21, r21[r0]
+      b0:	b3 4e 00 c1 	fmul	r19, r21, r19
+      b4:	52 4e 00 c1 	fmul	r18, r18, r19
+      b8:	31 4e 00 c1 	fmul	r17, r17, r19
+      bc:	93 4e 00 c1 	fmul	r19, r20, r19
+      c0:	21 4c 00 c0 	fadd	r1, r1, r19
+      c4:	08 45 00 c0 	fadd	r8, r8, r17
+      c8:	84 48 00 c0 	fadd	r4, r4, r18
+      cc:	8c 41 00 11 	addi	r12, r12, 16
+      d0:	ad 05 00 11 	addi	r13, r13, 1
+      d4:	b1 39 00 b6 	sltu	r17, r13, r14
+      d8:	11 84 ff 63 	bne	r17, r0, -31
+      dc:	29 15 00 10 	add	r9, r9, r5
+      e0:	2b 11 00 11 	addi	r11, r9, 4
+      e4:	0b 2c 00 74 	lw	r11, r11[r0]
+      e8:	6c 09 00 c1 	fmul	r12, r11, r2
+      ec:	8c 3d 00 c0 	fadd	r12, r12, r15
+      f0:	0d 00 00 19 	li	r13, 0
+      f4:	0d 00 fc 1d 	lui	r13, 16128
+      f8:	0e 35 00 c1 	fmul	r14, r8, r13
+      fc:	4e 38 00 c1 	fmul	r14, r2, r14
+     100:	ce 09 00 c1 	fmul	r14, r14, r2
+     104:	cc 31 00 c0 	fadd	r12, r14, r12
+     108:	0e 24 00 74 	lw	r14, r9[r0]
+     10c:	29 21 00 11 	addi	r9, r9, 8
+     110:	09 24 00 74 	lw	r9, r9[r0]
+     114:	c6 14 00 10 	add	r6, r6, r5
+     118:	cf 10 00 11 	addi	r15, r6, 4
+     11c:	0c 3c 00 7c 	sw	r12, r15[r0]
+     120:	2c 09 00 c1 	fmul	r12, r9, r2
+     124:	8a 29 00 c0 	fadd	r10, r12, r10
+     128:	2c 34 00 c1 	fmul	r12, r1, r13
+     12c:	4c 30 00 c1 	fmul	r12, r2, r12
+     130:	8c 09 00 c1 	fmul	r12, r12, r2
+     134:	8a 29 00 c0 	fadd	r10, r12, r10
+     138:	cc 09 00 c1 	fmul	r12, r14, r2
+     13c:	87 1d 00 c0 	fadd	r7, r12, r7
+     140:	8c 34 00 c1 	fmul	r12, r4, r13
+     144:	4c 30 00 c1 	fmul	r12, r2, r12
+     148:	8c 09 00 c1 	fmul	r12, r12, r2
+     14c:	87 1d 00 c0 	fadd	r7, r12, r7
+     150:	07 18 00 7c 	sw	r7, r6[r0]
+     154:	c6 20 00 11 	addi	r6, r6, 8
+     158:	0a 18 00 7c 	sw	r10, r6[r0]
+     15c:	06 09 00 c1 	fmul	r6, r8, r2
+     160:	c6 2c 00 c0 	fadd	r6, r6, r11
+     164:	63 14 00 10 	add	r3, r3, r5
+     168:	65 10 00 11 	addi	r5, r3, 4
+     16c:	06 14 00 7c 	sw	r6, r5[r0]
+     170:	84 08 00 c1 	fmul	r4, r4, r2
+     174:	84 38 00 c0 	fadd	r4, r4, r14
+     178:	21 08 00 c1 	fmul	r1, r1, r2
+     17c:	04 0c 00 7c 	sw	r4, r3[r0]
+     180:	21 24 00 c0 	fadd	r1, r1, r9
+     184:	62 20 00 11 	addi	r2, r3, 8
+     188:	01 08 00 7c 	sw	r1, r2[r0]
+     18c:	00 00 00 92 	ret
