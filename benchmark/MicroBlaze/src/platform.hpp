@@ -20,12 +20,14 @@
 	((Xil_In32((BaseAddress) + 0x2C) & 	\
 	 0x10) == 0x10)
 
-XTmrCtr TimerCounter;
 
+void wait_ms(unsigned int time);
 void init_platform();
 void cleanup_platform();
 void ChangedPrint(char *ptr);
 void timer_init();
+void tic();
+void toc();
 u64 elapsed_time_us();
 
 #endif

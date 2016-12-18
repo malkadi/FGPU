@@ -11,7 +11,7 @@
 /*******************************************************************/
 
 _STACK_SIZE = DEFINED(_STACK_SIZE) ? _STACK_SIZE : 0x400;
-_HEAP_SIZE = DEFINED(_HEAP_SIZE) ? _HEAP_SIZE : 0x800;
+_HEAP_SIZE = DEFINED(_HEAP_SIZE) ? _HEAP_SIZE : 0x8000000;
 
 /* Define Memories in the system */
 
@@ -19,7 +19,7 @@ MEMORY
 {
    microblaze_0_local_memory_ilmb_bram_if_cntlr_microblaze_0_local_memory_dlmb_bram_if_cntlr : ORIGIN = 0x50, LENGTH = 0x7FB0
    ps7_ddr_0_GP0_AXI_BASENAME : ORIGIN = 0x10000000, LENGTH = 0x10000000
-   ps7_ddr_0_HP0_AXI_BASENAME : ORIGIN = 0x20000000, LENGTH = 0x20000000
+   ps7_ddr_0_HP0_AXI_BASENAME : ORIGIN = 0x20000000, LENGTH = 0x10000000
    ps7_qspi_linear_0_S_AXI_BASEADDR : ORIGIN = 0xFC000000, LENGTH = 0x2000000
 }
 

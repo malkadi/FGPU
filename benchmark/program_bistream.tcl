@@ -38,6 +38,9 @@ switch $benchmark {
   }
   "power_measurement" {
   }
+  "MicroBlaze" {
+    set bitstream ../bitstreams/MicroBlaze_performance_180MHz.bit
+  }
 
   default {
     puts "Please select an appropriate bitstream to the $benchmark in program_bitstream.tcl"
@@ -59,6 +62,10 @@ if { $benchmark == "power_measurement" } {
 rst -processor
 
 # PS7 initialization
-source .FGPU_V2_hw/ps7_init.tcl
+if {$benchmark == "MicroBlaze" } {
+  source .MicroBlaze_hw/ps7_init.tcl
+} else {
+  source .FGPU_V2_hw/ps7_init.tcl
+}
 ps7_init
 ps7_post_config
