@@ -39,5 +39,11 @@
 void init_platform();
 void cleanup_platform();
 void wait_ms(u64 time);
+// Macros
+#define REG_READ(addr) \
+    ({int val;int a=addr; asm volatile ("ldr   %0,[%1]\n" : "=r"(val) : "r"(a)); val;})
+
+#define REG_WRITE(addr,val) \
+    ({int v = val; int a = addr; __asm volatile ("str  %1,[%0]\n" :: "r"(a),"r"(v)); v;})
 
 #endif

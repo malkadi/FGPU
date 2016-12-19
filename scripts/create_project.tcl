@@ -14,7 +14,7 @@ if { $arm_core == "ARM_CORE_0" } {
 
 if {$name == "power_measurement" } {
   set bsp_proj .$name\_bsp
-  set language c++
+  set language c
 } else {
   set bsp_proj .FGPU_$version\_bsp
   set language c++

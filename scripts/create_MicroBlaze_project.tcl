@@ -7,7 +7,7 @@ catch {
   deleteprojects -name MicroBlaze -workspace-only
 }
 # Create application projects
-createapp -name MicroBlaze -hwproject .MicroBlaze_hw -bsp .MicroBlaze_bsp -proc microblaze_0 -os standalone -lang c -app {Empty Application}
+createapp -name MicroBlaze -hwproject .MicroBlaze_hw -bsp .MicroBlaze_bsp -proc microblaze_0 -os standalone -lang c++ -app {Empty Application}
 # Configure the projects for best optimization
 configapp -app MicroBlaze -set build-config {Release}
 configapp -app MicroBlaze -set compiler-optimization {Optimize most (-O3)}
