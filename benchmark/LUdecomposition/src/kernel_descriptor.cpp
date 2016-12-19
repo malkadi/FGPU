@@ -152,7 +152,6 @@ void LUDecomposition(unsigned n, float *mat, float *L)
         mat[i*n+j] -= L[i*n + k]*mat[k*n + j];
       }
     }
-    // break;
   }
   /* printf("LUDecomposition function result\n"); */
   /* printf("U:\n"); */

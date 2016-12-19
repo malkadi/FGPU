@@ -13,7 +13,8 @@ if { $name == "power_measurement" } {
 setws $path
 
 if { $name == "power_measurement" } {
-  set hw_proj .FGPU_V2_hw
+  set hw_proj .MicroBlaze_hw
+  # set hw_proj .FGPU_V2_hw
   set bsp_proj .$name\_bsp
 
   #delete bsp project if already exists

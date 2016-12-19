@@ -16,10 +16,21 @@ targets -set -filter {name =~ "ARM*#1"}
 rst -processor
 # download power measurement elf file
 dow $powerElfFile
-con
-# select the first ARM core as a target
-targets -set -filter {name =~ "ARM*#0"}
-rst -processor
+# con
+if { $benchmark == "MicroBlaze"} {
+  targets -set -filter {name =~ "MicroBlaze*"}
+} else {
+  # select the first ARM core as a target
+  targets -set -filter {name =~ "ARM*#0"}
+}
+# rst -processor
 # download elf file
 dow $elfFile
-con
+# con
+
+
+
+targets -set -filter {name =~ "MicroBlaze*"}
+con 
+targets -set -filter {name =~ "ARM*#1"}
+con 

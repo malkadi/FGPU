@@ -33,7 +33,7 @@
 #include "xparameters.h"
 #include "xil_cache.h"
 #include "assert.h"
-#include "platform.hpp"
+#include "platform.h"
 
 /*
  * Uncomment the following line if ps7 init source files are added in the
@@ -46,9 +46,6 @@
 
  #define UART_BAUD 9600
 #endif
-
-XTmrCtr TimerCounter;
-
 
 void enable_caches()
 {
@@ -64,11 +61,13 @@ void enable_caches()
 #endif
 #endif
 }
+
 void disable_caches()
 {
     Xil_DCacheDisable();
     Xil_ICacheDisable();
 }
+
 void init_platform()
 {
     /*
@@ -80,10 +79,13 @@ void init_platform()
     /* ps7_init();*/
     enable_caches();
 }
+
 void cleanup_platform()
 {
     disable_caches();
 }
+
+
 void XUartChanged_SendByte(u32 BaseAddress, u8 Data)
 {
 		/*
@@ -96,58 +98,43 @@ void XUartChanged_SendByte(u32 BaseAddress, u8 Data)
 		 */
 		X_mWriteReg(BaseAddress, 0x30, Data);
 }
-void outbyte(char c) 
-{
-  XUartChanged_SendByte(0xE0001000, c);
+
+void outbyte(char c) {
+	 XUartChanged_SendByte(0xE0001000, c);
 }
+
 void ChangedPrint(char *ptr)
 {
   while (*ptr) {
     outbyte (*ptr++);
   }
 }
-void wait_ms(unsigned int time)
-{
-  timer_init();
-  XTmrCtr_Start(&TimerCounter, 0);
-  double elapsed_time = 0;
-  while(elapsed_time < time)
-    elapsed_time = elapsed_time_us()/1000;
-}
-void tic() 
-{
-  XTmrCtr_Reset(&TimerCounter, 0);
-  XTmrCtr_Start(&TimerCounter, 0);
-}
-void toc()
-{
-  XTmrCtr_Stop(&TimerCounter, 0);
-}
+
 u64 elapsed_time_us()
 {
-  u64 elapsed_time_us = 0;
-  unsigned int timer_upper = XTmrCtr_GetValue(&TimerCounter, 1);
-  unsigned int timer_lower = XTmrCtr_GetValue(&TimerCounter, 0);
-  timer_upper = XTmrCtr_GetValue(&TimerCounter, 1);
-  timer_lower = XTmrCtr_GetValue(&TimerCounter, 0);
-  elapsed_time_us = timer_upper;
-  elapsed_time_us <<= 32;
-  elapsed_time_us += timer_lower;
-  elapsed_time_us /= 180;
-  return elapsed_time_us;
+	u64 elapsed_time_us = 0;
+	unsigned int timer_upper = XTmrCtr_GetValue(&TimerCounter, 1);
+	unsigned int timer_lower = XTmrCtr_GetValue(&TimerCounter, 0);
+	timer_upper = XTmrCtr_GetValue(&TimerCounter, 1);
+	timer_lower = XTmrCtr_GetValue(&TimerCounter, 0);
+	elapsed_time_us = timer_upper;
+	elapsed_time_us <<= 32;
+	elapsed_time_us += timer_lower;
+	elapsed_time_us /= 180;
+	return elapsed_time_us;
 }
-void timer_init()
-{
-  int Status;
-  Status = XTmrCtr_Initialize(&TimerCounter, 0);
-  if (Status != XST_SUCCESS) {
-    assert(0);
-  }
-  XTmrCtr_Stop(&TimerCounter, 0); //disable Timer 1
-  XTmrCtr_Stop(&TimerCounter, 1); //disable Timer 1
-  XTmrCtr_Reset(&TimerCounter, 0);
-  XTmrCtr_Reset(&TimerCounter, 1);
-  XTmrCtr_SetResetValue(&TimerCounter, 0, 0); //write the lower 32-bit in the load register
-  XTmrCtr_SetResetValue(&TimerCounter, 1, 0); //write the higher 32-bit in the load register
-  XTmrCtr_SetOptions(&TimerCounter, 0, XTC_CASCADE_MODE_OPTION); //enable cascade mode
+
+void timer_init(){
+	int Status;
+	Status = XTmrCtr_Initialize(&TimerCounter, 0);
+	if (Status != XST_SUCCESS) {
+		assert(0);
+	}
+	XTmrCtr_Stop(&TimerCounter, 0); //disable Timer 1
+	XTmrCtr_Stop(&TimerCounter, 1); //disable Timer 1
+	XTmrCtr_Reset(&TimerCounter, 0);
+	XTmrCtr_Reset(&TimerCounter, 1);
+	XTmrCtr_SetResetValue(&TimerCounter, 0, 0); //write the lower 32-bit in the load register
+	XTmrCtr_SetResetValue(&TimerCounter, 1, 0); //write the higher 32-bit in the load register
+	XTmrCtr_SetOptions(&TimerCounter, 0, XTC_CASCADE_MODE_OPTION); //enable cascade mode
 }

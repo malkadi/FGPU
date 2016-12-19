@@ -53,7 +53,7 @@ struct zc706dataset_STR{
 
 /* Raw Rail Parameters */
 struct raw_rail_STR {
-	const char *name;
+	char *name;
 	unsigned char device;
 	unsigned char page;
 };

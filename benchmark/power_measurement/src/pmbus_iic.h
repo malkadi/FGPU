@@ -59,7 +59,7 @@
  */
 
 #define CPU_CORTEXA9_CORE_CLOCK_FREQ_HZ 667000000
-#define COUNTS_PER_SECOND               (CPU_CORTEXA9_CORE_CLOCK_FREQ_HZ / 64)
+#define COUNTS_PER_SECOND1               (CPU_CORTEXA9_CORE_CLOCK_FREQ_HZ / 64)
 
 
 /* Function Declarations */

@@ -14,18 +14,22 @@ if { $arm_core == "ARM_CORE_0" } {
 
 if {$name == "power_measurement" } {
   set bsp_proj .$name\_bsp
+  set language c++
 } else {
   set bsp_proj .FGPU_$version\_bsp
+  set language c++
 }
 
-set hw_proj .FGPU_$version\_hw
+set hw_proj .MicroBlaze_hw
+# set hw_proj .FGPU_$version\_hw
 
 # Delete the project with the same name if already exist
 catch {
   deleteprojects -name $name -workspace-only
 }
+
 # Create application projects
-createapp -name $name -hwproject $hw_proj -bsp $bsp_proj -proc ps7_cortexa9_$core_id -os standalone -lang c++ -app {Empty Application}
+createapp -name $name -hwproject $hw_proj -bsp $bsp_proj -proc ps7_cortexa9_$core_id -os standalone -lang $language -app {Empty Application}
 # Configure the projects for best optimization
 configapp -app $name -set build-config {Release}
 configapp -app $name -set compiler-optimization {Optimize most (-O3)}

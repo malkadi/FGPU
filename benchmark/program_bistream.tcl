@@ -55,7 +55,11 @@ if { $benchmark == "power_measurement" } {
 } else {
   fpga $bitstream
   # select the first ARM core as a target
+  if { $benchmark == "MicroBlaze" } {
+    targets -set -filter {name =~ "ARM*#1"}
+  } else {
   targets -set -filter {name =~ "ARM*#0"}
+  }
 }
 
 # reset the processor

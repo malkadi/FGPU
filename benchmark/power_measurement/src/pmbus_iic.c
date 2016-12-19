@@ -238,6 +238,7 @@ double readCurrent_real(unsigned char deviceAddress, unsigned char pageAddress) 
     u8 SendArray[3];
     myusleep(10000);
     readCurrent(deviceAddress, pageAddress, SendArray);
+    //printf("data = %x", data);
     current = linear11ToFloat((unsigned char)SendArray[1],(unsigned char)SendArray[0]);
     return current;
 }
@@ -266,6 +267,7 @@ int iicMuxSetup(unsigned char channelMask) {
     unsigned char buffer;
 
     buffer = channelMask;
+
 
     /* Wait until the IIC bus is idle */
     while(XIicPs_BusIsBusy(&iic)) {
@@ -300,8 +302,8 @@ int myusleep(unsigned int useconds) {
         return 0;
     }
 
-    if (((COUNTS_PER_SECOND / 1000000) > 0) &&
-            (useconds > (0xFFFFFFFF / (COUNTS_PER_SECOND / 1000000)))) {
+    if (((COUNTS_PER_SECOND1 / 1000000) > 0) &&
+            (useconds > (0xFFFFFFFF / (COUNTS_PER_SECOND1 / 1000000)))) {
         return -1;
     }
 
@@ -321,7 +323,7 @@ int myusleep(unsigned int useconds) {
     { register unsigned int Reg __asm(XREG_CP15_PERF_CYCLE_COUNTER);
     tCur = Reg; }
 #endif
-    tEnd = tCur + (useconds * (COUNTS_PER_SECOND / 1000000));
+    tEnd = tCur + (useconds * (COUNTS_PER_SECOND1 / 1000000));
 
     do {
 #ifdef __GNUC__
