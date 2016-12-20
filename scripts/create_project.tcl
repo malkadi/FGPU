@@ -20,8 +20,8 @@ if {$name == "power_measurement" } {
   set language c++
 }
 
-set hw_proj .MicroBlaze_hw
-# set hw_proj .FGPU_$version\_hw
+# set hw_proj .MicroBlaze_hw
+set hw_proj .FGPU_$version\_hw
 
 # Delete the project with the same name if already exist
 catch {

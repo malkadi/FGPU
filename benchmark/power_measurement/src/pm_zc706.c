@@ -44,7 +44,7 @@ int main()
   struct raw_uivalues_STR *raw_uivalues;
   struct raw_uivalues_STR *memaddr_ds1;
   volatile int *msync;
-  memaddr_ds1=MEMADDR_DS1;
+  memaddr_ds1=(struct raw_uivalues_STR *)MEMADDR_DS1;
   assert(memaddr_ds1);
   msync = (void*)MEMADDR_SYNC;
 
@@ -128,9 +128,9 @@ int main()
   res[15] = Ds_Vcc1V5_SumPower / Ds_Number;
   REG_WRITE(MEMADDR_SYNC, MEASURE_RESP);
   *msync = MEASURE_RESP;
-  Xil_DCacheFlushRange((unsigned)MEMADDR_SYNC, 4);
   Xil_DCacheFlushRange((unsigned)res, 16*sizeof(float));
-  Xil_DCacheFlush();
+  Xil_DCacheFlushRange((unsigned)MEMADDR_SYNC, 4);
+  // flushing MEMADDR_SYNC not the last place will not work!!!!!
 
   /*Print*/
   /* xil_printf("\nAverage Values: Data Set 1 (#%d)\n",Ds_Number); */
