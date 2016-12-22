@@ -8,7 +8,7 @@ int main()
   // The correctness of all results will be checked at the end of each execution round
   const unsigned check_results = 1; 
   // The kernel will be executed for problem sizes of 8*8, 16*16, ... 
-  const unsigned test_vec_len = 1;
+  const unsigned test_vec_len = 7;
   // Executions & time measurements will be repeated nruns times 
   const unsigned nruns = 5;
   // control power measurement

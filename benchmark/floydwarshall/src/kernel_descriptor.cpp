@@ -131,11 +131,10 @@ void kernel<T>::initialize_memory()
 }
 void FloydWarshall(unsigned n, float *mat) 
 {
-  unsigned i, j, k;
-  float oldWeight, tempWeight;
-  for ( k = 0; k < n; k++) {
-    for ( i = 0; i < n; i++) {
-      for ( j = 0; j < n; j++) {
+  for (unsigned  k = 0; k < n; k++) {
+    for (unsigned  j = 0; j < n; j++) {
+      for (unsigned  i = 0; i < n; i++) {
+        float oldWeight, tempWeight;
         oldWeight = mat[j*n + i];
         tempWeight = mat[j*n + k] + mat[k*n + i];
         if (tempWeight < oldWeight)

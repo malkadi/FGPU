@@ -1,0 +1,183 @@
+
+compiler_outputs/edge_detection.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+compass_edge_detection:
+       0:	23 00 00 a0 	lid	r3, 1
+       4:	24 00 00 a1 	wgoff	r4, 1
+       8:	02 00 00 a0 	lid	r2, 0
+       c:	05 00 00 a1 	wgoff	r5, 0
+      10:	a2 08 00 10 	add	r2, r5, r2
+      14:	84 0c 00 10 	add	r4, r4, r3
+      18:	81 00 00 34 	xor	r1, r4, r0
+      1c:	21 04 00 b7 	sltiu	r1, r1, 1
+      20:	43 00 00 34 	xor	r3, r2, r0
+      24:	63 04 00 b7 	sltiu	r3, r3, 1
+      28:	63 04 00 32 	or	r3, r3, r1
+      2c:	05 00 00 a2 	size	r5, 0
+      30:	a1 f8 ff 11 	addi	r1, r5, -2
+      34:	26 10 00 b6 	sltu	r6, r1, r4
+      38:	63 18 00 32 	or	r3, r3, r6
+      3c:	21 08 00 b6 	sltu	r1, r1, r2
+      40:	61 04 00 32 	or	r1, r3, r1
+      44:	01 64 01 63 	bne	r1, r0, 89
+      48:	41 00 00 a8 	lp	r1, 2
+      4c:	23 00 00 a8 	lp	r3, 1
+      50:	06 00 00 a8 	lp	r6, 0
+      54:	87 fc ff 11 	addi	r7, r4, -1
+      58:	08 08 00 10 	add	r8, r0, r2
+      5c:	a8 1c 00 58 	macc	r8, r5, r7
+      60:	87 04 00 11 	addi	r7, r4, 1
+      64:	09 08 00 10 	add	r9, r0, r2
+      68:	a9 1c 00 58 	macc	r9, r5, r7
+      6c:	a2 10 00 58 	macc	r2, r5, r4
+      70:	44 08 00 21 	slli	r4, r2, 2
+      74:	84 18 00 10 	add	r4, r4, r6
+      78:	25 09 00 21 	slli	r5, r9, 2
+      7c:	c5 14 00 10 	add	r5, r6, r5
+      80:	07 19 00 74 	lw	r7, r6[r8]
+      84:	08 09 00 21 	slli	r8, r8, 2
+      88:	c8 20 00 10 	add	r8, r6, r8
+      8c:	26 19 00 74 	lw	r6, r6[r9]
+      90:	09 f0 ff 11 	addi	r9, r0, -4
+      94:	0a 10 00 11 	addi	r10, r0, 4
+      98:	4b 21 00 71 	lb	r11, r8[r10]
+      9c:	28 21 00 71 	lb	r8, r8[r9]
+      a0:	2c 15 00 71 	lb	r12, r5[r9]
+      a4:	45 15 00 71 	lb	r5, r5[r10]
+      a8:	4a 11 00 71 	lb	r10, r4[r10]
+      ac:	24 11 00 71 	lb	r4, r4[r9]
+      b0:	89 1c 00 10 	add	r9, r4, r7
+      b4:	49 25 00 12 	sub	r9, r10, r9
+      b8:	29 19 00 10 	add	r9, r9, r6
+      bc:	ad 20 00 12 	sub	r13, r5, r8
+      c0:	ad 05 00 21 	slli	r13, r13, 1
+      c4:	29 35 00 10 	add	r9, r9, r13
+      c8:	6d 21 00 12 	sub	r13, r11, r8
+      cc:	ad 31 00 12 	sub	r13, r13, r12
+      d0:	ad 15 00 10 	add	r13, r13, r5
+      d4:	4e 11 00 12 	sub	r14, r10, r4
+      d8:	ce 05 00 21 	slli	r14, r14, 1
+      dc:	ad 39 00 10 	add	r13, r13, r14
+      e0:	ee 04 00 21 	slli	r14, r7, 1
+      e4:	c8 21 00 10 	add	r8, r14, r8
+      e8:	08 2d 00 10 	add	r8, r8, r11
+      ec:	88 21 00 12 	sub	r8, r12, r8
+      f0:	ce 04 00 21 	slli	r14, r6, 1
+      f4:	08 39 00 10 	add	r8, r8, r14
+      f8:	05 15 00 10 	add	r5, r8, r5
+      fc:	28 35 00 b2 	slt	r8, r9, r13
+     100:	0e 05 00 35 	xori	r14, r8, 1
+     104:	0e 38 00 12 	sub	r14, r0, r14
+     108:	ce b5 00 31 	andi	r14, r14, 45
+     10c:	0f 24 00 10 	add	r15, r0, r9
+     110:	af 21 00 40 	movn	r15, r13, r8
+     114:	08 68 01 11 	addi	r8, r0, 90
+     118:	b0 3c 00 b2 	slt	r16, r5, r15
+     11c:	c8 41 00 40 	movn	r8, r14, r16
+     120:	0e 14 00 10 	add	r14, r0, r5
+     124:	ee 41 00 40 	movn	r14, r15, r16
+     128:	6b 05 00 21 	slli	r11, r11, 1
+     12c:	67 1d 00 10 	add	r7, r11, r7
+     130:	84 1c 00 12 	sub	r4, r4, r7
+     134:	84 28 00 12 	sub	r4, r4, r10
+     138:	87 05 00 21 	slli	r7, r12, 1
+     13c:	84 1c 00 10 	add	r4, r4, r7
+     140:	84 18 00 10 	add	r4, r4, r6
+     144:	06 1c 02 11 	addi	r6, r0, 135
+     148:	87 38 00 b2 	slt	r7, r4, r14
+     14c:	06 1d 00 40 	movn	r6, r8, r7
+     150:	08 10 00 12 	sub	r8, r0, r4
+     154:	c4 1d 00 40 	movn	r4, r14, r7
+     158:	07 34 00 12 	sub	r7, r0, r13
+     15c:	ea 10 00 b2 	slt	r10, r7, r4
+     160:	87 28 00 40 	movn	r7, r4, r10
+     164:	04 d0 02 11 	addi	r4, r0, 180
+     168:	c4 28 00 40 	movn	r4, r6, r10
+     16c:	06 24 00 12 	sub	r6, r0, r9
+     170:	05 14 00 12 	sub	r5, r0, r5
+     174:	c9 1c 00 b2 	slt	r9, r6, r7
+     178:	e6 24 00 40 	movn	r6, r7, r9
+     17c:	a7 18 00 b2 	slt	r7, r5, r6
+     180:	c5 1c 00 40 	movn	r5, r6, r7
+     184:	06 15 00 b2 	slt	r6, r8, r5
+     188:	a8 18 00 40 	movn	r8, r5, r6
+     18c:	48 0c 00 7c 	sw	r8, r3[r2]
+     190:	03 84 03 11 	addi	r3, r0, 225
+     194:	83 24 00 40 	movn	r3, r4, r9
+     198:	04 38 04 11 	addi	r4, r0, 270
+     19c:	64 1c 00 40 	movn	r4, r3, r7
+     1a0:	03 ec 04 11 	addi	r3, r0, 315
+     1a4:	83 18 00 40 	movn	r3, r4, r6
+     1a8:	43 04 00 7c 	sw	r3, r1[r2]
+
+LBB0_2:
+     1ac:	00 00 00 92 	ret
+
+sobel:
+     1b0:	23 00 00 a0 	lid	r3, 1
+     1b4:	24 00 00 a1 	wgoff	r4, 1
+     1b8:	02 00 00 a0 	lid	r2, 0
+     1bc:	05 00 00 a1 	wgoff	r5, 0
+     1c0:	a2 08 00 10 	add	r2, r5, r2
+     1c4:	83 0c 00 10 	add	r3, r4, r3
+     1c8:	61 00 00 34 	xor	r1, r3, r0
+     1cc:	21 04 00 b7 	sltiu	r1, r1, 1
+     1d0:	44 00 00 34 	xor	r4, r2, r0
+     1d4:	84 04 00 b7 	sltiu	r4, r4, 1
+     1d8:	85 04 00 32 	or	r5, r4, r1
+     1dc:	04 00 00 a2 	size	r4, 0
+     1e0:	81 f8 ff 11 	addi	r1, r4, -2
+     1e4:	26 0c 00 b6 	sltu	r6, r1, r3
+     1e8:	a5 18 00 32 	or	r5, r5, r6
+     1ec:	21 08 00 b6 	sltu	r1, r1, r2
+     1f0:	a1 04 00 32 	or	r1, r5, r1
+     1f4:	01 b4 00 63 	bne	r1, r0, 45
+     1f8:	21 00 00 a8 	lp	r1, 1
+     1fc:	05 00 00 a8 	lp	r5, 0
+     200:	06 08 00 10 	add	r6, r0, r2
+     204:	86 0c 00 58 	macc	r6, r4, r3
+     208:	67 04 00 11 	addi	r7, r3, 1
+     20c:	63 fc ff 11 	addi	r3, r3, -1
+     210:	08 08 00 10 	add	r8, r0, r2
+     214:	88 0c 00 58 	macc	r8, r4, r3
+     218:	82 1c 00 58 	macc	r2, r4, r7
+     21c:	c3 08 00 21 	slli	r3, r6, 2
+     220:	63 14 00 10 	add	r3, r3, r5
+     224:	04 f0 ff 11 	addi	r4, r0, -4
+     228:	87 0c 00 71 	lb	r7, r3[r4]
+     22c:	09 10 00 11 	addi	r9, r0, 4
+     230:	23 0d 00 71 	lb	r3, r3[r9]
+     234:	63 1c 00 12 	sub	r3, r3, r7
+     238:	47 08 00 21 	slli	r7, r2, 2
+     23c:	a7 1c 00 10 	add	r7, r5, r7
+     240:	2a 1d 00 71 	lb	r10, r7[r9]
+     244:	87 1c 00 71 	lb	r7, r7[r4]
+     248:	0b 09 00 21 	slli	r11, r8, 2
+     24c:	ab 2c 00 10 	add	r11, r5, r11
+     250:	84 2c 00 71 	lb	r4, r11[r4]
+     254:	29 2d 00 71 	lb	r9, r11[r9]
+     258:	2b 11 00 12 	sub	r11, r9, r4
+     25c:	6b 1d 00 12 	sub	r11, r11, r7
+     260:	6b 29 00 10 	add	r11, r11, r10
+     264:	63 04 00 21 	slli	r3, r3, 1
+     268:	63 0d 00 10 	add	r3, r11, r3
+     26c:	08 15 00 74 	lw	r8, r5[r8]
+     270:	08 05 00 21 	slli	r8, r8, 1
+     274:	04 11 00 10 	add	r4, r8, r4
+     278:	84 24 00 10 	add	r4, r4, r9
+     27c:	e4 10 00 12 	sub	r4, r7, r4
+     280:	42 14 00 74 	lw	r2, r5[r2]
+     284:	42 04 00 21 	slli	r2, r2, 1
+     288:	82 08 00 10 	add	r2, r4, r2
+     28c:	42 28 00 10 	add	r2, r2, r10
+     290:	63 0c 00 c3 	uitofp	r3, r3
+     294:	63 0c 00 c1 	fmul	r3, r3, r3
+     298:	42 08 00 c3 	uitofp	r2, r2
+     29c:	42 08 00 c1 	fmul	r2, r2, r2
+     2a0:	62 08 00 c0 	fadd	r2, r3, r2
+     2a4:	42 08 00 c4 	fsqrt	r2, r2
+     2a8:	c2 04 00 7c 	sw	r2, r1[r6]
+
+LBB1_2:
+     2ac:	00 00 00 92 	ret

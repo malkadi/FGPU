@@ -13,9 +13,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-// This file is originally a part of the compiler-RT/LLVM compiler infrastructure
-// and it has been edited to fit to FGPU
-
 #include "fp_lib.h"
 
 float __floatunsisf(unsigned a) {

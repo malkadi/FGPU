@@ -3,11 +3,14 @@ connect
 
 # program bitstream
 switch $benchmark {
+  "edge_detection" {
+    set bitstream ../bitstreams/V2_4CUs_float_2AXI_u.bit
+  }
   "nbody" {
     set bitstream ../bitstreams/V2_4CUs_float_250MHz.bit
   }
   "copy" {
-    set bitstream ../bitstreams/V2_8CUs_Atomic_noSubInteger_240MHz.bit
+    set bitstream ../bitstreams/V2_8CUs_2AXIs_250MHz.bit
   }
   "LUdecomposition" -
   "floydwarshall" -
@@ -31,8 +34,7 @@ switch $benchmark {
   "sharpen" -
   "matrix_multiply" -
   "median" -
-  "parallel_selection" -
-  "compass_edge_detection" {
+  "parallel_selection" {
     # set bitstream ../bitstreams/V2_8CUs_SubInteger_2K_LMEM_240MHz.bit
     set bitstream ../bitstreams/V2_8CUs_Atomic_SubInteger_2AXI_220MHz.bit
   }

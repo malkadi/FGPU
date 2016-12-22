@@ -4,13 +4,13 @@ unsigned filter_len = 12;
 unsigned div_factor = 10;
 unsigned mean = 100;
 
-#define TYPE float
-// #define TYPE int
+// #define TYPE float
+#define TYPE int
 // #define TYPE short
 // #define TYPE char
 
-#define VEC_LEN           6
-#define N_RUNS            4
+#define VEC_LEN           13
+#define N_RUNS            10
 #define TEST_VEC_OFFSET   0
 
 int main()
@@ -18,7 +18,7 @@ int main()
   Xil_ICacheEnable();
   Xil_DCacheEnable();
   // kernel_name kernel = copy_kernel;
-  // kernel_name kernel = vec_add_kernel;
+  kernel_name kernel = vec_add_kernel;
   // kernel_name kernel = vec_mul_kernel;
   // kernel_name kernel = fir_kernel;
   // kernel_name kernel = matrix_multiply_kernel;
@@ -35,10 +35,10 @@ int main()
   // kernel_name kernel = fft_kernel;
   // kernel_name kernel = nbody_iter_kernel;
   // kernel_name kernel = floydwarshall_kernel;
-  kernel_name kernel = ludecomposition_kernel;
+  // kernel_name kernel = ludecomposition_kernel;
   
   // control power measurement
-  const unsigned sync_power_measurement = 1;
+  const unsigned sync_power_measurement = 0;
   
   
   //check if the requested kernel is available for the requested data type  
