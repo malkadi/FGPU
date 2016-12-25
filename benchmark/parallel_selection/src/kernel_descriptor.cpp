@@ -5,8 +5,7 @@ extern unsigned int *code; // binary storde in code.c as an array
 template<typename T>
 kernel<T>::kernel(unsigned max_size, bool vector_types)
 {
-  filterLen = 12;
-  param1 = new T[max_size+filterLen];
+  param1 = new T[max_size];
   target_fgpu = new T[max_size];
   target_arm = new T[max_size];
   use_vector_types = vector_types;
@@ -23,7 +22,9 @@ void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
   unsigned int size = PARALLEL_SELECTION_LEN;
-  if (typeid(T) == typeid(int))
+  if(typeid(T) == typeid(float))
+    start_addr = PARALLELSELECTION_FLOAT_POS;
+  else if (typeid(T) == typeid(int))
     start_addr = PARALLELSELECTION_POS;
   else if (typeid(T) == typeid( short)) 
     if(use_vector_types)
@@ -72,15 +73,7 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   offset0 = 0;
   nDim = 1;
   size0 = Size;
-  if( typeid(T) == typeid(int)) {
-    dataSize = 4 * problemSize; // 4 bytes per word
-  }
-  else if (typeid(T) == typeid(short)) {
-    dataSize = 2 * problemSize; // 2 bytes per word
-  }
-  else if (typeid(T) == typeid(char)) {
-    dataSize = 1 * problemSize; // 1 bytes per word
-  }
+  dataSize = sizeof(T) * problemSize;
 
   if(size0 < 64)
     wg_size0 = size0;
@@ -99,16 +92,27 @@ void kernel<T>::initialize_memory()
   srand(0);
   for(i = 0; i < problemSize; i++) 
   {
-    param1_ptr[i] = (T)i;
-    // param1_ptr[i] = rand();
+    param1_ptr[i] = rand();
     target_ptr[i] = 0;
   }
   Xil_DCacheFlush(); // flush data to global memory
 }
 template<typename T>
+void ParallelSelection(T *in, T *out, unsigned Size)
+{
+  for(unsigned i = 0; i < Size; i++)
+  {
+    unsigned pos = 0;
+    T tmp = in[i];
+    for(unsigned j = 0; j < Size; j++) {
+      pos += (in[j] < tmp) || (in[j]==tmp && j < i);
+    }
+    out[pos] = tmp;
+  }
+}
+template<typename T>
 unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
 {
-  unsigned i, j;
   unsigned exec_time = 0;
   unsigned runs = 0;
 
@@ -120,27 +124,12 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     Xil_DCacheInvalidate();
 
     // parametrs accessed during computations should be cashed
-    T *target_ptr = target_arm;
-    T *param1_ptr = param1;
-    unsigned Size = problemSize;
 
     XTime_GetTime(&tStart);
-    for(i = 0; i < Size; i++)
-    {
-      unsigned pos = 0;
-      T tmp = param1_ptr[i];
-      for(j = 0; j < Size; j++) {
-        pos += (param1_ptr[j] < tmp) || (param1_ptr[j]==tmp && j < i);
-      }
-      target_ptr[pos] = tmp;
-    }
 
+    ParallelSelection(param1, target_arm, problemSize);
     // flush the results to the global memory 
-    // If the size of the data to be flushed exceeds half of the cache size, flush the whole cache. It is faster!
-    if (dataSize > 16*1024)
-      Xil_DCacheFlush();
-    else
-      Xil_DCacheFlushRange((unsigned)target_arm, dataSize);
+    Xil_DCacheFlushRange((unsigned)target_arm, dataSize);
     
     XTime_GetTime(&tEnd);
     exec_time += elapsed_time_us(tStart, tEnd);
@@ -206,7 +195,9 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
 template<typename T>
 void kernel<T>::print_name()
 {
-  if( typeid(T) == typeid(int) )
+  if( typeid(T) == typeid(float) )
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is parallel selection sort float\n\r" ANSI_COLOR_RESET);
+  else if( typeid(T) == typeid(int) )
     xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is parallel selection sort word\n\r" ANSI_COLOR_RESET);
   else if (typeid(T) == typeid(short))
     xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is parallel selection sort half word\n\r" ANSI_COLOR_RESET);
@@ -256,6 +247,7 @@ void kernel<T>::compute_descriptor()
     nWF_WG++;
 }
 
+template class kernel<float>;
 template class kernel<int>;
 template class kernel<short>;
 template class kernel<unsigned char>;

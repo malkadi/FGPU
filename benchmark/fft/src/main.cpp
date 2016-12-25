@@ -8,7 +8,7 @@ int main()
   // The correctness of all results will be checked at the end of each execution round
   const unsigned check_results = 1; 
   // The kernel will be executed for problem sizes of 64, 64*2, ... , 64*2^(test_vec_len-1)
-  const unsigned test_vec_len = 10;
+  const unsigned test_vec_len = 1;
   // Executions & time measurements will be repeated nruns times 
   const unsigned nruns = 10;
   // control power measurement
@@ -30,8 +30,7 @@ int main()
   Xil_ICacheEnable();
   Xil_DCacheEnable();
   // create kernel
-  unsigned maxProblemSize = 64<<test_vec_len;
-  kernel<TYPE> fft_kernel(maxProblemSize);
+  kernel<TYPE> fft_kernel(MAX_PROBLEM_SIZE);
   power_measure power;
   if( sync_power_measurement ) {
     power.set_idle();
@@ -49,7 +48,7 @@ int main()
   for(size_index = 0; size_index < test_vec_len; size_index++)
   {
     // initiate the kernel descriptor for the required problem size
-    fft_kernel.prepare_descriptor(64 << size_index);
+    fft_kernel.prepare_descriptor(64 << (size_index+12));
     xil_printf("%-8u", fft_kernel.get_problemSize());
     fflush(stdout);
 

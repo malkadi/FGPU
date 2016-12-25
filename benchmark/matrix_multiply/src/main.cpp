@@ -1,22 +1,23 @@
 #include "aux_functions.hpp"
 using namespace std;
 
-#define TYPE  int 
+#define TYPE  float
+// #define TYPE  int 
 // #define TYPE  short
 // #define TYPE  char
 
 int main()
 {
   // The correctness of all results will be checked at the end of each execution round
-  const unsigned check_results = 0; 
+  const unsigned check_results = 1; 
   // The kernel will be executed for problem sizes of 64, 64*2, ... , 64*2^(test_vec_len-1)
-  const unsigned test_vec_len = 7;
+  const unsigned test_vec_len = 1;
   // Executions & time measurements will be repeated nruns times 
-  const unsigned nruns = 5;
+  const unsigned nruns = 1;
   // use vector types:ushort2 instead of ushort OR uchar4 instead of byte
   const bool use_vector_types = 1;
   // control power measurement
-  const unsigned sync_power_measurement = 0;
+  const unsigned sync_power_measurement = 1;
   
   if(check_results)
     xil_printf("\n\r---Entering main (checking FGPU results is" ANSI_COLOR_GREEN" active" ANSI_COLOR_RESET ") ---\n\r");
@@ -34,8 +35,7 @@ int main()
   Xil_ICacheEnable();
   Xil_DCacheEnable();
   // create kernel
-  unsigned maxDim = 8<<test_vec_len;
-  kernel<TYPE> matrix_multiply_kernel(maxDim, use_vector_types);
+  kernel<TYPE> matrix_multiply_kernel(sqrt(MAX_PROBLEM_SIZE), use_vector_types);
   power_measure power;
   if( sync_power_measurement ) {
     power.set_idle();
@@ -53,7 +53,7 @@ int main()
   for(size_index = 0; size_index < test_vec_len; size_index++)
   {
     // initiate the kernel descriptor for the required problem size
-    matrix_multiply_kernel.prepare_descriptor(8 << size_index);
+    matrix_multiply_kernel.prepare_descriptor(8 << (size_index+6));
     xil_printf("%-8u", matrix_multiply_kernel.get_problemSize());
     fflush(stdout);
 
@@ -69,7 +69,10 @@ int main()
     }
     
     // compute on FGPU
-    timer_val_fgpu[size_index] = matrix_multiply_kernel.compute_on_FGPU(nruns, check_results);
+    if(sync_power_measurement)
+      timer_val_fgpu[size_index] = matrix_multiply_kernel.compute_on_FGPU(nruns, false);
+    else
+      timer_val_fgpu[size_index] = matrix_multiply_kernel.compute_on_FGPU(nruns, check_results);
     
     xil_printf("\n\r");
 

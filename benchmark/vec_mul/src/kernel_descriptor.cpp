@@ -85,16 +85,12 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   offset0 = 0;
   nDim = 1;
   size0 = Size;
-  if( typeid(T) == typeid(int) || typeid(T) == typeid(float)) {
-    dataSize = 4 * problemSize; // 4 bytes per word
-  }
-  else if (typeid(T) == typeid(short)) {
-    dataSize = 2 * problemSize; // 2 bytes per word
+  dataSize = sizeof(T)*problemSize;
+  if (typeid(T) == typeid(short)) {
     if(use_vector_types)
       size0 = Size / 2;
   }
   else if (typeid(T) == typeid(char)) {
-    dataSize = 1 * problemSize; // 1 bytes per word
     if(use_vector_types)
       size0 = Size / 4;
   }
@@ -123,9 +119,14 @@ void kernel<T>::initialize_memory()
   Xil_DCacheFlush(); // flush data to global memory
 }
 template<typename T>
+void VecMul(T *in1, T *in2, T *out, unsigned Size)
+{
+  for(unsigned i = 0; i < Size; i++)
+    out[i] = in1[i] * in2[i];
+}
+template<typename T>
 unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
 {
-  unsigned i;
   unsigned exec_time = 0;
   unsigned runs = 0;
 
@@ -137,15 +138,9 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     Xil_DCacheInvalidate();
 
     // parametrs accessed during computations should be cashed
-    T *target_ptr = target;
-    T *param1_ptr = param1;
-    T *param2_ptr = param2;
-    unsigned Size = problemSize;
-
     XTime_GetTime(&tStart);
-    for(i = 0; i < Size; i++)
-      target_ptr[i] = param1_ptr[i] * param2_ptr[i];
 
+    VecMul(param1, param2, target, size0);
     // flush the results to the global memory 
     Xil_DCacheFlushRange((unsigned)target, dataSize);
     

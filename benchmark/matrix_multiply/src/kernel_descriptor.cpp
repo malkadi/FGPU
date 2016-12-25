@@ -24,7 +24,9 @@ void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
   unsigned int size = MATRIX_MULTIPLY_LEN;
-  if (typeid(T) == typeid(int))
+  if (typeid(T) == typeid(float))
+    start_addr = MATRIX_MULTIPLY_FLOAT_POS;
+  else if (typeid(T) == typeid(int))
     start_addr = MATRIX_MULTIPLY_POS;
   else if (typeid(T) == typeid(short)) 
     if(use_vector_types)
@@ -77,15 +79,7 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   nDim = 2;
   size0 = Size;
   size1 = Size;
-  if( typeid(T) == typeid(int)) {
-    dataSize = 4 * problemSize; // 4 bytes per word
-  }
-  else if (typeid(T) == typeid(short)) {
-    dataSize = 2 * problemSize; // 2 bytes per word
-  }
-  else if (typeid(T) == typeid(char)) {
-    dataSize = 1 * problemSize; // 1 bytes per word
-  }
+  dataSize = sizeof(T)*problemSize;
 
   if(size0 < 8)
     wg_size0 = size0;
@@ -113,9 +107,21 @@ void kernel<T>::initialize_memory()
   Xil_DCacheFlush(); // flush data to global memory
 }
 template<typename T>
+void matrix_multiply(T *out, T *in1, T *in2, unsigned Size) 
+{
+  for(unsigned i = 0; i < Size; i++) {
+    for(unsigned j = 0; j < Size; j++) {
+      T res = 0;
+      for(unsigned k = 0; k < Size; k++) {
+        res += in1[i*Size + k]*in2[k*Size+j];
+      }
+      out[i*Size + j] = res;
+    }
+  }
+}
+template<typename T>
 unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
 {
-  unsigned i, j, k;
   unsigned exec_time = 0;
   unsigned runs = 0;
 
@@ -126,29 +132,10 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     Xil_DCacheFlush();
     Xil_DCacheInvalidate();
 
-    // parametrs accessed during computations should be cashed
-    T *target_ptr = target_arm;
-    T *param1_ptr = param1;
-    T *param2_ptr = param2;
-    unsigned Size = size0;
-
     XTime_GetTime(&tStart);
-    for(i = 0; i < Size; i++) {
-      for(j = 0; j < Size; j++) {
-        int res = 0;
-        for(k = 0; k < Size; k++) {
-          res += param1_ptr[i*Size + k]*param2_ptr[k*Size+j];
-        }
-        target_ptr[i*Size + j] = res;
-      }
-    }
-
+    matrix_multiply(target_arm, param1, param2, size0);
     // flush the results to the global memory 
-    // If the size of the data to be flushed exceeds half of the cache size, flush the whole cache. It is faster!
-    if (dataSize > 16*1024)
-      Xil_DCacheFlush();
-    else
-      Xil_DCacheFlushRange((unsigned)target_arm, dataSize);
+    Xil_DCacheFlushRange((unsigned)target_arm, dataSize);
     
     XTime_GetTime(&tEnd);
     exec_time += elapsed_time_us(tStart, tEnd);
@@ -168,11 +155,13 @@ void kernel<T>::check_FGPU_results()
   for (i = 0; i < problemSize; i++)
     if(target_arm[i] != target_fgpu[i])
     {
+      #if PRINT_ERRORS
       if( typeid(T) == typeid(int) ) {
-        #if PRINT_ERRORS
+          xil_printf("res[%d]=%6.2f (must be %6.2f)\n\r", i, (float)target_fgpu[i], (float) target_arm[i]);
+      } else {
           xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, (unsigned)target_fgpu[i], (unsigned) target_arm[i]);
-        #endif
       }
+      #endif
       nErrors++;
     }
   if(nErrors != 0) {
@@ -222,6 +211,8 @@ void kernel<T>::print_name()
     xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is matrix_multiply half word\n\r" ANSI_COLOR_RESET);
   else if (typeid(T) == typeid(char))
     xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is matrix_multiply byte\n\r" ANSI_COLOR_RESET);
+  else if (typeid(T) == typeid(float))
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is matrix_multiply float\n\r" ANSI_COLOR_RESET);
 }
 template<typename T>
 unsigned kernel<T>::get_problemSize() 
@@ -266,6 +257,7 @@ void kernel<T>::compute_descriptor()
     nWF_WG++;
 }
 
+template class kernel<float>;
 template class kernel<int>;
 template class kernel<short>;
 template class kernel<char>;

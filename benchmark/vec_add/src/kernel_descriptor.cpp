@@ -166,12 +166,12 @@ void kernel<T>::check_FGPU_results()
   for (i = 0; i < problemSize; i++)
     if(target[i] != (T)((T)i+(T)i))
     {
-      #if PRINT_ERRORS
-      if(typeid(T) == typeid(float))
-        printf("res[0x%x]=%4.2f (must be %4.2f)\n\r", i, (float)target[i], (float) i+i);
-      else
-        xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, (unsigned)target[i], (unsigned) i+i);
-      #endif
+      if( PRINT_ERRORS && nErrors < 10) {
+        if(typeid(T) == typeid(float))
+          printf("res[0x%x]=%4.2f (must be %4.2f)\n\r", i, (float)target[i], (float) i+i);
+        else
+          xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, (unsigned)target[i], (unsigned) i+i);
+      }
       nErrors++;
     }
   if(nErrors != 0)
@@ -223,7 +223,7 @@ void kernel<T>::print_name()
     if(use_hard_float)
       xil_printf(" (hard)\n\r" ANSI_COLOR_RESET);
     else
-      xil_printf(" (float)\n\r" ANSI_COLOR_RESET);
+      xil_printf(" (soft)\n\r" ANSI_COLOR_RESET);
   }
 }
 template<typename T>

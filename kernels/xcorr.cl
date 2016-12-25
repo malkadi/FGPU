@@ -1,4 +1,6 @@
 #include "FGPUlib.c"
+#include "addsf3.c"
+#include "mulsf3.c"
 __kernel void xcorr(__global int *in1, __global int *in2, __global int *out) {
   int offset = get_global_id(0);
   int len = get_global_size(0);
@@ -87,4 +89,15 @@ __kernel void xcorr_byte_improved(__global char4 *in1, __global char4 *in2, __gl
   out[offset].y = res2;
   out[offset].z = res3;
   out[offset].w = res4;
+}
+__kernel void xcorr_float(__global float *in1, __global float *in2, __global float *out) {
+  int offset = get_global_id(0);
+  int len = get_global_size(0);
+  int i = 0;
+  float res = 0;
+  do{
+    res += in1[i] * in2[i+offset];
+    i++;
+  } while( i != len);
+  out[offset] = res;
 }

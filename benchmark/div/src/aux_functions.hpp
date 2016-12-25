@@ -31,7 +31,7 @@
 #include "kernel_descriptor.hpp"
 using namespace std;
 
-#define MAX_PROBLEM_SIZE    256*1024  // The execution will break if bigger problem sizes are executed
+#define MAX_PROBLEM_SIZE    1024*1024  // The execution will break if bigger problem sizes are executed
 #define MAX_MES_TIME_S          2     // maximum execution time of a kernel at any size.
                                       // The execution will not repeat if this number is exceeded
 

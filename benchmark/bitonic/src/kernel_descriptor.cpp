@@ -56,7 +56,6 @@ void kernel<T>::download_descriptor()
   lram_ptr[17] = (unsigned) stageIndx;
   lram_ptr[18] = (unsigned) passIndx;
   lram_ptr[19] = 1; // sort increasing
-
 }
 template<typename T>
 void kernel<T>::compute_descriptor()
@@ -98,7 +97,11 @@ void kernel<T>::compute_descriptor()
 template<typename T>
 void kernel<T>::prepare_descriptor(unsigned int Size)
 {
-  wg_size0 = 32;
+  //setting wg_size0 for integer sorting to 32 is a little bit better
+  if(typeid(T) == typeid(int))
+    wg_size0 = 32;
+  else //float
+    wg_size0 = 64;
   problemSize = Size;
   offset0 = 0;
   nDim = 1;
@@ -108,7 +111,7 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   passIndx = 0;
   dataSize = sizeof(T) * problemSize; // 4 bytes per word
 
-  if(size0 < 32)
+  if(size0 < wg_size0)
     wg_size0 = size0;
 
   compute_descriptor();
@@ -130,8 +133,8 @@ void kernel<T>::initialize_memory()
   T *target_arm_ptr = (T*) target_arm;
   for(i = 0; i < (int)problemSize; i++) 
   {
-    target_arm_ptr[i] = target_fgpu_ptr[i] = param_ptr[i] = (T)i+1;
-    // target_arm_ptr[i] = target_fgpu_ptr[i] = param_ptr[i] = (T)rand();
+    // target_arm_ptr[i] = target_fgpu_ptr[i] = param_ptr[i] = (T)i+1;
+    target_arm_ptr[i] = target_fgpu_ptr[i] = param_ptr[i] = (T)(rand()>>8);
   }
   Xil_DCacheFlush(); // flush data to global memory
 }
@@ -217,10 +220,12 @@ void kernel<T>::check_FGPU_results()
     if(target_arm[i] != target_fgpu[i])
     {
       #if PRINT_ERRORS
-      if(typeid(T) == typeid(float))
-        printf("res[%d]=%6.2f (must be %6.2f)\n\r", i, (float)target_fgpu[i], (float)target_arm[i]);
-      else
-        xil_printf("res[%d]=0x%x (must be 0x%x)\n\r", i, target_fgpu[i], target_arm[i]);
+      if(nErrors < 10) {
+        if(typeid(T) == typeid(float))
+          printf("res[%d]=%6.2f (must be %6.2f)\n\r", i, (float)target_fgpu[i], (float)target_arm[i]);
+        else
+          xil_printf("res[%d]=0x%x (must be 0x%x)\n\r", i, target_fgpu[i], target_arm[i]);
+      }
       #endif
       nErrors++;
     }
@@ -237,12 +242,8 @@ void kernel<T>::update_and_download()
     passIndx = 0;
     stageIndx++;
   }
-  if(stageIndx >= nStages) {
-    size0 = 0;
-  }
   lram_ptr[17] = stageIndx;
   lram_ptr[18] = passIndx;
-  Xil_DCacheFlushRange((unsigned)lram_ptr, 32*4);
 }
 template<typename T>
 unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
@@ -252,9 +253,11 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
   unsigned exec_time = 0;
 
   REG_WRITE(INITIATE_REG_ADDR, 0xFFFF); // initiate FGPU when execution starts
-  REG_WRITE(CLEAN_CACHE_REG_ADDR, 0); // do not clean FGPU cache at end of execution
+  // REG_WRITE(CLEAN_CACHE_REG_ADDR, 0); // do not clean FGPU cache at end of execution
   while(runs < n_runs)
   {
+    stageIndx = 0;
+    passIndx = 0;
     download_descriptor();
     XTime_GetTime(&tStart);
     
@@ -262,18 +265,13 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
     {
       REG_WRITE(START_REG_ADDR, 1);
       while(REG_READ(STATUS_REG_ADDR)==0);
-      // cout << "stageIndx = " << stageIndx << ", passIndx = " << passIndx << endl;
-      // for(unsigned i = 0; i < problemSize; i++) {
-      //   printf("@%d: original = %f, arm = %f, fgpu = %f\n", i, (float)param1[i], (float)target_arm[i], (float)target_fgpu[i]);
-      // }
-      // cout<<endl;
       update_and_download();
       REG_WRITE(INITIATE_REG_ADDR, 0); // do not initiate FGPU for next iterations
       if(stageIndx == nStages-1 && passIndx == nStages-1){
         REG_WRITE(CLEAN_CACHE_REG_ADDR, 1); // clean cache for the last iteration
       }
 
-    }while(size0 > 0);
+    }while(stageIndx < nStages);
     
     XTime_GetTime(&tEnd);
     exec_time += elapsed_time_us(tStart, tEnd);
@@ -294,7 +292,9 @@ template<typename T>
 void kernel<T>::print_name()
 {
   if( typeid(T) == typeid(int) )
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is bitonic\n\r" ANSI_COLOR_RESET);
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is bitonic int\n\r" ANSI_COLOR_RESET);
+  else if( typeid(T) == typeid(float) )
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is bitonic float\n\r" ANSI_COLOR_RESET);
 }
 
 template class kernel<int>;

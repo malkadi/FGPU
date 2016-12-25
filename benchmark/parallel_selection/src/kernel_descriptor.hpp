@@ -26,7 +26,6 @@ class kernel{
   //extra info
   unsigned problemSize, dataSize;
   T *param1, *target_fgpu, *target_arm;
-  unsigned filterLen;
 
   void compute_descriptor();
   bool use_vector_types;

@@ -1,9 +1,7 @@
 #include "FGPUlib.c"
 
-// #include "floatunsisf.c"
 #include "divsf3.c"
 #include "subsf3.c"
-#include "addsf3.c"
 #include "mulsf3.c"
 
 // This kernel decomposes a matrix into lower and upper parts

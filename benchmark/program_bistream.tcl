@@ -22,12 +22,12 @@ switch $benchmark {
   "sum_power_another" -
   "sum" {
     # set bitstream ../bitstreams/V1_8CUs.bit
-    set bitstream ../bitstreams/V2_8CUs_Atomic_SubInteger_2AXI_220MHz.bit
+    set bitstream ../bitstreams/V2_8CUs_2AXIs_250MHz.bit
     # set bitstream ../bitstreams/V2_8CUs_Atomic_2AXI_245MHz.bit
   }
   "vec_mul" -
   "vec_add" {
-    set bitstream ../bitstreams/V2_8CUs_float_240MHz.bit
+    set bitstream ../bitstreams/V2_8CUs_2AXIs_250MHz.bit
   }
   "xcorr" -
   "fir" -
@@ -36,7 +36,7 @@ switch $benchmark {
   "median" -
   "parallel_selection" {
     # set bitstream ../bitstreams/V2_8CUs_SubInteger_2K_LMEM_240MHz.bit
-    set bitstream ../bitstreams/V2_8CUs_Atomic_SubInteger_2AXI_220MHz.bit
+    set bitstream ../bitstreams/V2_8CUs_2AXIs_250MHz.bit
   }
   "power_measurement" {
   }

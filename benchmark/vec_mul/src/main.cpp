@@ -17,7 +17,7 @@ int main()
   // use vector types:short2 instead of short OR char4 instead of char
   const bool use_vector_types = 1;
   // use hard floating point units
-  const bool use_hard_float = 1;
+  const bool use_hard_float = 0;
   // control power measurement
   const unsigned sync_power_measurement = 0;
   
@@ -37,8 +37,7 @@ int main()
   Xil_ICacheEnable();
   Xil_DCacheEnable();
   // create kernel
-  unsigned maxProblemSize = 64<<test_vec_len;
-  kernel<TYPE> vec_mul_kernel(maxProblemSize, use_vector_types, use_hard_float);
+  kernel<TYPE> vec_mul_kernel(MAX_PROBLEM_SIZE, use_vector_types, use_hard_float);
   power_measure power;
   if( sync_power_measurement ) {
     power.set_idle();
@@ -56,7 +55,7 @@ int main()
   for(size_index = 0; size_index < test_vec_len; size_index++)
   {
     // initiate the kernel descriptor for the required problem size
-    vec_mul_kernel.prepare_descriptor(64 << size_index);
+    vec_mul_kernel.prepare_descriptor(64 << (size_index+0));
     xil_printf("%-8u", vec_mul_kernel.get_problemSize());
     fflush(stdout);
 
@@ -67,7 +66,10 @@ int main()
     }
 
     // compute on FGPU
-    timer_val_fgpu[size_index] = vec_mul_kernel.compute_on_FGPU(nruns, check_results);
+    if(sync_power_measurement)
+      timer_val_fgpu[size_index] = vec_mul_kernel.compute_on_FGPU(nruns, false);
+    else
+      timer_val_fgpu[size_index] = vec_mul_kernel.compute_on_FGPU(nruns, check_results);
 
     // compute on ARM
     if (!sync_power_measurement ) {

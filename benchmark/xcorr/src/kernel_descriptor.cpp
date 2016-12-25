@@ -24,7 +24,9 @@ void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
   unsigned int size = XCORR_LEN;
-  if (typeid(T) == typeid(int))
+  if(typeid(T) == typeid(float))
+    start_addr = XCORR_FLOAT_POS;
+  else if (typeid(T) == typeid(int))
     if(use_vector_types)
       start_addr = XCORR_IMPROVED_POS;
     else
@@ -78,18 +80,16 @@ void kernel<T>::prepare_descriptor(unsigned int Size)
   offset1 = 0;
   nDim = 1;
   size0 = Size;
+  dataSize = sizeof(T) * problemSize;
   if( typeid(T) == typeid(int)) {
-    dataSize = 4 * problemSize; // 4 bytes per word
     if(use_vector_types)
       size0 = Size / 4;
   }
   else if (typeid(T) == typeid(short)) {
-    dataSize = 2 * problemSize; // 2 bytes per word
     if(use_vector_types)
       size0 = Size / 2;
   }
   else if (typeid(T) == typeid(char)) {
-    dataSize = 1 * problemSize; // 1 bytes per word
     if(use_vector_types)
       size0 = Size / 4;
   }
@@ -121,9 +121,19 @@ void kernel<T>::initialize_memory()
   Xil_DCacheFlush(); // flush data to global memory
 }
 template<typename T>
+void Xcorr(T *in1, T *in2, T *out, unsigned Size)
+{
+  for(unsigned i = 0; i < Size; i++) {
+    T res = 0;
+    for(unsigned j = 0; j < Size; j++) {
+      res += in1[j]*in2[i+j];
+    }
+    out[i] = res;
+  }
+}
+template<typename T>
 unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
 {
-  unsigned i, j;
   unsigned exec_time = 0;
   unsigned runs = 0;
 
@@ -134,27 +144,11 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     Xil_DCacheFlush();
     Xil_DCacheInvalidate();
 
-    // parametrs accessed during computations should be cashed
-    T *target_ptr = target_arm;
-    T *param1_ptr = param1;
-    T *param2_ptr = param2;
-    unsigned Size = problemSize;
-
     XTime_GetTime(&tStart);
-    for(i = 0; i < Size; i++) {
-      int res = 0;
-      for(j = 0; j < Size; j++) {
-        res += param1_ptr[j]*param2_ptr[i+j];
-      }
-      target_ptr[i] = res;
-    }
 
+    Xcorr(param1, param2, target_arm, problemSize);
     // flush the results to the global memory 
-    // If the size of the data to be flushed exceeds half of the cache size, flush the whole cache. It is faster!
-    if (dataSize > 16*1024)
-      Xil_DCacheFlush();
-    else
-      Xil_DCacheFlushRange((unsigned)target_arm, dataSize);
+    Xil_DCacheFlushRange((unsigned)target_arm, dataSize);
     
     XTime_GetTime(&tEnd);
     exec_time += elapsed_time_us(tStart, tEnd);
@@ -223,7 +217,9 @@ template<typename T>
 void kernel<T>::print_name()
 {
   if( typeid(T) == typeid(int) )
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is corss correlation word\n\r" ANSI_COLOR_RESET);
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is corss correlation int\n\r" ANSI_COLOR_RESET);
+  else if( typeid(T) == typeid(float) )
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is corss correlation float\n\r" ANSI_COLOR_RESET);
   else if (typeid(T) == typeid(short))
     xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is corss correlation half word\n\r" ANSI_COLOR_RESET);
   else if (typeid(T) == typeid(char))
@@ -273,5 +269,6 @@ void kernel<T>::compute_descriptor()
 }
 
 template class kernel<int>;
+template class kernel<float>;
 template class kernel<short>;
 template class kernel<char>;
