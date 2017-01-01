@@ -1,11 +1,12 @@
 #include "kernel_descriptor.hpp"
 using namespace std;
-extern unsigned int *code; // binary storde in code.c as an array
+extern unsigned *code; // binary storde in code.c as an array
+extern unsigned *code_hard_float; // binary storde in code_hard_float.c as an array
 
 #define PRINT_ERRORS    1
 
 template<typename T>
-kernel<T>::kernel(unsigned max_size, bool vector_types, bool atomics)
+kernel<T>::kernel(unsigned max_size, bool vector_types, bool atomics, bool hard_float)
 {
   // The FGPU read wrong data from the dynamically allocated arrays
   // param1 = (T*)new int [max_size];
@@ -20,6 +21,7 @@ kernel<T>::kernel(unsigned max_size, bool vector_types, bool atomics)
   use_vector_types = vector_types;
   use_atomics = atomics;
   minReduceSize = 32;
+  use_hard_float = hard_float;
   lram_ptr = (unsigned*)FGPU_BASEADDR;
 }
 template<typename T>
@@ -34,8 +36,15 @@ void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
   unsigned int size = MAX_LEN;
+  unsigned *code_ptr = code;
   if(typeid(T) == typeid(float)){
-    start_addr = MAX_FLOAT_POS;
+    if(use_hard_float) {
+      start_addr = MAX_HARD_FLOAT_POS;
+      code_ptr = code_hard_float;
+      size = MAX_HARD_FLOAT_LEN;
+    } else {
+      start_addr = MAX_FLOAT_POS;
+    }
   } else if(use_atomics) {
     if (typeid(T) == typeid(int))
       start_addr = MAX_ATOMIC_POS;
@@ -69,7 +78,7 @@ void kernel<T>::download_code()
   }
   unsigned i = 0;
   for(; i < size; i++){
-    cram_ptr[i] = code[i];
+    cram_ptr[i] = code_ptr[i];
   }
   Xil_DCacheFlush();
 }
@@ -413,7 +422,12 @@ template<typename T>
 void kernel<T>::print_name()
 {
   if(typeid(T) == typeid(float)) {
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is max float\n\r" ANSI_COLOR_RESET);
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is max float");
+    if(use_hard_float)
+      xil_printf(" (hard)");
+    else
+      xil_printf(" (soft)");
+    xil_printf("\n\r" ANSI_COLOR_RESET);
     return;
   }
   if( typeid(T) == typeid(int) )

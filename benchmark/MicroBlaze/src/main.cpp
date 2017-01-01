@@ -4,21 +4,21 @@ unsigned filter_len = 12;
 unsigned div_factor = 10;
 unsigned mean = 100;
 
-// #define TYPE float
-#define TYPE int
+#define TYPE float
+// #define TYPE int
 // #define TYPE short
 // #define TYPE char
 
-#define VEC_LEN           13
-#define N_RUNS            10
-#define TEST_VEC_OFFSET   0
+#define VEC_LEN           1
+#define N_RUNS            1
+#define TEST_VEC_OFFSET   11
 
 int main()
 {
   Xil_ICacheEnable();
   Xil_DCacheEnable();
   // kernel_name kernel = copy_kernel;
-  kernel_name kernel = vec_add_kernel;
+  // kernel_name kernel = vec_add_kernel;
   // kernel_name kernel = vec_mul_kernel;
   // kernel_name kernel = fir_kernel;
   // kernel_name kernel = matrix_multiply_kernel;
@@ -33,9 +33,10 @@ int main()
   // kernel_name kernel = div_kernel;
   // kernel_name kernel = bitonicSort_kernel;
   // kernel_name kernel = fft_kernel;
-  // kernel_name kernel = nbody_iter_kernel;
+  kernel_name kernel = nbody_iter_kernel;
   // kernel_name kernel = floydwarshall_kernel;
   // kernel_name kernel = ludecomposition_kernel;
+  // kernel_name kernel = sobel_kernel;
   
   // control power measurement
   const unsigned sync_power_measurement = 0;
@@ -122,7 +123,9 @@ int main()
       printf("%-35d%llu\n\r", (8<<i)*(8<<i), time_us[i]/N_RUNS);
 
   if( sync_power_measurement ) {
-    power.wait_power_values();
+    //Waiting for sync value for the power measurment program running on ARM Core 1 does not succeed always
+    //power.wait_power_values();
+    wait_ms(100);
     power.print_values();
   }
 

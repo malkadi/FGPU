@@ -14,6 +14,7 @@ unsigned int set_dimensions(kernel_name kernel)
     case compass_edge_detection_kernel:
     case floydwarshall_kernel:
     case ludecomposition_kernel:
+    case sobel_kernel:
       return 2;
     case copy_kernel:
     case fir_kernel:
@@ -138,6 +139,7 @@ void set_initial_size(kernel_name kernel, unsigned *size_d0, unsigned *size_d1, 
     case compass_edge_detection_kernel:
     case matrix_multiply_kernel:
     case floydwarshall_kernel:
+    case sobel_kernel:
     case ludecomposition_kernel:
       *size_d0 = (1<<offset)*8;
       *size_d1 = (1<<offset)*8;

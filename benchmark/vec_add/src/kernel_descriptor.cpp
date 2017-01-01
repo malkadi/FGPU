@@ -2,7 +2,7 @@
 
 #define PRINT_ERRORS    1
 extern unsigned *code; // binary storde in code.c as an array
-extern unsigned *code_hard_float; // binary storde in code.c as an array
+extern unsigned *code_hard_float; // binary storde in code_hard_float.c as an array
 
 template<typename T>
 kernel<T>::kernel(unsigned max_size, bool vector_types, bool hard_float)

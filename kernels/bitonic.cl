@@ -23,19 +23,9 @@ __kernel void bitonicSort_float(__global float *a, unsigned stage, unsigned pass
     float greater;
     float lesser;
     unsigned leftBigger = leftElement > rightElement;
-    // if(leftElement > rightElement) {
-    //   greater = leftElement;
-    //   lesser = rightElement;
-    // } else {
-    //   greater = rightElement;
-    //   lesser = leftElement;
-    // } 
-    
-    // greater = leftBigger?leftElement:rightElement;
-    // lesser = leftBigger?rightElement:leftElement;
 
-    greater = leftBigger>0?leftElement:rightElement;
-    lesser = leftBigger>0?rightElement:leftElement;
+    greater = leftBigger?leftElement:rightElement;
+    lesser = leftBigger?rightElement:leftElement;
     
     leftElement = sortIncreasing ? lesser:greater;
     rightElement = sortIncreasing ? greater:lesser;

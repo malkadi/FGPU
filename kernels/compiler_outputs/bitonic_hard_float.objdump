@@ -1,0 +1,40 @@
+
+compiler_outputs/bitonic_hard_float.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+bitonicSort_hard_float:
+       0:	02 00 00 a8 	lp	r2, 0
+       4:	43 00 00 a8 	lp	r3, 2
+       8:	64 00 00 a8 	lp	r4, 3
+       c:	25 00 00 a8 	lp	r5, 1
+      10:	06 00 00 a0 	lid	r6, 0
+      14:	07 00 00 a1 	wgoff	r7, 0
+      18:	e1 18 00 10 	add	r1, r7, r6
+      1c:	a6 7c 00 31 	andi	r6, r5, 31
+      20:	07 04 00 11 	addi	r7, r0, 1
+      24:	e6 18 00 20 	sll	r6, r7, r6
+      28:	26 18 00 30 	and	r6, r1, r6
+      2c:	e8 10 00 12 	sub	r8, r7, r4
+      30:	88 18 00 48 	movz	r8, r4, r6
+      34:	a3 0c 00 12 	sub	r3, r5, r3
+      38:	63 7c 00 31 	andi	r3, r3, 31
+      3c:	e4 0c 00 20 	sll	r4, r7, r3
+      40:	85 fc ff 11 	addi	r5, r4, -1
+      44:	25 14 00 30 	and	r5, r1, r5
+      48:	21 0c 00 28 	srl	r1, r1, r3
+      4c:	81 04 00 51 	mul	r1, r4, r1
+      50:	21 04 00 21 	slli	r1, r1, 1
+      54:	21 14 00 10 	add	r1, r1, r5
+      58:	23 08 00 74 	lw	r3, r2[r1]
+      5c:	24 10 00 10 	add	r4, r1, r4
+      60:	85 08 00 74 	lw	r5, r2[r4]
+      64:	a6 0c 00 c7 	fslt	r6, r5, r3
+      68:	07 14 00 10 	add	r7, r0, r5
+      6c:	67 18 00 40 	movn	r7, r3, r6
+      70:	a3 18 00 40 	movn	r3, r5, r6
+      74:	05 1c 00 10 	add	r5, r0, r7
+      78:	65 20 00 40 	movn	r5, r3, r8
+      7c:	25 08 00 7c 	sw	r5, r2[r1]
+      80:	e3 20 00 40 	movn	r3, r7, r8
+      84:	83 08 00 7c 	sw	r3, r2[r4]
+      88:	00 00 00 92 	ret

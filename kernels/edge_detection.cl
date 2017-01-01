@@ -49,7 +49,6 @@ __kernel void compass_edge_detection(__global unsigned *in, __global unsigned *a
   angle[x*rowLen+y] = max_index*45;
 }
 
-// #include "floatunsisf.c"
 __kernel void sobel(__global unsigned *in, __global float *amplitude)
 {
   unsigned x = get_global_id(1);

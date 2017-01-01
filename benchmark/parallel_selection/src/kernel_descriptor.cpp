@@ -1,14 +1,16 @@
 #include "kernel_descriptor.hpp"
 
-extern unsigned int *code; // binary storde in code.c as an array
-
+extern unsigned *code; // binary storde in code.c as an array
+extern unsigned *code_hard_float; // binary storde in code_hard_float.c as an array
+#define PRINT_ERRORS    1
 template<typename T>
-kernel<T>::kernel(unsigned max_size, bool vector_types)
+kernel<T>::kernel(unsigned max_size, bool vector_types, bool hard_float)
 {
   param1 = new T[max_size];
   target_fgpu = new T[max_size];
   target_arm = new T[max_size];
   use_vector_types = vector_types;
+  use_hard_float = hard_float;
 }
 template<typename T>
 kernel<T>::~kernel() 
@@ -21,10 +23,17 @@ template<typename T>
 void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
-  unsigned int size = PARALLEL_SELECTION_LEN;
-  if(typeid(T) == typeid(float))
-    start_addr = PARALLELSELECTION_FLOAT_POS;
-  else if (typeid(T) == typeid(int))
+  unsigned *code_ptr = code;
+  unsigned Size = PARALLEL_SELECTION_LEN;
+  if(typeid(T) == typeid(float)) {
+    if(use_hard_float) {
+      start_addr = PARALLELSELECTION_HARD_FLOAT_POS;
+      code_ptr = code_hard_float;
+      Size = PARALLEL_SELECTION_HARD_FLOAT_LEN;
+    } else {
+      start_addr = PARALLELSELECTION_FLOAT_POS;
+    }
+  } else if (typeid(T) == typeid(int))
     start_addr = PARALLELSELECTION_POS;
   else if (typeid(T) == typeid( short)) 
     if(use_vector_types)
@@ -38,9 +47,9 @@ void kernel<T>::download_code()
       start_addr = PARALLELSELECTION_BYTE_POS;
   else
     assert(0 && "unsupported type");
-  unsigned i = 0;
-  for(; i < size; i++){
-    cram_ptr[i] = code[i];
+  
+  for(unsigned i = 0; i < Size; i++){
+    cram_ptr[i] = code_ptr[i];
   }
 }
 template<typename T>
@@ -150,9 +159,13 @@ void kernel<T>::check_FGPU_results()
   for (i = 0; i < problemSize; i++) {
     if((T)target_fgpu[i] != (T)target_arm[i])
     {
-      #if PRINT_ERRORS
-        xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, (int)target_fgpu[i], (int) target_arm[i]);
-      #endif
+      if(PRINT_ERRORS && nErrors < 100) {
+        if(typeid(T) != typeid(float)) {
+          xil_printf("res[0x%x]=0x%x (must be 0x%x)\n\r", i, (int)target_fgpu[i], (int) target_arm[i]);
+        } else {
+          printf("res[%d]=%6.2f (must be %6.2f)\n\r", i, (float)target_fgpu[i], (float) target_arm[i]);
+        }
+      }
       nErrors++;
     }
   }
@@ -195,8 +208,14 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
 template<typename T>
 void kernel<T>::print_name()
 {
-  if( typeid(T) == typeid(float) )
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is parallel selection sort float\n\r" ANSI_COLOR_RESET);
+  if( typeid(T) == typeid(float) ) {
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is parallel selection sort float");
+    if(use_hard_float)
+      xil_printf(" (hard)");
+    else
+      xil_printf(" (soft)");
+    xil_printf("\n\r"ANSI_COLOR_RESET);
+  }
   else if( typeid(T) == typeid(int) )
     xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is parallel selection sort word\n\r" ANSI_COLOR_RESET);
   else if (typeid(T) == typeid(short))

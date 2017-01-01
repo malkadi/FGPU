@@ -1,15 +1,17 @@
 #include "kernel_descriptor.hpp"
 
 #define PRINT_ERRORS  1
-extern unsigned int *code; // binary storde in code.c as an array
+extern unsigned *code; // binary storde in code.c as an array
+extern unsigned *code_hard_float; // binary storde in code_hard_float.c as an array
 
 template<typename T>
-kernel<T>::kernel(unsigned max_size)
+kernel<T>::kernel(unsigned max_size, bool hard_float)
 {
   param1 = new T[max_size];
   target_fgpu = new T[max_size];
   target_arm = new T[max_size];
   div_val = 3;
+  use_hard_float = hard_float;
 }
 template<typename T>
 kernel<T>::~kernel() 
@@ -23,15 +25,23 @@ void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
   unsigned int size = DIV_LEN;
+  unsigned *code_ptr = code;
   if (typeid(T) == typeid(int))
     start_addr = DIV_INT_POS;
-  else if(typeid(T) == typeid(float))
-    start_addr = DIV_FLOAT_POS;
+  else if(typeid(T) == typeid(float)) {
+    if(use_hard_float) {
+      start_addr = DIV_HARD_FLOAT_POS;
+      size = DIV_HARD_FLOAT_LEN;
+      code_ptr = code_hard_float;
+    } else {
+      start_addr = DIV_FLOAT_POS;
+    }
+  }
   else
     assert(0 && "unsupported type");
-  unsigned i = 0;
-  for(; i < size; i++){
-    cram_ptr[i] = code[i];
+
+  for(unsigned i = 0; i < size; i++){
+    cram_ptr[i] = code_ptr[i];
   }
 }
 template<typename T>

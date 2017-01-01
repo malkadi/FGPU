@@ -1,15 +1,17 @@
 #include "kernel_descriptor.hpp"
 
 #define PRINT_ERRORS  1
-extern unsigned int *code; // binary storde in code.c as an array
+extern unsigned *code; // binary storde in code.c as an array
+extern unsigned *code_hard_float; // binary storde in code_hard_float.c as an array
 
 template<typename T>
-kernel<T>::kernel(unsigned max_size)
+kernel<T>::kernel(unsigned max_size, unsigned hard_float)
 {
   param1 = new T[max_size];
   target_fgpu = new T[max_size];
   target_arm = new T[max_size];
   lram_ptr = (unsigned*) FGPU_BASEADDR;
+  use_hard_float = hard_float;
 }
 template<typename T>
 kernel<T>::~kernel() 
@@ -22,16 +24,24 @@ template<typename T>
 void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
-  unsigned int size = BITONIC_LEN;
+  unsigned *code_ptr = code;
+  unsigned size = BITONIC_LEN;
   if (typeid(T) == typeid(int))
     start_addr = BITONICSORT_POS;
-  else if (typeid(T) == typeid(float))
-    start_addr = BITONICSORT_FLOAT_POS;
+  else if (typeid(T) == typeid(float)) {
+    if(use_hard_float) {
+      start_addr = BITONICSORT_HARD_FLOAT_POS;
+      size = BITONIC_HARD_FLOAT_LEN;
+      code_ptr = code_hard_float;
+    }
+    else
+      start_addr = BITONICSORT_FLOAT_POS;
+  }
   else
     assert(0 && "unsupported type");
-  unsigned i = 0;
-  for(; i < size; i++){
-    cram_ptr[i] = code[i];
+  
+  for(unsigned i = 0; i < size; i++){
+    cram_ptr[i] = code_ptr[i];
   }
 }
 template<typename T>
@@ -133,8 +143,8 @@ void kernel<T>::initialize_memory()
   T *target_arm_ptr = (T*) target_arm;
   for(i = 0; i < (int)problemSize; i++) 
   {
-    // target_arm_ptr[i] = target_fgpu_ptr[i] = param_ptr[i] = (T)i+1;
-    target_arm_ptr[i] = target_fgpu_ptr[i] = param_ptr[i] = (T)(rand()>>8);
+    target_arm_ptr[i] = target_fgpu_ptr[i] = param_ptr[i] = (T)(i%10);
+    // target_arm_ptr[i] = target_fgpu_ptr[i] = param_ptr[i] = (T)(rand()>>8);
   }
   Xil_DCacheFlush(); // flush data to global memory
 }
@@ -146,10 +156,6 @@ void bitonicSort(unsigned problemSize, T *array)
   T leftElement, rightElement;
   T greater, lesser;
   nStages = log2_int(problemSize);
-  /* xil_printf("nStages = %d\n\r", nStages); */
-  /* xil_printf("size = %d, problemSize = %d\n\r", size, problemSize); */
-  /* for(i = 0; i < problemSize;  i++) */
-  /*     xil_printf("first[%d]=%d, second[%d]=%d\n\r", i, first_param_ptr[i], i, second_param_ptr[i]); */
   for(i = 0; i < nStages; i++)
   {
     sameDirectionBlock = 1 << i;
@@ -193,7 +199,6 @@ unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
     XTime_GetTime(&tStart);
 
     bitonicSort<T>(problemSize, target_arm);
-
     // flush the results to the global memory 
     Xil_DCacheFlushRange((unsigned)target_arm, dataSize);
     
@@ -253,7 +258,7 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
   unsigned exec_time = 0;
 
   REG_WRITE(INITIATE_REG_ADDR, 0xFFFF); // initiate FGPU when execution starts
-  // REG_WRITE(CLEAN_CACHE_REG_ADDR, 0); // do not clean FGPU cache at end of execution
+  REG_WRITE(CLEAN_CACHE_REG_ADDR, 0); // do not clean FGPU cache at end of execution
   while(runs < n_runs)
   {
     stageIndx = 0;
@@ -293,8 +298,13 @@ void kernel<T>::print_name()
 {
   if( typeid(T) == typeid(int) )
     xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is bitonic int\n\r" ANSI_COLOR_RESET);
-  else if( typeid(T) == typeid(float) )
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is bitonic float\n\r" ANSI_COLOR_RESET);
+  else if( typeid(T) == typeid(float) ) {
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is bitonic float" ANSI_COLOR_RESET);
+    if(use_hard_float)
+      xil_printf(" (hard)\n\r");
+    else
+      xil_printf(" (soft)\n\r");
+  }
 }
 
 template class kernel<int>;

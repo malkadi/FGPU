@@ -4,37 +4,51 @@ connect
 # program bitstream
 switch $benchmark {
   "edge_detection" {
-    set bitstream ../bitstreams/V2_4CUs_float_2AXI_u.bit
+    set bitstream ../bitstreams/V2_8CUs_fadd_fmul_fsqrt_uitofp_2AXI_185MHz.bit
   }
   "nbody" {
     set bitstream ../bitstreams/V2_4CUs_float_250MHz.bit
   }
   "copy" {
-    set bitstream ../bitstreams/V2_8CUs_2AXIs_250MHz.bit
+    set bitstream ../bitstreams/V2_4CUs_float_8ALUs_2AXI_250MHz.bit
+    # set bitstream ../bitstreams/V2_4CUs_float_8ALUs_2AXI_250MHz.bit
+    # set bitstream ../bitstreams/V2_4CUs_float_8ALUs_250MHz.bit
+    # set bitstream ../bitstreams/V2_4CUs_float_2AXI_250MHz.bit
+    # set bitstream ../bitstreams/V2_4CUs_float_250MHz.bit
+    # set bitstream ../bitstreams/V2_4CUs_max_210MHz.bit
+    # set bitstream ../bitstreams/V2_8CUs_2AXIs_250MHz.bit
+  }
+  "div" {
+    # set bitstream ../bitstreams/V2_4CUs_fdiv_max.bit
+    # set bitstream ../bitstreams/V2_8CUs_fdiv_225MHz.bit
+    set bitstream ../bitstreams/V21_8CUs_fdiv_2AXI.bit
+    # set bitstream ../bitstreams/V2_8CUs_fdiv_2AXI_215MHz.bit
   }
   "LUdecomposition" -
   "floydwarshall" -
-  "bitonic" -
   "fft" -
-  "max" -
-  "div" -
   "sum_power" -
-  "sum_power_another" -
-  "sum" {
+  "sum_power_another" {
     # set bitstream ../bitstreams/V1_8CUs.bit
     set bitstream ../bitstreams/V2_8CUs_2AXIs_250MHz.bit
     # set bitstream ../bitstreams/V2_8CUs_Atomic_2AXI_245MHz.bit
   }
-  "vec_mul" -
+  "vec_mul" {
+    set bitstream ../bitstreams/V2_8CUs_fmul_2AXI_235MHz.bit
+  }
+  "max" -
+  "bitonic" -
+  "parallel_selection" -
+  "sum" -
   "vec_add" {
-    set bitstream ../bitstreams/V2_8CUs_2AXIs_250MHz.bit
+    set bitstream ../bitstreams/V2_8CUs_float_slt_2AXI_240.bit
   }
   "xcorr" -
   "fir" -
   "sharpen" -
   "matrix_multiply" -
-  "median" -
-  "parallel_selection" {
+  "median" 
+  {
     # set bitstream ../bitstreams/V2_8CUs_SubInteger_2K_LMEM_240MHz.bit
     set bitstream ../bitstreams/V2_8CUs_2AXIs_250MHz.bit
   }

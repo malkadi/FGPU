@@ -23,7 +23,7 @@ typedef enum {  copy_kernel, vec_add_kernel, vec_mul_kernel, fir_kernel,
         parallel_selection_kernel, median_kernel, sum_kernel, max_kernel,
         compass_edge_detection_kernel, sum_power_kernel, div_kernel,
         bitonicSort_kernel, fft_kernel, nbody_iter_kernel, floydwarshall_kernel,
-        ludecomposition_kernel
+        ludecomposition_kernel, sobel_kernel
 } kernel_name;
 
 extern unsigned filter_len;
@@ -560,6 +560,36 @@ template<typename T>void LUDecomposition(unsigned n, T *mat, T *L)
     }
   }
 }
+template<typename T>void sobel(unsigned *in, float *out, unsigned Size)
+{
+  for(unsigned x = 1; x < Size-1; x++)
+  {
+    for(unsigned y = 1;y < Size-1; y++)
+    {
+      unsigned p00 = in[(x-1)*Size+y-1];
+      unsigned p01 = in[(x-1)*Size+y];
+      unsigned p02 = in[(x-1)*Size+y+1];
+      unsigned p10 = in[x*Size+y-1];
+      unsigned p11 = in[x*Size+y];
+      unsigned p12 = in[x*Size+y+1];
+      unsigned p20 = in[(x+1)*Size+y-1];
+      unsigned p21 = in[(x+1)*Size+y];
+      unsigned p22 = in[(x+1)*Size+y+1];
+      
+      float Gx, Gy;
+      Gx =  -1*p00 +0*p01 +1*p02 +
+            -2*p10 +0*p11 +2*p12 +
+            -1*p20 +0*p21 +1*p22;
+      Gy =  -1*p00 -2*p01 -1*p02 +
+            -0*p10 +0*p11 +0*p12 +
+            +1*p20 +2*p21 +1*p22;
+
+      float res = sqrtf(Gx*Gx+Gy*Gy);
+      
+      out[x*Size+y] = res;
+    }
+  }
+}
 template<typename T>
 void compute(kernel_name kernel, T *target_ptr, T *target2_ptr, T *param1_ptr, T *param2_ptr, unsigned size, unsigned size_d0, unsigned size_d1)
 {
@@ -622,6 +652,9 @@ void compute(kernel_name kernel, T *target_ptr, T *target2_ptr, T *param1_ptr, T
     case nbody_iter_kernel:
       Nbody_iter(size_d0, (float*)param1_ptr, (float*)param2_ptr, (float*)target_ptr, (float*)target2_ptr);
       break;
+    case sobel_kernel:
+      sobel<T>((unsigned*)param1_ptr, (float*)target_ptr, size_d0);
+      break;
     default:
       assert(0);
       break;
@@ -639,6 +672,7 @@ void compute(kernel_name kernel, T *target_ptr, T *target2_ptr, T *param1_ptr, T
     case cross_correlation_kernel:
     case matrix_multiply_kernel:
     case div_kernel:
+    case sobel_kernel:
       Xil_DCacheFlushRange((unsigned)target_ptr, size*sizeof(T));
       break;
     case bitonicSort_kernel:
@@ -696,6 +730,7 @@ bool check_kernel_type(kernel_name kernel)
     case sharpen_kernel:
     case compass_edge_detection_kernel:
     case median_kernel:
+    case sobel_kernel:
       if(typeid(T) == typeid(int))
         return true;
       break;
@@ -736,6 +771,8 @@ void print_name(kernel_name kernel)
       xil_printf("max kernel");break;
     case floydwarshall_kernel:
       xil_printf("Floyd-Warshall kernel");break;
+    case sobel_kernel:
+      xil_printf("Sobel filter kernel");break;
     case ludecomposition_kernel:
       xil_printf("LU decomposition kernel");break;
     case fft_kernel:

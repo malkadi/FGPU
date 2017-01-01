@@ -1,0 +1,270 @@
+
+compiler_outputs/bitonic.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+__eqsf2:
+       0:	44 04 00 b2 	slt	r4, r2, r1
+       4:	05 04 00 11 	addi	r5, r0, 1
+       8:	06 fc ff 11 	addi	r6, r0, -1
+       c:	03 14 00 10 	add	r3, r0, r5
+      10:	c3 10 00 40 	movn	r3, r6, r4
+      14:	24 08 00 b2 	slt	r4, r1, r2
+      18:	07 14 00 10 	add	r7, r0, r5
+      1c:	c7 10 00 40 	movn	r7, r6, r4
+      20:	44 04 00 30 	and	r4, r2, r1
+      24:	c4 10 00 b2 	slt	r4, r6, r4
+      28:	e3 10 00 40 	movn	r3, r7, r4
+      2c:	44 04 00 32 	or	r4, r2, r1
+      30:	66 fc ff 19 	li	r6, 65535
+      34:	26 fc ff 1d 	lui	r6, 32767
+      38:	84 18 00 30 	and	r4, r4, r6
+      3c:	03 10 00 48 	movz	r3, r0, r4
+      40:	24 08 00 34 	xor	r4, r1, r2
+      44:	03 10 00 48 	movz	r3, r0, r4
+      48:	42 18 00 30 	and	r2, r2, r6
+      4c:	04 00 00 19 	li	r4, 0
+      50:	24 00 fe 1d 	lui	r4, 32640
+      54:	82 08 00 b6 	sltu	r2, r4, r2
+      58:	a3 08 00 40 	movn	r3, r5, r2
+      5c:	21 18 00 30 	and	r1, r1, r6
+      60:	81 04 00 b6 	sltu	r1, r4, r1
+      64:	a3 04 00 40 	movn	r3, r5, r1
+      68:	01 0c 00 10 	add	r1, r0, r3
+      6c:	00 00 00 92 	ret
+
+__nesf2:
+      70:	44 04 00 b2 	slt	r4, r2, r1
+      74:	05 04 00 11 	addi	r5, r0, 1
+      78:	06 fc ff 11 	addi	r6, r0, -1
+      7c:	03 14 00 10 	add	r3, r0, r5
+      80:	c3 10 00 40 	movn	r3, r6, r4
+      84:	24 08 00 b2 	slt	r4, r1, r2
+      88:	07 14 00 10 	add	r7, r0, r5
+      8c:	c7 10 00 40 	movn	r7, r6, r4
+      90:	44 04 00 30 	and	r4, r2, r1
+      94:	c4 10 00 b2 	slt	r4, r6, r4
+      98:	e3 10 00 40 	movn	r3, r7, r4
+      9c:	44 04 00 32 	or	r4, r2, r1
+      a0:	66 fc ff 19 	li	r6, 65535
+      a4:	26 fc ff 1d 	lui	r6, 32767
+      a8:	84 18 00 30 	and	r4, r4, r6
+      ac:	03 10 00 48 	movz	r3, r0, r4
+      b0:	24 08 00 34 	xor	r4, r1, r2
+      b4:	03 10 00 48 	movz	r3, r0, r4
+      b8:	42 18 00 30 	and	r2, r2, r6
+      bc:	04 00 00 19 	li	r4, 0
+      c0:	24 00 fe 1d 	lui	r4, 32640
+      c4:	82 08 00 b6 	sltu	r2, r4, r2
+      c8:	a3 08 00 40 	movn	r3, r5, r2
+      cc:	21 18 00 30 	and	r1, r1, r6
+      d0:	81 04 00 b6 	sltu	r1, r4, r1
+      d4:	a3 04 00 40 	movn	r3, r5, r1
+      d8:	01 0c 00 10 	add	r1, r0, r3
+      dc:	00 00 00 92 	ret
+
+__lesf2:
+      e0:	44 04 00 b2 	slt	r4, r2, r1
+      e4:	05 04 00 11 	addi	r5, r0, 1
+      e8:	06 fc ff 11 	addi	r6, r0, -1
+      ec:	03 14 00 10 	add	r3, r0, r5
+      f0:	c3 10 00 40 	movn	r3, r6, r4
+      f4:	24 08 00 b2 	slt	r4, r1, r2
+      f8:	07 14 00 10 	add	r7, r0, r5
+      fc:	c7 10 00 40 	movn	r7, r6, r4
+     100:	44 04 00 30 	and	r4, r2, r1
+     104:	c4 10 00 b2 	slt	r4, r6, r4
+     108:	e3 10 00 40 	movn	r3, r7, r4
+     10c:	44 04 00 32 	or	r4, r2, r1
+     110:	66 fc ff 19 	li	r6, 65535
+     114:	26 fc ff 1d 	lui	r6, 32767
+     118:	84 18 00 30 	and	r4, r4, r6
+     11c:	03 10 00 48 	movz	r3, r0, r4
+     120:	24 08 00 34 	xor	r4, r1, r2
+     124:	03 10 00 48 	movz	r3, r0, r4
+     128:	42 18 00 30 	and	r2, r2, r6
+     12c:	04 00 00 19 	li	r4, 0
+     130:	24 00 fe 1d 	lui	r4, 32640
+     134:	82 08 00 b6 	sltu	r2, r4, r2
+     138:	a3 08 00 40 	movn	r3, r5, r2
+     13c:	21 18 00 30 	and	r1, r1, r6
+     140:	81 04 00 b6 	sltu	r1, r4, r1
+     144:	a3 04 00 40 	movn	r3, r5, r1
+     148:	01 0c 00 10 	add	r1, r0, r3
+     14c:	00 00 00 92 	ret
+
+__ltsf2:
+     150:	44 04 00 b2 	slt	r4, r2, r1
+     154:	05 04 00 11 	addi	r5, r0, 1
+     158:	06 fc ff 11 	addi	r6, r0, -1
+     15c:	03 14 00 10 	add	r3, r0, r5
+     160:	c3 10 00 40 	movn	r3, r6, r4
+     164:	24 08 00 b2 	slt	r4, r1, r2
+     168:	07 14 00 10 	add	r7, r0, r5
+     16c:	c7 10 00 40 	movn	r7, r6, r4
+     170:	44 04 00 30 	and	r4, r2, r1
+     174:	c4 10 00 b2 	slt	r4, r6, r4
+     178:	e3 10 00 40 	movn	r3, r7, r4
+     17c:	44 04 00 32 	or	r4, r2, r1
+     180:	66 fc ff 19 	li	r6, 65535
+     184:	26 fc ff 1d 	lui	r6, 32767
+     188:	84 18 00 30 	and	r4, r4, r6
+     18c:	03 10 00 48 	movz	r3, r0, r4
+     190:	24 08 00 34 	xor	r4, r1, r2
+     194:	03 10 00 48 	movz	r3, r0, r4
+     198:	42 18 00 30 	and	r2, r2, r6
+     19c:	04 00 00 19 	li	r4, 0
+     1a0:	24 00 fe 1d 	lui	r4, 32640
+     1a4:	82 08 00 b6 	sltu	r2, r4, r2
+     1a8:	a3 08 00 40 	movn	r3, r5, r2
+     1ac:	21 18 00 30 	and	r1, r1, r6
+     1b0:	81 04 00 b6 	sltu	r1, r4, r1
+     1b4:	a3 04 00 40 	movn	r3, r5, r1
+     1b8:	01 0c 00 10 	add	r1, r0, r3
+     1bc:	00 00 00 92 	ret
+
+__gesf2:
+     1c0:	44 04 00 b2 	slt	r4, r2, r1
+     1c4:	05 04 00 11 	addi	r5, r0, 1
+     1c8:	06 fc ff 11 	addi	r6, r0, -1
+     1cc:	03 14 00 10 	add	r3, r0, r5
+     1d0:	c3 10 00 40 	movn	r3, r6, r4
+     1d4:	24 08 00 b2 	slt	r4, r1, r2
+     1d8:	c5 10 00 40 	movn	r5, r6, r4
+     1dc:	44 04 00 30 	and	r4, r2, r1
+     1e0:	c4 10 00 b2 	slt	r4, r6, r4
+     1e4:	a3 10 00 40 	movn	r3, r5, r4
+     1e8:	44 04 00 32 	or	r4, r2, r1
+     1ec:	65 fc ff 19 	li	r5, 65535
+     1f0:	25 fc ff 1d 	lui	r5, 32767
+     1f4:	84 14 00 30 	and	r4, r4, r5
+     1f8:	03 10 00 48 	movz	r3, r0, r4
+     1fc:	24 08 00 34 	xor	r4, r1, r2
+     200:	03 10 00 48 	movz	r3, r0, r4
+     204:	42 14 00 30 	and	r2, r2, r5
+     208:	04 00 00 19 	li	r4, 0
+     20c:	24 00 fe 1d 	lui	r4, 32640
+     210:	82 08 00 b6 	sltu	r2, r4, r2
+     214:	c3 08 00 40 	movn	r3, r6, r2
+     218:	21 14 00 30 	and	r1, r1, r5
+     21c:	81 04 00 b6 	sltu	r1, r4, r1
+     220:	c3 04 00 40 	movn	r3, r6, r1
+     224:	01 0c 00 10 	add	r1, r0, r3
+     228:	00 00 00 92 	ret
+
+__gtsf2:
+     22c:	44 04 00 b2 	slt	r4, r2, r1
+     230:	05 04 00 11 	addi	r5, r0, 1
+     234:	06 fc ff 11 	addi	r6, r0, -1
+     238:	03 14 00 10 	add	r3, r0, r5
+     23c:	c3 10 00 40 	movn	r3, r6, r4
+     240:	24 08 00 b2 	slt	r4, r1, r2
+     244:	c5 10 00 40 	movn	r5, r6, r4
+     248:	44 04 00 30 	and	r4, r2, r1
+     24c:	c4 10 00 b2 	slt	r4, r6, r4
+     250:	a3 10 00 40 	movn	r3, r5, r4
+     254:	44 04 00 32 	or	r4, r2, r1
+     258:	65 fc ff 19 	li	r5, 65535
+     25c:	25 fc ff 1d 	lui	r5, 32767
+     260:	84 14 00 30 	and	r4, r4, r5
+     264:	03 10 00 48 	movz	r3, r0, r4
+     268:	24 08 00 34 	xor	r4, r1, r2
+     26c:	03 10 00 48 	movz	r3, r0, r4
+     270:	42 14 00 30 	and	r2, r2, r5
+     274:	04 00 00 19 	li	r4, 0
+     278:	24 00 fe 1d 	lui	r4, 32640
+     27c:	82 08 00 b6 	sltu	r2, r4, r2
+     280:	c3 08 00 40 	movn	r3, r6, r2
+     284:	21 14 00 30 	and	r1, r1, r5
+     288:	81 04 00 b6 	sltu	r1, r4, r1
+     28c:	c3 04 00 40 	movn	r3, r6, r1
+     290:	01 0c 00 10 	add	r1, r0, r3
+     294:	00 00 00 92 	ret
+
+__unordsf2:
+     298:	63 fc ff 19 	li	r3, 65535
+     29c:	23 fc ff 1d 	lui	r3, 32767
+     2a0:	21 0c 00 30 	and	r1, r1, r3
+     2a4:	42 0c 00 30 	and	r2, r2, r3
+     2a8:	03 00 00 19 	li	r3, 0
+     2ac:	23 00 fe 1d 	lui	r3, 32640
+     2b0:	62 08 00 b6 	sltu	r2, r3, r2
+     2b4:	61 04 00 b6 	sltu	r1, r3, r1
+     2b8:	21 08 00 32 	or	r1, r1, r2
+     2bc:	00 00 00 92 	ret
+
+bitonicSort_float:
+     2c0:	6b 00 00 a8 	lp	r11, 3
+     2c4:	0c 00 00 a8 	lp	r12, 0
+     2c8:	42 00 00 a8 	lp	r2, 2
+     2cc:	2d 00 00 a8 	lp	r13, 1
+     2d0:	03 00 00 a0 	lid	r3, 0
+     2d4:	04 00 00 a1 	wgoff	r4, 0
+     2d8:	8e 0c 00 10 	add	r14, r4, r3
+     2dc:	a1 09 00 12 	sub	r1, r13, r2
+     2e0:	21 7c 00 31 	andi	r1, r1, 31
+     2e4:	0f 04 00 11 	addi	r15, r0, 1
+     2e8:	e2 05 00 20 	sll	r2, r15, r1
+     2ec:	43 fc ff 11 	addi	r3, r2, -1
+     2f0:	c3 0d 00 30 	and	r3, r14, r3
+     2f4:	c1 05 00 28 	srl	r1, r14, r1
+     2f8:	41 04 00 51 	mul	r1, r2, r1
+     2fc:	21 04 00 21 	slli	r1, r1, 1
+     300:	30 0c 00 10 	add	r16, r1, r3
+     304:	11 0a 00 10 	add	r17, r16, r2
+     308:	09 32 00 74 	lw	r9, r12[r16]
+     30c:	2a 32 00 74 	lw	r10, r12[r17]
+     310:	01 24 00 10 	add	r1, r0, r9
+     314:	02 28 00 10 	add	r2, r0, r10
+     318:	00 14 ff 64 	jsub	-59
+     31c:	a2 7d 00 31 	andi	r2, r13, 31
+     320:	e2 09 00 20 	sll	r2, r15, r2
+     324:	c2 09 00 30 	and	r2, r14, r2
+     328:	e3 2d 00 12 	sub	r3, r15, r11
+     32c:	63 09 00 48 	movz	r3, r11, r2
+     330:	01 04 00 b2 	slt	r1, r0, r1
+     334:	02 28 00 10 	add	r2, r0, r10
+     338:	22 05 00 40 	movn	r2, r9, r1
+     33c:	49 05 00 40 	movn	r9, r10, r1
+     340:	01 08 00 10 	add	r1, r0, r2
+     344:	21 0d 00 40 	movn	r1, r9, r3
+     348:	01 32 00 7c 	sw	r1, r12[r16]
+     34c:	49 0c 00 40 	movn	r9, r2, r3
+     350:	29 32 00 7c 	sw	r9, r12[r17]
+     354:	00 00 00 92 	ret
+
+bitonicSort:
+     358:	62 00 00 a8 	lp	r2, 3
+     35c:	03 00 00 a8 	lp	r3, 0
+     360:	44 00 00 a8 	lp	r4, 2
+     364:	25 00 00 a8 	lp	r5, 1
+     368:	06 00 00 a0 	lid	r6, 0
+     36c:	07 00 00 a1 	wgoff	r7, 0
+     370:	e1 18 00 10 	add	r1, r7, r6
+     374:	a4 10 00 12 	sub	r4, r5, r4
+     378:	84 7c 00 31 	andi	r4, r4, 31
+     37c:	06 04 00 11 	addi	r6, r0, 1
+     380:	c7 10 00 20 	sll	r7, r6, r4
+     384:	e8 fc ff 11 	addi	r8, r7, -1
+     388:	28 20 00 30 	and	r8, r1, r8
+     38c:	24 10 00 28 	srl	r4, r1, r4
+     390:	e4 10 00 51 	mul	r4, r7, r4
+     394:	84 04 00 21 	slli	r4, r4, 1
+     398:	84 20 00 10 	add	r4, r4, r8
+     39c:	87 1c 00 10 	add	r7, r4, r7
+     3a0:	88 0c 00 74 	lw	r8, r3[r4]
+     3a4:	e9 0c 00 74 	lw	r9, r3[r7]
+     3a8:	2a 21 00 b2 	slt	r10, r9, r8
+     3ac:	0b 24 00 10 	add	r11, r0, r9
+     3b0:	0b 29 00 40 	movn	r11, r8, r10
+     3b4:	28 29 00 40 	movn	r8, r9, r10
+     3b8:	a5 7c 00 31 	andi	r5, r5, 31
+     3bc:	c5 14 00 20 	sll	r5, r6, r5
+     3c0:	21 14 00 30 	and	r1, r1, r5
+     3c4:	c5 08 00 12 	sub	r5, r6, r2
+     3c8:	45 04 00 48 	movz	r5, r2, r1
+     3cc:	01 2c 00 10 	add	r1, r0, r11
+     3d0:	01 15 00 40 	movn	r1, r8, r5
+     3d4:	81 0c 00 7c 	sw	r1, r3[r4]
+     3d8:	68 15 00 40 	movn	r8, r11, r5
+     3dc:	e8 0c 00 7c 	sw	r8, r3[r7]
+     3e0:	00 00 00 92 	ret

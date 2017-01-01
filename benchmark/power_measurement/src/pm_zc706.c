@@ -43,10 +43,9 @@ int main()
   /* Setup Memory */
   struct raw_uivalues_STR *raw_uivalues;
   struct raw_uivalues_STR *memaddr_ds1;
-  volatile int *msync;
+  volatile int *msync = (void*)MEMADDR_SYNC;
   memaddr_ds1=(struct raw_uivalues_STR *)MEMADDR_DS1;
   assert(memaddr_ds1);
-  msync = (void*)MEMADDR_SYNC;
 
 
   /* Wait */
@@ -129,7 +128,7 @@ int main()
   REG_WRITE(MEMADDR_SYNC, MEASURE_RESP);
   *msync = MEASURE_RESP;
   Xil_DCacheFlushRange((unsigned)res, 16*sizeof(float));
-  Xil_DCacheFlushRange((unsigned)MEMADDR_SYNC, 4);
+  Xil_DCacheFlushRange((unsigned)MEMADDR_SYNC, 12);
   // flushing MEMADDR_SYNC not the last place will not work!!!!!
 
   /*Print*/

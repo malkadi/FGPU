@@ -28,9 +28,9 @@ class kernel{
   T *param1, *target_fgpu, *target_arm;
 
   void compute_descriptor();
-  bool use_vector_types;
+  bool use_vector_types, use_hard_float;
 public:
-  kernel(unsigned max_size, bool vector_types);
+  kernel(unsigned max_size, bool vector_types, bool hard_float);
   ~kernel();
   void download_code();
   void download_descriptor();

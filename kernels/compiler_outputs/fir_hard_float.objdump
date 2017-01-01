@@ -1,0 +1,28 @@
+
+compiler_outputs/fir_hard_float.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+fir_hard_float:
+       0:	63 00 00 a8 	lp	r3, 3
+       4:	42 00 00 a8 	lp	r2, 2
+       8:	24 00 00 a8 	lp	r4, 1
+       c:	05 00 00 a8 	lp	r5, 0
+      10:	06 00 00 a0 	lid	r6, 0
+      14:	07 00 00 a1 	wgoff	r7, 0
+      18:	e1 18 00 10 	add	r1, r7, r6
+      1c:	26 08 00 21 	slli	r6, r1, 2
+      20:	a6 18 00 10 	add	r6, r5, r6
+      24:	05 00 00 19 	li	r5, 0
+      28:	05 00 00 1d 	lui	r5, 0
+
+LBB0_1:
+      2c:	07 10 00 74 	lw	r7, r4[r0]
+      30:	08 18 00 74 	lw	r8, r6[r0]
+      34:	07 1d 00 c1 	fmul	r7, r8, r7
+      38:	a5 1c 00 c0 	fadd	r5, r5, r7
+      3c:	c6 10 00 11 	addi	r6, r6, 4
+      40:	84 10 00 11 	addi	r4, r4, 4
+      44:	63 fc ff 11 	addi	r3, r3, -1
+      48:	03 e0 ff 63 	bne	r3, r0, -8
+      4c:	25 08 00 7c 	sw	r5, r2[r1]
+      50:	00 00 00 92 	ret

@@ -31,8 +31,9 @@ class kernel{
   T *target_fgpu;
   void compute_descriptor();
   void update_and_download();
+  unsigned use_hard_float;
 public:
-  kernel(unsigned max_size);
+  kernel(unsigned max_size, unsigned hard_float);
   ~kernel();
   void download_code();
   void download_descriptor();

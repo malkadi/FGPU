@@ -1,0 +1,29 @@
+
+compiler_outputs/max_hard_float.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+max_hard_float:
+       0:	22 00 00 a8 	lp	r2, 1
+       4:	05 00 00 a8 	lp	r5, 0
+       8:	44 00 00 a8 	lp	r4, 2
+       c:	03 00 00 a0 	lid	r3, 0
+      10:	06 00 00 a1 	wgoff	r6, 0
+      14:	c3 0c 00 10 	add	r3, r6, r3
+      18:	84 fc ff 11 	addi	r4, r4, -1
+      1c:	07 00 00 a2 	size	r7, 0
+      20:	61 1c 00 10 	add	r1, r3, r7
+      24:	21 08 00 21 	slli	r1, r1, 2
+      28:	a1 04 00 10 	add	r1, r5, r1
+      2c:	66 14 00 74 	lw	r6, r5[r3]
+      30:	e5 08 00 21 	slli	r5, r7, 2
+
+LBB0_1:
+      34:	07 04 00 74 	lw	r7, r1[r0]
+      38:	e8 18 00 c7 	fslt	r8, r7, r6
+      3c:	c7 20 00 40 	movn	r7, r6, r8
+      40:	21 14 00 10 	add	r1, r1, r5
+      44:	84 fc ff 11 	addi	r4, r4, -1
+      48:	06 1c 00 10 	add	r6, r0, r7
+      4c:	04 e4 ff 63 	bne	r4, r0, -7
+      50:	67 08 00 7c 	sw	r7, r2[r3]
+      54:	00 00 00 92 	ret

@@ -1,0 +1,29 @@
+
+compiler_outputs/parallel_selection_hard_float.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+ParallelSelection_hard_float:
+       0:	22 00 00 a8 	lp	r2, 1
+       4:	03 00 00 a8 	lp	r3, 0
+       8:	04 00 00 a0 	lid	r4, 0
+       c:	05 00 00 a1 	wgoff	r5, 0
+      10:	a4 10 00 10 	add	r4, r5, r4
+      14:	05 00 00 11 	addi	r5, r0, 0
+      18:	06 00 00 a2 	size	r6, 0
+      1c:	81 0c 00 74 	lw	r1, r3[r4]
+      20:	07 14 00 10 	add	r7, r0, r5
+
+LBB0_1:
+      24:	08 0c 00 74 	lw	r8, r3[r0]
+      28:	29 20 00 c7 	fslt	r9, r1, r8
+      2c:	08 05 00 c7 	fslt	r8, r8, r1
+      30:	09 25 00 38 	nor	r9, r8, r9
+      34:	aa 10 00 b2 	slt	r10, r5, r4
+      38:	49 25 00 30 	and	r9, r10, r9
+      3c:	08 25 00 32 	or	r8, r8, r9
+      40:	07 1d 00 10 	add	r7, r8, r7
+      44:	63 10 00 11 	addi	r3, r3, 4
+      48:	a5 04 00 11 	addi	r5, r5, 1
+      4c:	a6 d4 ff 63 	bne	r6, r5, -11
+      50:	e1 08 00 7c 	sw	r1, r2[r7]
+      54:	00 00 00 92 	ret
