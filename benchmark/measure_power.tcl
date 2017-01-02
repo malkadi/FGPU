@@ -17,7 +17,7 @@ rst -processor
 # download power measurement elf file
 dow $powerElfFile
 con 
-# con
+
 if { $benchmark == "MicroBlaze"} {
   targets -set -filter {name =~ "MicroBlaze*"}
 } else {
@@ -27,7 +27,6 @@ if { $benchmark == "MicroBlaze"} {
 rst -processor
 # download elf file
 dow $elfFile
-# con
 con 
 
 

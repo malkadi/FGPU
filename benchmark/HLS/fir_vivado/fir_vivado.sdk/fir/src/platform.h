@@ -36,11 +36,22 @@
 #include "platform_config.h"
 #include "xfir.h"
 #include "xtime_l.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include "xil_printf.h"
+#include <assert.h>
 
+#define POWER_SYNC_ADDR       0x3FFFFF20  
+#define POWER_RESULTS         0x3Efff000
 void init_platform();
 void cleanup_platform();
 u64 elapsed_time_us(XTime tStart, XTime tEnd);
 unsigned toRep(float x);
 float fromRep(unsigned x); 
+void power_measurement_set_idle();
+void power_measurement_start();
+void power_measurement_stop();
+void power_measurement_print_values();
+void power_measurement_wait_power_values();
 
 #endif

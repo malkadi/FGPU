@@ -1,15 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "platform.h"
-#include "xil_printf.h"
-#include <assert.h>
 
 XFir fir_device;
 int main()
 {
   const unsigned inputLen = 8*1024;
   const unsigned filterLen = 12;
+  const unsigned n_runs = 500;
   init_platform();
+  power_measurement_set_idle();
 
   if (XFir_Initialize(&fir_device, 0) != XST_SUCCESS) {
     printf("\ndevice not initialized!\n\r");
@@ -39,15 +37,22 @@ int main()
   XFir_Set_inputLen(&fir_device, (unsigned) inputLen);
 
   XTime tStart, tEnd;
-  XTime_GetTime(&tStart);
-  XFir_Start(&fir_device);
-  while (!XFir_IsDone(&fir_device));
-  XTime_GetTime(&tEnd);
+  power_measurement_start();
+  for(i = 0; i < n_runs; i++) {
+    XTime_GetTime(&tStart);
+    XFir_Start(&fir_device);
+    while (!XFir_IsDone(&fir_device));
+    XTime_GetTime(&tEnd);
+  }
+  power_measurement_stop();
 
   unsigned timer_count_hw = elapsed_time_us(tStart, tEnd);
     
 
   printf("Time = %d\n", timer_count_hw);
+
+  power_measurement_wait_power_values();
+  power_measurement_print_values();
   cleanup_platform();
   return 0;
 }

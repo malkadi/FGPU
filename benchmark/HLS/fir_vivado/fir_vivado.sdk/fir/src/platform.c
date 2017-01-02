@@ -34,23 +34,10 @@
 #include "xil_cache.h"
 #include "platform.h"
 #include "platform_config.h"
+volatile unsigned *msync = (unsigned* ) POWER_SYNC_ADDR;
+volatile float *res = (float*) POWER_RESULTS;
 
-/*
- * Uncomment one of the following two lines, depending on the target,
- * if ps7/psu init source files are added in the source directory for
- * compiling example outside of SDK.
- */
-/*#include "ps7_init.h"*/
-/*#include "psu_init.h"*/
-
-#ifdef STDOUT_IS_16550
- #include "xuartns550_l.h"
-
- #define UART_BAUD 9600
-#endif
-
-void
-enable_caches()
+void enable_caches()
 {
 #ifdef __PPC__
     Xil_ICacheEnableRegion(CACHEABLE_REGION_MASK);
@@ -64,16 +51,12 @@ enable_caches()
 #endif
 #endif
 }
-
-void
-disable_caches()
+void disable_caches()
 {
     Xil_DCacheDisable();
     Xil_ICacheDisable();
 }
-
-void
-init_uart()
+void init_uart()
 {
 #ifdef STDOUT_IS_16550
     XUartNs550_SetBaud(STDOUT_BASEADDR, XPAR_XUARTNS550_CLOCK_HZ, UART_BAUD);
@@ -81,9 +64,7 @@ init_uart()
 #endif
     /* Bootrom/BSP configures PS7/PSU UART to 115200 bps */
 }
-
-void
-init_platform()
+void init_platform()
 {
     /*
      * If you want to run this example outside of SDK,
@@ -114,7 +95,39 @@ cleanup_platform()
 }
 u64 elapsed_time_us(XTime tStart, XTime tEnd)
 {
-	u64 time_elapsed = (tEnd - tStart)*1000000;
-	time_elapsed /= COUNTS_PER_SECOND;
-	return time_elapsed;
+  u64 time_elapsed = (tEnd - tStart)*1000000;
+  time_elapsed /= COUNTS_PER_SECOND;
+  return time_elapsed;
+}
+
+void power_measurement_set_idle() 
+{
+  *msync = 1;
+  Xil_DCacheFlushRange((unsigned) msync, 4);
+}
+void power_measurement_start() 
+{
+  *msync = 2;
+  Xil_DCacheFlushRange((unsigned) msync, 4);
+}
+void power_measurement_stop() 
+{
+  *msync = 3;
+  Xil_DCacheFlushRange((unsigned) msync, 4);
+}
+void power_measurement_print_values() 
+{
+  printf("\nAverage Values: (#%d samples)\n", (unsigned) res[0]);
+  printf("VccInt-> U: %2.4fV ,  I: %2.4fA ,  P: %f W\n", res[1], res[2], res[3]);
+  printf("VccAux-> U: %2.4fV ,  I: %2.4fA ,  P: %f W\n", res[4], res[5], res[6]);
+  printf("VccADJ-> U: %2.4fV ,  I: %2.4fA ,  P: %f W\n", res[7], res[8], res[9]);
+  printf("Vcc3V3-> U: %2.4fV ,  I: %2.4fA ,  P: %f W\n", res[10], res[11], res[12]);
+  printf("Vcc1V5-> U: %2.4fV ,  I: %2.4fA ,  P: %f W\n", res[13], res[14], res[15]);
+  float total_power = res[3]+res[6]+res[9]+res[12]+res[15];
+  printf("Total->                              P: %f W\n", total_power);
+}
+void power_measurement_wait_power_values() 
+{
+  xil_printf("\n\rWaiting for power values to be written from second core..\n\r");
+  while(*msync != 4);
 }
