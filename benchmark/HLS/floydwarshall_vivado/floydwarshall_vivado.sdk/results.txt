@@ -1,0 +1,4 @@
+Execution time (us), matrix is 64x64
+solution1: 82539                @250MHz
+solution2: 17286		@240MHz (writes are done when necessary)
+solution3: 19626	        @230MHz (writes are combined in local memory and then written back)

@@ -1,0 +1,71 @@
+<AutoPilot:ProjectResources xmlns:AutoPilot="com.autoesl.autopilot.ui.directiveView">
+    <sourceFile name="">
+        <directive functionName="floydwarshall" label="loop3" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="floydwarshall" label="loop3" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="floydwarshall" label="loop3" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="1024"/>
+                <option name="max" value="1024"/>
+            </pragma>
+        </directive>
+        <directive functionName="floydwarshall" label="loop3" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="floydwarshall" label="loop3" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="1024"/>
+                <option name="max" value="1024"/>
+            </pragma>
+        </directive>
+        <directive functionName="floydwarshall" label="loop2" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="1024"/>
+                <option name="max" value="1024"/>
+            </pragma>
+        </directive>
+        <directive functionName="floydwarshall" label="loop2" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="floydwarshall" label="loop2" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="1024"/>
+                <option name="max" value="1024"/>
+            </pragma>
+        </directive>
+        <directive functionName="floydwarshall" label="loop2" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="floydwarshall" label="loop1" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="floydwarshall" label="loop1" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="1024"/>
+                <option name="max" value="1024"/>
+            </pragma>
+        </directive>
+        <directive functionName="floydwarshall" label="loop1" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="1024"/>
+                <option name="max" value="1024"/>
+            </pragma>
+        </directive>
+        <directive functionName="floydwarshall" label="loop1" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="floydwarshall" label="loop1" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="1024"/>
+                <option name="max" value="1024"/>
+            </pragma>
+        </directive>
+        <directive functionName="floydwarshall" label="" functionLabel="">
+            <pragma name="DATAFLOW"/>
+        </directive>
+    </sourceFile>
+</AutoPilot:ProjectResources>
+

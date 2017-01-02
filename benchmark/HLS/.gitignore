@@ -1,0 +1,12 @@
+#for HLS projects
+impl
+syn
+
+
+# for vivado projects
+*.cache
+*.hw
+*.ip_user_files
+*.sim
+*.srcs
+*.xpr
