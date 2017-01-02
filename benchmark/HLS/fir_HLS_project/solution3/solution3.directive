@@ -1,0 +1,35 @@
+<AutoPilot:ProjectResources xmlns:AutoPilot="com.autoesl.autopilot.ui.directiveView">
+    <sourceFile name="">
+        <directive functionName="fir" label="loop1" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="1024"/>
+                <option name="max" value="1024"/>
+            </pragma>
+        </directive>
+        <directive functionName="fir" label="loop2" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="12"/>
+                <option name="max" value="12"/>
+            </pragma>
+        </directive>
+        <directive functionName="fir" label="loop1" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="fir" label="loop2" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="fir_local" label="loop_local1" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="fir_local" label="loop_local2" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="fir" label="loop3" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="fir" label="" functionLabel="">
+            <pragma name="DATAFLOW"/>
+        </directive>
+    </sourceFile>
+</AutoPilot:ProjectResources>
+
