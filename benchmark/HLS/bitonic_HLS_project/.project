@@ -29,57 +29,57 @@
 		<link>
 			<name>source</name>
 			<type>2</type>
-			<location>/home/muhammed/FGPU/benchmark/bitonic_HLS/bitonic_HLS_project/.apc/.src</location>
+			<location>/home/muhammed/FGPU/benchmark/HLS/bitonic_HLS_project/.apc/.src</location>
 		</link>
 		<link>
 			<name>testbench</name>
 			<type>2</type>
-			<location>/home/muhammed/FGPU/benchmark/bitonic_HLS/bitonic_HLS_project/.apc/.tb</location>
+			<location>/home/muhammed/FGPU/benchmark/HLS/bitonic_HLS_project/.apc/.tb</location>
 		</link>
 		<link>
 			<name>solution1/constraints</name>
 			<type>2</type>
-			<location>/home/muhammed/FGPU/benchmark/bitonic_HLS/bitonic_HLS_project/solution1/.tcls</location>
+			<location>/home/muhammed/FGPU/benchmark/HLS/bitonic_HLS_project/solution1/.tcls</location>
 		</link>
 		<link>
 			<name>solution2/constraints</name>
 			<type>2</type>
-			<location>/home/muhammed/FGPU/benchmark/bitonic_HLS/bitonic_HLS_project/solution2/.tcls</location>
+			<location>/home/muhammed/FGPU/benchmark/HLS/bitonic_HLS_project/solution2/.tcls</location>
 		</link>
 		<link>
 			<name>source/bitonic.cpp</name>
 			<type>1</type>
-			<location>/home/muhammed/FGPU/benchmark/bitonic_HLS/bitonic_HLS_project/bitonic.cpp</location>
+			<location>/home/muhammed/FGPU/benchmark/HLS/bitonic_HLS_project/bitonic.cpp</location>
 		</link>
 		<link>
 			<name>solution1/constraints/.xml.directive</name>
 			<type>1</type>
-			<location>/home/muhammed/FGPU/benchmark/bitonic_HLS/bitonic_HLS_project/solution1/solution1.directive</location>
+			<location>/home/muhammed/FGPU/benchmark/HLS/bitonic_HLS_project/solution1/solution1.directive</location>
 		</link>
 		<link>
 			<name>solution1/constraints/directives.tcl</name>
 			<type>1</type>
-			<location>/home/muhammed/FGPU/benchmark/bitonic_HLS/bitonic_HLS_project/solution1/directives.tcl</location>
+			<location>/home/muhammed/FGPU/benchmark/HLS/bitonic_HLS_project/solution1/directives.tcl</location>
 		</link>
 		<link>
 			<name>solution1/constraints/script.tcl</name>
 			<type>1</type>
-			<location>/home/muhammed/FGPU/benchmark/bitonic_HLS/bitonic_HLS_project/solution1/script.tcl</location>
+			<location>/home/muhammed/FGPU/benchmark/HLS/bitonic_HLS_project/solution1/script.tcl</location>
 		</link>
 		<link>
 			<name>solution2/constraints/.xml.directive</name>
 			<type>1</type>
-			<location>/home/muhammed/FGPU/benchmark/bitonic_HLS/bitonic_HLS_project/solution2/solution2.directive</location>
+			<location>/home/muhammed/FGPU/benchmark/HLS/bitonic_HLS_project/solution2/solution2.directive</location>
 		</link>
 		<link>
 			<name>solution2/constraints/directives.tcl</name>
 			<type>1</type>
-			<location>/home/muhammed/FGPU/benchmark/bitonic_HLS/bitonic_HLS_project/solution2/directives.tcl</location>
+			<location>/home/muhammed/FGPU/benchmark/HLS/bitonic_HLS_project/solution2/directives.tcl</location>
 		</link>
 		<link>
 			<name>solution2/constraints/script.tcl</name>
 			<type>1</type>
-			<location>/home/muhammed/FGPU/benchmark/bitonic_HLS/bitonic_HLS_project/solution2/script.tcl</location>
+			<location>/home/muhammed/FGPU/benchmark/HLS/bitonic_HLS_project/solution2/script.tcl</location>
 		</link>
 	</linkedResources>
 </projectDescription>
