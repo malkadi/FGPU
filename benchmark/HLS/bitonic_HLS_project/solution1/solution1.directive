@@ -1,0 +1,32 @@
+<AutoPilot:ProjectResources xmlns:AutoPilot="com.autoesl.autopilot.ui.directiveView">
+    <sourceFile name="">
+        <directive functionName="bitonic" label="loop1" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="bitonic" label="loop2" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="bitonic" label="loop3" functionLabel="">
+            <pragma name="PIPELINE"/>
+        </directive>
+        <directive functionName="bitonic" label="loop1" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="12"/>
+                <option name="max" value="12"/>
+            </pragma>
+        </directive>
+        <directive functionName="bitonic" label="loop2" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="12"/>
+                <option name="max" value="12"/>
+            </pragma>
+        </directive>
+        <directive functionName="bitonic" label="loop3" functionLabel="">
+            <pragma name="LOOP_TRIPCOUNT">
+                <option name="min" value="2048"/>
+                <option name="max" value="2048"/>
+            </pragma>
+        </directive>
+    </sourceFile>
+</AutoPilot:ProjectResources>
+

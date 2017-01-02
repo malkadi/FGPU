@@ -9,9 +9,9 @@ unsigned mean = 100;
 // #define TYPE short
 // #define TYPE char
 
-#define VEC_LEN           1
-#define N_RUNS            1
-#define TEST_VEC_OFFSET   11
+#define VEC_LEN           7
+#define N_RUNS            10
+#define TEST_VEC_OFFSET   0
 
 int main()
 {
@@ -33,9 +33,9 @@ int main()
   // kernel_name kernel = div_kernel;
   // kernel_name kernel = bitonicSort_kernel;
   // kernel_name kernel = fft_kernel;
-  kernel_name kernel = nbody_iter_kernel;
+  // kernel_name kernel = nbody_iter_kernel;
   // kernel_name kernel = floydwarshall_kernel;
-  // kernel_name kernel = ludecomposition_kernel;
+  kernel_name kernel = ludecomposition_kernel;
   // kernel_name kernel = sobel_kernel;
   
   // control power measurement

@@ -1,0 +1,4 @@
+Execution Time (us):
+
+solution1: 131136
+solution2: 44072
