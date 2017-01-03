@@ -10,13 +10,7 @@ switch $benchmark {
     set bitstream ../bitstreams/V2_4CUs_float_250MHz.bit
   }
   "copy" {
-    set bitstream ../bitstreams/V2_4CUs_float_8ALUs_2AXI_250MHz.bit
-    # set bitstream ../bitstreams/V2_4CUs_float_8ALUs_2AXI_250MHz.bit
-    # set bitstream ../bitstreams/V2_4CUs_float_8ALUs_250MHz.bit
-    # set bitstream ../bitstreams/V2_4CUs_float_2AXI_250MHz.bit
-    # set bitstream ../bitstreams/V2_4CUs_float_250MHz.bit
-    # set bitstream ../bitstreams/V2_4CUs_max_210MHz.bit
-    # set bitstream ../bitstreams/V2_8CUs_2AXIs_250MHz.bit
+    set bitstream ../bitstreams/V2_8CUs_2AXI.bit
   }
   "div" {
     # set bitstream ../bitstreams/V2_4CUs_fdiv_max.bit
