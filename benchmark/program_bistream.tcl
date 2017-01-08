@@ -9,8 +9,9 @@ switch $benchmark {
   "nbody" {
     set bitstream ../bitstreams/V2_4CUs_float_250MHz.bit
   }
+  "vec_add" -
   "copy" {
-    set bitstream ../bitstreams/V2_8CUs_6Stations_2AXI.bit
+    set bitstream ../bitstreams/V2_8CUs_fadd_2AXI.bit
   }
   "div" {
     # set bitstream ../bitstreams/V2_4CUs_fdiv_max.bit
@@ -24,18 +25,18 @@ switch $benchmark {
   "sum_power" -
   "sum_power_another" {
     # set bitstream ../bitstreams/V1_8CUs.bit
-    set bitstream ../bitstreams/V2_8CUs_2AXIs_250MHz.bit
+    set bitstream ../bitstreams/V2_8CUs_fadd_fmul.bit
     # set bitstream ../bitstreams/V2_8CUs_Atomic_2AXI_245MHz.bit
   }
   "vec_mul" {
-    set bitstream ../bitstreams/V2_8CUs_fmul_2AXI_235MHz.bit
+    set bitstream ../bitstreams/V2_8CUs.bit
   }
   "max" -
   "bitonic" -
   "parallel_selection" -
-  "sum" -
-  "vec_add" {
-    set bitstream ../bitstreams/V2_8CUs_float_slt_2AXI_240.bit
+  "sum" 
+  {
+    set bitstream ../bitstreams/V2_8CUs_2AXI.bit
   }
   "xcorr" -
   "fir" -
@@ -44,7 +45,7 @@ switch $benchmark {
   "median" 
   {
     # set bitstream ../bitstreams/V2_8CUs_SubInteger_2K_LMEM_240MHz.bit
-    set bitstream ../bitstreams/V2_8CUs_2AXIs_250MHz.bit
+    set bitstream ../bitstreams/V2_8CUs.bit
   }
   "power_measurement" {
   }

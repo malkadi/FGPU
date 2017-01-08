@@ -2,7 +2,7 @@
 compiler_outputs/fft_hard_float.bin:	file format ELF32-fgpu
 
 Disassembly of section .text:
-butterfly_hard:
+butterfly_hard_float:
        0:	42 00 00 a8 	lp	r2, 2
        4:	03 00 00 a8 	lp	r3, 0
        8:	24 00 00 a8 	lp	r4, 1

@@ -1,10 +1,11 @@
 #include "kernel_descriptor.hpp"
 
 #define PRINT_ERRORS  1
-extern unsigned int *code; // binary storde in code.c as an array
+extern unsigned *code; // binary storde in code.c as an array
+extern unsigned *code_hard_float; // binary storde in code_hard_float.c as an array
 
 template<typename T>
-kernel<T>::kernel(unsigned max_size)
+kernel<T>::kernel(unsigned max_size, bool hard_float)
 {
   param1 = new T[max_size];
   target_fgpu = new T[max_size];
@@ -15,6 +16,7 @@ kernel<T>::kernel(unsigned max_size)
   // target_fgpu=  (float complex*)0x18000000;
   // target_arm=  (float complex*)0x1C000000;
   lram_ptr = (unsigned*) FGPU_BASEADDR;
+  use_hard_float = hard_float;
 }
 template<typename T>
 kernel<T>::~kernel() 
@@ -29,13 +31,20 @@ void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
   unsigned int size = FFT_LEN;
-  if (typeid(T) == typeid(float complex))
-    start_addr = BUTTERFLY_POS;
+  unsigned *code_ptr = code;
+  if (typeid(T) == typeid(float complex)) {
+    if(use_hard_float) {
+      start_addr = BUTTERFLY_HARD_FLOAT_POS;
+      size = FFT_HARD_FLOAT_LEN;
+      code_ptr = code_hard_float;
+    } else {
+      start_addr = BUTTERFLY_POS;
+    }
+  }
   else
     assert(0 && "unsupported type");
-  unsigned i = 0;
-  for(; i < size; i++){
-    cram_ptr[i] = code[i];
+  for(unsigned i = 0; i < size; i++){
+    cram_ptr[i] = code_ptr[i];
   }
 }
 template<typename T>
@@ -263,7 +272,10 @@ void kernel<T>::update_and_download()
 {
   stageIndx++;
   lram_ptr[17] = stageIndx;
+  printf("stageIndx = %d\n", stageIndx);
   Xil_DCacheFlushRange((unsigned)lram_ptr, 32*4);
+  for(unsigned i = 0; i < 32; i++)
+    printf("lram[%d] = %x\n", i, lram_ptr[i]);
 }
 template<typename T>
 unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
@@ -304,6 +316,7 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
       REG_WRITE(START_REG_ADDR, 1);
       while(REG_READ(STATUS_REG_ADDR)==0);
       update_and_download();
+      printf("here\n\r");
       // Xil_DCacheInvalidate();
       // for(unsigned i = 0; i < problemSize; i++) {
       //   printf("target_fgpu[%d]= %F + %Fj \n\r", i, creal(target_fgpu[i]), cimag(target_fgpu[i]));
@@ -333,7 +346,11 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
 template<typename T>
 void kernel<T>::print_name()
 {
-  xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is fft\n\r" ANSI_COLOR_RESET);
+  xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is fft");
+  if(use_hard_float)
+    xil_printf(" (hard)\n\r" ANSI_COLOR_RESET);
+  else
+    xil_printf(" (soft)\n\r" ANSI_COLOR_RESET);
 }
 
 template class kernel<float complex>;

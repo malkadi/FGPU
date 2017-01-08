@@ -8,6 +8,8 @@
 #ifndef KERNEL_DESCRIPTOR_H_
 #define KERNEL_DESCRIPTOR_H_
 
+#include "code.h"
+#include "code_hard_float.h"
 #include "aux_functions.hpp"
 #include <typeinfo>
 
@@ -27,9 +29,9 @@ class kernel{
   unsigned problemSize, dataSize;
   T *param1, *param2, *target_fgpu, *target_arm;
   void compute_descriptor();
-  bool use_vector_types;
+  bool use_vector_types, use_hard_float;
 public:
-  kernel(unsigned max_size, bool vector_types);
+  kernel(unsigned max_size, bool vector_types, bool hard_float);
   ~kernel();
   void download_code();
   void download_descriptor();

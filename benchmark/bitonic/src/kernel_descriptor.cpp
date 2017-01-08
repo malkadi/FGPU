@@ -143,8 +143,8 @@ void kernel<T>::initialize_memory()
   T *target_arm_ptr = (T*) target_arm;
   for(i = 0; i < (int)problemSize; i++) 
   {
-    target_arm_ptr[i] = target_fgpu_ptr[i] = param_ptr[i] = (T)(i%10);
-    // target_arm_ptr[i] = target_fgpu_ptr[i] = param_ptr[i] = (T)(rand()>>8);
+    // target_arm_ptr[i] = target_fgpu_ptr[i] = param_ptr[i] = (T)(i%10);
+    target_arm_ptr[i] = target_fgpu_ptr[i] = param_ptr[i] = (T)(rand()>>8);
   }
   Xil_DCacheFlush(); // flush data to global memory
 }

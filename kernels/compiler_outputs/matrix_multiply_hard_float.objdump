@@ -1,0 +1,37 @@
+
+compiler_outputs/matrix_multiply_hard_float.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+matrix_multiply_hard_float:
+       0:	42 00 00 a8 	lp	r2, 2
+       4:	05 00 00 a8 	lp	r5, 0
+       8:	24 00 00 a8 	lp	r4, 1
+       c:	23 00 00 a0 	lid	r3, 1
+      10:	26 00 00 a1 	wgoff	r6, 1
+      14:	c6 0c 00 10 	add	r6, r6, r3
+      18:	03 00 00 a0 	lid	r3, 0
+      1c:	07 00 00 a1 	wgoff	r7, 0
+      20:	e3 0c 00 10 	add	r3, r7, r3
+      24:	61 08 00 21 	slli	r1, r3, 2
+      28:	87 04 00 10 	add	r7, r4, r1
+      2c:	04 00 00 a2 	size	r4, 0
+      30:	81 18 00 51 	mul	r1, r4, r6
+      34:	26 08 00 21 	slli	r6, r1, 2
+      38:	a6 18 00 10 	add	r6, r5, r6
+      3c:	05 00 00 19 	li	r5, 0
+      40:	05 00 00 1d 	lui	r5, 0
+      44:	88 08 00 21 	slli	r8, r4, 2
+
+LBB0_1:
+      48:	e9 20 00 10 	add	r9, r7, r8
+      4c:	07 1c 00 74 	lw	r7, r7[r0]
+      50:	0a 18 00 74 	lw	r10, r6[r0]
+      54:	47 1d 00 c1 	fmul	r7, r10, r7
+      58:	a5 1c 00 c0 	fadd	r5, r5, r7
+      5c:	c6 10 00 11 	addi	r6, r6, 4
+      60:	84 fc ff 11 	addi	r4, r4, -1
+      64:	07 24 00 10 	add	r7, r0, r9
+      68:	04 dc ff 63 	bne	r4, r0, -9
+      6c:	21 0c 00 10 	add	r1, r1, r3
+      70:	25 08 00 7c 	sw	r5, r2[r1]
+      74:	00 00 00 92 	ret

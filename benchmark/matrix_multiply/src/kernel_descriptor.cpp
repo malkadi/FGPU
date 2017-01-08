@@ -1,15 +1,17 @@
 #include "kernel_descriptor.hpp"
 
-extern unsigned int *code; // binary storde in code.c as an array
+extern unsigned *code; // binary storde in code.c as an array
+extern unsigned *code_hard_float; // binary storde in code_hard_float.c as an array
 
 template<typename T>
-kernel<T>::kernel(unsigned maxDim, bool vector_types)
+kernel<T>::kernel(unsigned maxDim, bool vector_types, bool hard_float)
 {
   param1 = new T[maxDim*maxDim];
   param2 = new T[maxDim*maxDim];
   target_fgpu = new T[maxDim*maxDim];
   target_arm = new T[maxDim*maxDim];
   use_vector_types = vector_types;
+  use_hard_float = hard_float;
 }
 template<typename T>
 kernel<T>::~kernel() 
@@ -24,8 +26,16 @@ void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
   unsigned int size = MATRIX_MULTIPLY_LEN;
-  if (typeid(T) == typeid(float))
-    start_addr = MATRIX_MULTIPLY_FLOAT_POS;
+  unsigned *code_ptr = code;
+  if (typeid(T) == typeid(float)) {
+    if(use_hard_float) {
+      start_addr = MATRIX_MULTIPLY_HARD_FLOAT_POS;
+      size = MATRIX_MULTIPLY_HARD_FLOAT_LEN;
+      code_ptr = code_hard_float;
+    } else {
+      start_addr = MATRIX_MULTIPLY_FLOAT_POS;
+    }
+  }
   else if (typeid(T) == typeid(int))
     start_addr = MATRIX_MULTIPLY_POS;
   else if (typeid(T) == typeid(short)) 
@@ -40,9 +50,8 @@ void kernel<T>::download_code()
       start_addr = MATRIX_MULTIPLY_BYTE_POS;
   else
     assert(0 && "unsupported type");
-  unsigned i = 0;
-  for(; i < size; i++){
-    cram_ptr[i] = code[i];
+  for(unsigned i = 0; i < size; i++){
+    cram_ptr[i] = code_ptr[i];
   }
 }
 template<typename T>
@@ -211,8 +220,13 @@ void kernel<T>::print_name()
     xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is matrix_multiply half word\n\r" ANSI_COLOR_RESET);
   else if (typeid(T) == typeid(char))
     xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is matrix_multiply byte\n\r" ANSI_COLOR_RESET);
-  else if (typeid(T) == typeid(float))
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is matrix_multiply float\n\r" ANSI_COLOR_RESET);
+  else if (typeid(T) == typeid(float)) {
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is matrix_multiply float");
+    if(use_hard_float)
+      xil_printf(" (hard)\n\r" ANSI_COLOR_RESET);
+    else
+      xil_printf(" (soft)\n\r" ANSI_COLOR_RESET);
+  }
 }
 template<typename T>
 unsigned kernel<T>::get_problemSize() 

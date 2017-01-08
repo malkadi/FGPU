@@ -1,0 +1,28 @@
+
+compiler_outputs/xcorr_hard_float.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+xcorr_float_hard_float:
+       0:	42 00 00 a8 	lp	r2, 2
+       4:	03 00 00 a8 	lp	r3, 0
+       8:	25 00 00 a8 	lp	r5, 1
+       c:	04 00 00 a0 	lid	r4, 0
+      10:	06 00 00 a1 	wgoff	r6, 0
+      14:	c4 10 00 10 	add	r4, r6, r4
+      18:	81 08 00 21 	slli	r1, r4, 2
+      1c:	a6 04 00 10 	add	r6, r5, r1
+      20:	05 00 00 19 	li	r5, 0
+      24:	05 00 00 1d 	lui	r5, 0
+      28:	07 00 00 a2 	size	r7, 0
+
+LBB0_1:
+      2c:	01 18 00 74 	lw	r1, r6[r0]
+      30:	08 0c 00 74 	lw	r8, r3[r0]
+      34:	01 05 00 c1 	fmul	r1, r8, r1
+      38:	a5 04 00 c0 	fadd	r5, r5, r1
+      3c:	63 10 00 11 	addi	r3, r3, 4
+      40:	c6 10 00 11 	addi	r6, r6, 4
+      44:	e7 fc ff 11 	addi	r7, r7, -1
+      48:	07 e0 ff 63 	bne	r7, r0, -8
+      4c:	85 08 00 7c 	sw	r5, r2[r4]
+      50:	00 00 00 92 	ret

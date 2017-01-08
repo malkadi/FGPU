@@ -13,7 +13,7 @@ int main()
   // Executions & time measurements will be repeated nruns times 
   const unsigned nruns = 10;
   // use hard float units
-  const unsigned use_hard_float = 1;
+  const unsigned use_hard_float = 0;
   // control power measurement
   const unsigned sync_power_measurement = 0;
   

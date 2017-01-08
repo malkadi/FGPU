@@ -13,9 +13,11 @@ int main()
   // The kernel will be executed for problem sizes of 64, 64*2, ... , 64*2^(test_vec_len-1)
   const unsigned test_vec_len = 1;
   // Executions & time measurements will be repeated nruns times 
-  const unsigned nruns = 1;
+  const unsigned nruns = 10;
   // use vector types:ushort2 instead of ushort OR uchar4 instead of byte
   const bool use_vector_types = 1;
+  // use hard floating point units
+  const bool use_hard_float = 1;
   // control power measurement
   const unsigned sync_power_measurement = 1;
   
@@ -35,7 +37,7 @@ int main()
   Xil_ICacheEnable();
   Xil_DCacheEnable();
   // create kernel
-  kernel<TYPE> matrix_multiply_kernel(sqrt(MAX_PROBLEM_SIZE), use_vector_types);
+  kernel<TYPE> matrix_multiply_kernel(sqrt(MAX_PROBLEM_SIZE), use_vector_types, use_hard_float);
   power_measure power;
   if( sync_power_measurement ) {
     power.set_idle();

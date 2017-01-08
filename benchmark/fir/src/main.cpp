@@ -16,6 +16,8 @@ int main()
   const unsigned nruns = 10;
   // use vector types:ushort2 instead of ushort OR uchar4 instead of byte
   const bool use_vector_types = 1;
+  // use hard floating point units
+  const bool use_hard_float = 0;
   // control power measurement
   const unsigned sync_power_measurement = 1;
   
@@ -35,7 +37,7 @@ int main()
   Xil_ICacheEnable();
   Xil_DCacheEnable();
   // create kernel
-  kernel<TYPE> fir_kernel(MAX_PROBLEM_SIZE, use_vector_types);
+  kernel<TYPE> fir_kernel(MAX_PROBLEM_SIZE, use_vector_types, use_hard_float);
   power_measure power;
   if( sync_power_measurement ) {
     power.set_idle();

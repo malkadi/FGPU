@@ -1,9 +1,11 @@
 #include "kernel_descriptor.hpp"
 #define PRINT_ERRORS    1
-extern unsigned int *code; // binary storde in code.c as an array
+
+extern unsigned *code; // binary storde in code.c as an array
+extern unsigned *code_hard_float; // binary storde in code_hard_float.c as an array
 
 template<typename T>
-kernel<T>::kernel(unsigned max_size, bool vector_types)
+kernel<T>::kernel(unsigned max_size, bool vector_types, bool hard_float)
 {
   filterLen = 12;
   // param1 = (T *) 0x30000000;
@@ -14,6 +16,7 @@ kernel<T>::kernel(unsigned max_size, bool vector_types)
   target_fgpu = new T[max_size];
   target_arm = new T[max_size];
   use_vector_types = vector_types;
+  use_hard_float = hard_float;
 }
 template<typename T>
 kernel<T>::~kernel() 
@@ -28,8 +31,16 @@ void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
   unsigned int size = FIR_LEN;
-  if(typeid(T) == typeid(float))
-    start_addr = FIR_FLOAT_POS;
+  unsigned *code_ptr = code;
+  if(typeid(T) == typeid(float)) {
+    if(use_hard_float) {
+      start_addr = FIR_HARD_FLOAT_POS;
+      size = FIR_HARD_FLOAT_LEN;
+      code_ptr = code_hard_float;
+    } else {
+      start_addr = FIR_FLOAT_POS;
+    }
+  }
   else if (typeid(T) == typeid(int))
     start_addr = FIR_POS;
   else if (typeid(T) == typeid( short)){
@@ -46,9 +57,9 @@ void kernel<T>::download_code()
   }
   else
     assert(0 && "unsupported type");
-  unsigned i = 0;
-  for(; i < size; i++){
-    cram_ptr[i] = code[i];
+
+  for(unsigned i = 0; i < size; i++){
+    cram_ptr[i] = code_ptr[i];
   }
 }
 template<typename T>
@@ -220,7 +231,11 @@ template<typename T>
 void kernel<T>::print_name()
 {
   if(typeid(T) == typeid(float)){
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is fir float\n\r" ANSI_COLOR_RESET);
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is fir float" );
+    if(use_hard_float)
+      xil_printf(" (hard)\n\r" ANSI_COLOR_RESET);
+    else
+      xil_printf(" (soft)\n\r" ANSI_COLOR_RESET);
     return;
   }
   if( typeid(T) == typeid(int) )

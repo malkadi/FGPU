@@ -27,7 +27,6 @@
 #include "xscugic.h"
 #include "xil_exception.h"
 #include "assert.h"
-#include "code.h"
 #include "kernel_descriptor.hpp"
 using namespace std;
 
