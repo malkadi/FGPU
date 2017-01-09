@@ -1,13 +1,13 @@
 # To compile an existing application
 You may use Xilinx SDK or run the tcl script
 ```sh
-../scripts/compile.sh <path of the application, e.g. copy>
+../scripts/compile.sh <application path, e.g. copy>
 ```
 
 # To run an applications from terminal:
 + After a successful compilation, open a terminal and run the following command:
 ```sh
-open_sdk.sh <path of the application, e.g. copy>
+open_sdk.sh <application path, e.g. copy>
 ```
 This will open the Xilinx command line tool (xsct).
 + Program a bitstream:
@@ -28,7 +28,7 @@ source download_elf.tcl
   ```
   + Compiling the application:
   ```sh
-  ../scripts/compile.sh <path of the application, e.g. copy>
+  ../scripts/compile.sh <application path, e.g. copy>
   ```
   + Sourcing the script `measure_power.tcl` in xsct. It will program both ARM cores accordingly:
   ```sh

@@ -8,11 +8,15 @@ int main()
   // The correctness of all results will be checked at the end of each execution round
   const unsigned check_results = 1; 
   // The kernel will be executed for problem sizes of 8*8, 16*16, ... 
-  const unsigned test_vec_len = 1;
+  const unsigned test_vec_len = 7;
   // Executions & time measurements will be repeated nruns times 
-  const unsigned nruns = 1;
+  const unsigned nruns = 10;
+  // use hard floating point units
+  const bool use_hard_float = 1;
+  // use hard floating point units (mul & add only, no division)
+  const bool fdiv_hard_support = 1;
   // control power measurement
-  const unsigned sync_power_measurement = 1;
+  const unsigned sync_power_measurement = 0;
   
   if(check_results)
     xil_printf("\n\r---Entering main (checking FGPU results is" ANSI_COLOR_GREEN" active" ANSI_COLOR_RESET ") ---\n\r");
@@ -30,7 +34,7 @@ int main()
   Xil_ICacheEnable();
   Xil_DCacheEnable();
   // create kernel
-  kernel<TYPE> LUdecomposition_kernel(sqrt(MAX_PROBLEM_SIZE));
+  kernel<TYPE> LUdecomposition_kernel(sqrt(MAX_PROBLEM_SIZE), use_hard_float, fdiv_hard_support);
   power_measure power;
   if( sync_power_measurement ) {
     power.set_idle();
@@ -48,7 +52,7 @@ int main()
   for(size_index = 0; size_index < test_vec_len; size_index++)
   {
     // initiate the kernel descriptor for the required problem size
-    LUdecomposition_kernel.prepare_descriptor(8 << (size_index+6));
+    LUdecomposition_kernel.prepare_descriptor(8 << (size_index+0));
     xil_printf("%-8u", LUdecomposition_kernel.get_problemSize());
     fflush(stdout);
 

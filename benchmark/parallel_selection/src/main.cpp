@@ -19,7 +19,7 @@ int main()
   // use hard float units
   const bool use_hard_float = 1;
   // control power measurement
-  const unsigned sync_power_measurement = 0;
+  const unsigned sync_power_measurement = 1;
   
   if(check_results)
     xil_printf("\n\r---Entering main (checking FGPU results is" ANSI_COLOR_GREEN" active" ANSI_COLOR_RESET ") ---\n\r");
@@ -55,7 +55,7 @@ int main()
   for(size_index = 0; size_index < test_vec_len; size_index++)
   {
     // initiate the kernel descriptor for the required problem size
-    parallel_selection_kernel.prepare_descriptor(64 << (size_index+0));
+    parallel_selection_kernel.prepare_descriptor(64 << (size_index+10));
     xil_printf("%-8u", parallel_selection_kernel.get_problemSize());
     fflush(stdout);
 

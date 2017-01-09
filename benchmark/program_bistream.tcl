@@ -4,14 +4,15 @@ connect
 # program bitstream
 switch $benchmark {
   "edge_detection" {
-    set bitstream ../bitstreams/V2_8CUs_fadd_fmul_fsqrt_uitofp_2AXI_185MHz.bit
+    set bitstream ../bitstreams/V2_8CUs_fadd_fmul_fsqrt_uitofp.bit
   }
   "nbody" {
     set bitstream ../bitstreams/V2_4CUs_float_250MHz.bit
   }
   "vec_add" -
   "copy" {
-    set bitstream ../bitstreams/V2_8CUs_fadd_2AXI.bit
+    set bitstream ../bitstreams/V2_8CUs_4_CACHE_WORDS.bit
+    # set bitstream ../bitstreams/V2_8CUs.bit
   }
   "div" {
     # set bitstream ../bitstreams/V2_4CUs_fdiv_max.bit
@@ -24,19 +25,29 @@ switch $benchmark {
   "fft" -
   "sum_power" -
   "sum_power_another" {
-    # set bitstream ../bitstreams/V1_8CUs.bit
-    set bitstream ../bitstreams/V2_8CUs_fadd_fmul.bit
-    # set bitstream ../bitstreams/V2_8CUs_Atomic_2AXI_245MHz.bit
+    # set bitstream ../bitstreams/V2_8CUs_6Stations.bit
+    # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_LMEM.bit
+    # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_fdiv.bit
+    # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_2_CACHE_WORDS.bit
+    # set bitsrean ../bitstreams/V2_8CUs.bit
+    set bitstream ../bitstreams/V2_8CUs_2CACHE_WORDS.bit
   }
   "vec_mul" {
-    set bitstream ../bitstreams/V2_8CUs.bit
+    set bitstream ../bitstreams/V2_8CUs_fadd_fmul_2AXI.bit
   }
   "max" -
   "bitonic" -
   "parallel_selection" -
   "sum" 
   {
-    set bitstream ../bitstreams/V2_8CUs_2AXI.bit
+    set bitstream ../bitstreams/V2_8CUs_fadd_fslt_2AXI.bit
+    # set bitstream ../bitstreams/V2_8CUs_fadd_fslt.bit
+    # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_2_CACHE_WORDS.bit
+    # set bitstream ../bitstreams/V2_8CUs.bit
+    # set bitstream ../bitstreams/V2_8CUs_2AXI.bit
+    # set bitstream ../bitstreams/V2_8CUs_4_CACHE_WORDS.bit
+    # set bitstream ../bitstreams/V2_8CUs_4AXI_2TAGM.bit
+    # set bitstream ../bitstreams/V2_8CUs_6Stations.bit
   }
   "xcorr" -
   "fir" -
@@ -45,7 +56,7 @@ switch $benchmark {
   "median" 
   {
     # set bitstream ../bitstreams/V2_8CUs_SubInteger_2K_LMEM_240MHz.bit
-    set bitstream ../bitstreams/V2_8CUs.bit
+    set bitstream ../bitstreams/V2_8CUs_fadd_fmul_4_CACHE_WORDS.bit
   }
   "power_measurement" {
   }

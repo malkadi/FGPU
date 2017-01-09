@@ -299,11 +299,11 @@ void kernel<T>::print_name()
   if( typeid(T) == typeid(int) )
     xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is bitonic int\n\r" ANSI_COLOR_RESET);
   else if( typeid(T) == typeid(float) ) {
-    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is bitonic float" ANSI_COLOR_RESET);
+    xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is bitonic float");
     if(use_hard_float)
-      xil_printf(" (hard)\n\r");
+      xil_printf(" (hard)\n\r"ANSI_COLOR_RESET);
     else
-      xil_printf(" (soft)\n\r");
+      xil_printf(" (soft)\n\r"ANSI_COLOR_RESET);
   }
 }
 

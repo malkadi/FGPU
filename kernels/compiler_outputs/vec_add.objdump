@@ -2,420 +2,415 @@
 compiler_outputs/vec_add.bin:	file format ELF32-fgpu
 
 Disassembly of section .text:
+__addsf3:
+       0:	ff fb ff 11 	addi	sp, sp, -2
+       4:	e9 07 00 dc 	lswi	r9, sp[1]
+       8:	ea 03 00 dc 	lswi	r10, sp[0]
+       c:	63 fc ff 19 	li	r3, 65535
+      10:	23 fc ff 1d 	lui	r3, 32767
+      14:	24 0c 00 30 	and	r4, r1, r3
+      18:	85 fc ff 11 	addi	r5, r4, -1
+      1c:	66 f8 ff 19 	li	r6, 65534
+      20:	26 fc fd 1d 	lui	r6, 32639
+      24:	c6 14 00 b6 	sltu	r6, r6, r5
+      28:	45 0c 00 30 	and	r5, r2, r3
+      2c:	06 14 00 63 	bne	r6, r0, 5
+      30:	a3 fc ff 11 	addi	r3, r5, -1
+      34:	66 fc ff 19 	li	r6, 65535
+      38:	26 fc fd 1d 	lui	r6, 32639
+      3c:	63 18 00 b6 	sltu	r3, r3, r6
+      40:	03 64 00 63 	bne	r3, r0, 25
+
+LBB0_2:
+      44:	43 04 00 34 	xor	r3, r2, r1
+      48:	06 00 00 19 	li	r6, 0
+      4c:	46 00 00 1d 	lui	r6, 32768
+      50:	63 18 00 34 	xor	r3, r3, r6
+      54:	08 00 00 19 	li	r8, 0
+      58:	28 00 ff 1d 	lui	r8, 32704
+      5c:	07 04 00 10 	add	r7, r0, r1
+      60:	07 0d 00 48 	movz	r7, r8, r3
+      64:	06 00 00 19 	li	r6, 0
+      68:	26 00 fe 1d 	lui	r6, 32640
+      6c:	89 18 00 34 	xor	r9, r4, r6
+      70:	03 04 00 10 	add	r3, r0, r1
+      74:	e3 24 00 48 	movz	r3, r7, r9
+      78:	c7 14 00 b6 	sltu	r7, r6, r5
+      7c:	c9 10 00 b6 	sltu	r9, r6, r4
+      80:	27 1d 00 32 	or	r7, r9, r7
+      84:	03 1d 00 40 	movn	r3, r8, r7
+      88:	c4 50 03 62 	beq	r4, r6, 212
+      8c:	07 4c 03 63 	bne	r7, r0, 211
+      90:	03 08 00 10 	add	r3, r0, r2
+      94:	c5 44 03 62 	beq	r5, r6, 209
+      98:	04 04 00 63 	bne	r4, r0, 1
+      9c:	00 c8 02 62 	beq	r0, r0, 178
+
+LBB0_8:
+      a0:	03 04 00 10 	add	r3, r0, r1
+      a4:	05 34 03 62 	beq	r5, r0, 205
+
+LBB0_9:
+      a8:	83 14 00 b6 	sltu	r3, r4, r5
+      ac:	04 04 00 10 	add	r4, r0, r1
+      b0:	44 0c 00 40 	movn	r4, r2, r3
+      b4:	22 0c 00 40 	movn	r2, r1, r3
+      b8:	61 fc ff 19 	li	r1, 65535
+      bc:	01 fc 01 1d 	lui	r1, 127
+      c0:	83 04 00 30 	and	r3, r4, r1
+      c4:	45 5c 00 29 	srli	r5, r2, 23
+      c8:	a6 fc 03 31 	andi	r6, r5, 255
+      cc:	85 5c 00 29 	srli	r5, r4, 23
+      d0:	a5 fc 03 31 	andi	r5, r5, 255
+      d4:	05 8c 00 63 	bne	r5, r0, 35
+      d8:	65 04 00 29 	srli	r5, r3, 1
+      dc:	65 14 00 32 	or	r5, r3, r5
+      e0:	a7 08 00 29 	srli	r7, r5, 2
+      e4:	a5 1c 00 32 	or	r5, r5, r7
+      e8:	a7 10 00 29 	srli	r7, r5, 4
+      ec:	a5 1c 00 32 	or	r5, r5, r7
+      f0:	a7 20 00 29 	srli	r7, r5, 8
+      f4:	a5 1c 00 32 	or	r5, r5, r7
+      f8:	a7 40 00 29 	srli	r7, r5, 16
+      fc:	a5 1c 00 38 	nor	r5, r5, r7
+     100:	27 54 55 19 	li	r7, 21845
+     104:	27 54 55 1d 	lui	r7, 21845
+     108:	a8 04 00 29 	srli	r8, r5, 1
+     10c:	07 1d 00 30 	and	r7, r8, r7
+     110:	a5 1c 00 12 	sub	r5, r5, r7
+     114:	07 cc cc 19 	li	r7, 13107
+     118:	07 cc cc 1d 	lui	r7, 13107
+     11c:	a8 1c 00 30 	and	r8, r5, r7
+     120:	a5 08 00 29 	srli	r5, r5, 2
+     124:	a5 1c 00 30 	and	r5, r5, r7
+     128:	05 15 00 10 	add	r5, r8, r5
+     12c:	a7 10 00 29 	srli	r7, r5, 4
+     130:	a5 1c 00 10 	add	r5, r5, r7
+     134:	07 3c 3c 19 	li	r7, 3855
+     138:	07 3c 3c 1d 	lui	r7, 3855
+     13c:	a5 1c 00 30 	and	r5, r5, r7
+     140:	07 04 04 19 	li	r7, 257
+     144:	07 04 04 1d 	lui	r7, 257
+     148:	a5 1c 00 51 	mul	r5, r5, r7
+     14c:	a7 60 00 29 	srli	r7, r5, 24
+     150:	05 24 00 11 	addi	r5, r0, 9
+     154:	a5 1c 00 12 	sub	r5, r5, r7
+     158:	e7 60 00 11 	addi	r7, r7, 24
+     15c:	e7 7c 00 31 	andi	r7, r7, 31
+     160:	63 1c 00 20 	sll	r3, r3, r7
+
+LBB0_11:
+     164:	47 04 00 30 	and	r7, r2, r1
+     168:	06 8c 00 63 	bne	r6, r0, 35
+     16c:	e6 04 00 29 	srli	r6, r7, 1
+     170:	e6 18 00 32 	or	r6, r7, r6
+     174:	c8 08 00 29 	srli	r8, r6, 2
+     178:	c6 20 00 32 	or	r6, r6, r8
+     17c:	c8 10 00 29 	srli	r8, r6, 4
+     180:	c6 20 00 32 	or	r6, r6, r8
+     184:	c8 20 00 29 	srli	r8, r6, 8
+     188:	c6 20 00 32 	or	r6, r6, r8
+     18c:	c8 40 00 29 	srli	r8, r6, 16
+     190:	c6 20 00 38 	nor	r6, r6, r8
+     194:	28 54 55 19 	li	r8, 21845
+     198:	28 54 55 1d 	lui	r8, 21845
+     19c:	c9 04 00 29 	srli	r9, r6, 1
+     1a0:	28 21 00 30 	and	r8, r9, r8
+     1a4:	c6 20 00 12 	sub	r6, r6, r8
+     1a8:	08 cc cc 19 	li	r8, 13107
+     1ac:	08 cc cc 1d 	lui	r8, 13107
+     1b0:	c9 20 00 30 	and	r9, r6, r8
+     1b4:	c6 08 00 29 	srli	r6, r6, 2
+     1b8:	c6 20 00 30 	and	r6, r6, r8
+     1bc:	26 19 00 10 	add	r6, r9, r6
+     1c0:	c8 10 00 29 	srli	r8, r6, 4
+     1c4:	c6 20 00 10 	add	r6, r6, r8
+     1c8:	08 3c 3c 19 	li	r8, 3855
+     1cc:	08 3c 3c 1d 	lui	r8, 3855
+     1d0:	c6 20 00 30 	and	r6, r6, r8
+     1d4:	08 04 04 19 	li	r8, 257
+     1d8:	08 04 04 1d 	lui	r8, 257
+     1dc:	c6 20 00 51 	mul	r6, r6, r8
+     1e0:	c8 60 00 29 	srli	r8, r6, 24
+     1e4:	06 24 00 11 	addi	r6, r0, 9
+     1e8:	c6 20 00 12 	sub	r6, r6, r8
+     1ec:	08 61 00 11 	addi	r8, r8, 24
+     1f0:	08 7d 00 31 	andi	r8, r8, 31
+     1f4:	e7 20 00 20 	sll	r7, r7, r8
+
+LBB0_13:
+     1f8:	82 08 00 34 	xor	r2, r4, r2
+     1fc:	e7 0c 00 21 	slli	r7, r7, 3
+     200:	08 00 00 19 	li	r8, 0
+     204:	08 00 10 1d 	lui	r8, 1024
+     208:	e9 20 00 32 	or	r9, r7, r8
+     20c:	63 0c 00 21 	slli	r3, r3, 3
+     210:	07 24 00 10 	add	r7, r0, r9
+     214:	c5 34 00 62 	beq	r5, r6, 13
+     218:	a6 18 00 12 	sub	r6, r5, r6
+     21c:	07 7c 00 11 	addi	r7, r0, 31
+     220:	ea 18 00 b6 	sltu	r10, r7, r6
+     224:	07 04 00 11 	addi	r7, r0, 1
+     228:	0a 20 00 63 	bne	r10, r0, 8
+     22c:	c7 7c 00 31 	andi	r7, r6, 31
+     230:	27 1d 00 28 	srl	r7, r9, r7
+     234:	06 18 00 12 	sub	r6, r0, r6
+     238:	c6 7c 00 31 	andi	r6, r6, 31
+     23c:	26 19 00 20 	sll	r6, r9, r6
+     240:	c6 00 00 34 	xor	r6, r6, r0
+     244:	06 18 00 b6 	sltu	r6, r0, r6
+     248:	c7 1c 00 32 	or	r7, r6, r7
+
+LBB0_16:
+     24c:	66 20 00 32 	or	r6, r3, r8
+     250:	08 fc ff 11 	addi	r8, r0, -1
+     254:	02 09 00 b2 	slt	r2, r8, r2
+     258:	02 04 00 63 	bne	r2, r0, 1
+     25c:	00 18 00 62 	beq	r0, r0, 6
+
+LBB0_20:
+     260:	e2 18 00 10 	add	r2, r7, r6
+     264:	06 00 00 19 	li	r6, 0
+     268:	06 00 20 1d 	lui	r6, 2048
+     26c:	46 18 00 30 	and	r6, r2, r6
+     270:	06 c0 00 62 	beq	r6, r0, 48
+     274:	00 a8 00 62 	beq	r0, r0, 42
+
+LBB0_17:
+     278:	03 00 00 11 	addi	r3, r0, 0
+     27c:	e6 5c 01 62 	beq	r6, r7, 87
+     280:	c2 1c 00 12 	sub	r2, r6, r7
+     284:	63 fc ff 19 	li	r3, 65535
+     288:	03 fc 0f 1d 	lui	r3, 1023
+     28c:	63 08 00 b6 	sltu	r3, r3, r2
+     290:	03 a0 00 63 	bne	r3, r0, 40
+     294:	43 04 00 29 	srli	r3, r2, 1
+     298:	43 0c 00 32 	or	r3, r2, r3
+     29c:	66 08 00 29 	srli	r6, r3, 2
+     2a0:	63 18 00 32 	or	r3, r3, r6
+     2a4:	66 10 00 29 	srli	r6, r3, 4
+     2a8:	63 18 00 32 	or	r3, r3, r6
+     2ac:	66 20 00 29 	srli	r6, r3, 8
+     2b0:	63 18 00 32 	or	r3, r3, r6
+     2b4:	66 40 00 29 	srli	r6, r3, 16
+     2b8:	63 18 00 38 	nor	r3, r3, r6
+     2bc:	26 54 55 19 	li	r6, 21845
+     2c0:	26 54 55 1d 	lui	r6, 21845
+     2c4:	67 04 00 29 	srli	r7, r3, 1
+     2c8:	e6 18 00 30 	and	r6, r7, r6
+     2cc:	63 18 00 12 	sub	r3, r3, r6
+     2d0:	06 cc cc 19 	li	r6, 13107
+     2d4:	06 cc cc 1d 	lui	r6, 13107
+     2d8:	67 18 00 30 	and	r7, r3, r6
+     2dc:	63 08 00 29 	srli	r3, r3, 2
+     2e0:	63 18 00 30 	and	r3, r3, r6
+     2e4:	e3 0c 00 10 	add	r3, r7, r3
+     2e8:	66 10 00 29 	srli	r6, r3, 4
+     2ec:	63 18 00 10 	add	r3, r3, r6
+     2f0:	06 3c 3c 19 	li	r6, 3855
+     2f4:	06 3c 3c 1d 	lui	r6, 3855
+     2f8:	63 18 00 30 	and	r3, r3, r6
+     2fc:	06 04 04 19 	li	r6, 257
+     300:	06 04 04 1d 	lui	r6, 257
+     304:	63 18 00 51 	mul	r3, r3, r6
+     308:	63 60 00 29 	srli	r3, r3, 24
+     30c:	63 ec ff 11 	addi	r3, r3, -5
+     310:	a5 0c 00 12 	sub	r5, r5, r3
+     314:	63 7c 00 31 	andi	r3, r3, 31
+     318:	42 0c 00 20 	sll	r2, r2, r3
+     31c:	00 14 00 62 	beq	r0, r0, 5
+
+LBB0_21:
+     320:	e3 0c 00 10 	add	r3, r7, r3
+     324:	63 04 00 31 	andi	r3, r3, 1
+     328:	42 04 00 29 	srli	r2, r2, 1
+     32c:	42 0c 00 32 	or	r2, r2, r3
+     330:	a5 04 00 11 	addi	r5, r5, 1
+
+LBB0_22:
+     334:	03 00 00 19 	li	r3, 0
+     338:	43 00 00 1d 	lui	r3, 32768
+     33c:	83 0c 00 30 	and	r3, r4, r3
+     340:	04 fc 03 11 	addi	r4, r0, 255
+     344:	a4 10 00 b2 	slt	r4, r5, r4
+     348:	04 10 00 63 	bne	r4, r0, 4
+     34c:	01 00 00 19 	li	r1, 0
+     350:	21 00 fe 1d 	lui	r1, 32640
+     354:	63 04 00 32 	or	r3, r3, r1
+     358:	00 80 00 62 	beq	r0, r0, 32
+
+LBB0_24:
+     35c:	04 14 00 b2 	slt	r4, r0, r5
+     360:	04 40 00 63 	bne	r4, r0, 16
+     364:	00 10 00 62 	beq	r0, r0, 4
+
+LBB0_6:
+     368:	03 08 00 10 	add	r3, r0, r2
+     36c:	05 6c 00 63 	bne	r5, r0, 27
+     370:	43 04 00 30 	and	r3, r2, r1
+     374:	00 64 00 62 	beq	r0, r0, 25
+
+LBB0_25:
+     378:	04 04 00 11 	addi	r4, r0, 1
+     37c:	84 14 00 12 	sub	r4, r4, r5
+     380:	85 7c 00 31 	andi	r5, r4, 31
+     384:	46 14 00 28 	srl	r6, r2, r5
+     388:	05 00 00 11 	addi	r5, r0, 0
+     38c:	04 10 00 12 	sub	r4, r0, r4
+     390:	84 7c 00 31 	andi	r4, r4, 31
+     394:	42 10 00 20 	sll	r2, r2, r4
+     398:	42 00 00 34 	xor	r2, r2, r0
+     39c:	02 08 00 b6 	sltu	r2, r0, r2
+     3a0:	42 18 00 32 	or	r2, r2, r6
+
+LBB0_26:
+     3a4:	44 0c 00 29 	srli	r4, r2, 3
+     3a8:	81 04 00 30 	and	r1, r4, r1
+     3ac:	a4 5c 00 21 	slli	r4, r5, 23
+     3b0:	83 0c 00 32 	or	r3, r4, r3
+     3b4:	61 04 00 32 	or	r1, r3, r1
+     3b8:	42 1c 00 31 	andi	r2, r2, 7
+     3bc:	03 10 00 11 	addi	r3, r0, 4
+     3c0:	64 08 00 b6 	sltu	r4, r3, r2
+     3c4:	21 10 00 10 	add	r1, r1, r4
+     3c8:	42 0c 00 34 	xor	r2, r2, r3
+     3cc:	23 04 00 31 	andi	r3, r1, 1
+     3d0:	04 00 00 11 	addi	r4, r0, 0
+     3d4:	64 08 00 48 	movz	r4, r3, r2
+     3d8:	83 04 00 10 	add	r3, r4, r1
+
+LBB0_27:
+     3dc:	01 0c 00 10 	add	r1, r0, r3
+     3e0:	ea 03 00 d4 	llwi	r10, sp[0]
+     3e4:	e9 07 00 d4 	llwi	r9, sp[1]
+     3e8:	ff 0b 00 11 	addi	sp, sp, 2
+     3ec:	00 00 00 92 	ret
+
 vec_add:
-       0:	42 00 00 a8 	lp	r2, 2
-       4:	23 00 00 a8 	lp	r3, 1
-       8:	04 00 00 a8 	lp	r4, 0
-       c:	05 00 00 a0 	lid	r5, 0
-      10:	06 00 00 a1 	wgoff	r6, 0
-      14:	c1 14 00 10 	add	r1, r6, r5
-      18:	24 10 00 74 	lw	r4, r4[r1]
-      1c:	23 0c 00 74 	lw	r3, r3[r1]
-      20:	63 10 00 10 	add	r3, r3, r4
-      24:	23 08 00 7c 	sw	r3, r2[r1]
-      28:	00 00 00 92 	ret
+     3f0:	42 00 00 a8 	lp	r2, 2
+     3f4:	23 00 00 a8 	lp	r3, 1
+     3f8:	04 00 00 a8 	lp	r4, 0
+     3fc:	05 00 00 a0 	lid	r5, 0
+     400:	06 00 00 a1 	wgoff	r6, 0
+     404:	c1 14 00 10 	add	r1, r6, r5
+     408:	24 10 00 74 	lw	r4, r4[r1]
+     40c:	23 0c 00 74 	lw	r3, r3[r1]
+     410:	63 10 00 10 	add	r3, r3, r4
+     414:	23 08 00 7c 	sw	r3, r2[r1]
+     418:	00 00 00 92 	ret
 
 vec_add_half:
-      2c:	42 00 00 a8 	lp	r2, 2
-      30:	03 00 00 a8 	lp	r3, 0
-      34:	24 00 00 a8 	lp	r4, 1
-      38:	05 00 00 a0 	lid	r5, 0
-      3c:	06 00 00 a1 	wgoff	r6, 0
-      40:	c1 14 00 10 	add	r1, r6, r5
-      44:	25 10 00 72 	lh	r5, r4[r1]
-      48:	26 04 00 21 	slli	r6, r1, 1
-      4c:	84 18 00 10 	add	r4, r4, r6
-      50:	84 78 00 35 	xori	r4, r4, 30
-      54:	84 0c 00 21 	slli	r4, r4, 3
-      58:	a4 10 00 20 	sll	r4, r5, r4
-      5c:	65 18 00 10 	add	r5, r3, r6
-      60:	23 0c 00 72 	lh	r3, r3[r1]
-      64:	a5 78 00 35 	xori	r5, r5, 30
-      68:	a5 0c 00 21 	slli	r5, r5, 3
-      6c:	63 14 00 20 	sll	r3, r3, r5
-      70:	63 40 00 29 	srli	r3, r3, 16
-      74:	84 40 00 29 	srli	r4, r4, 16
-      78:	83 0c 00 10 	add	r3, r4, r3
-      7c:	23 08 00 7a 	sh	r3, r2[r1]
-      80:	00 00 00 92 	ret
+     41c:	42 00 00 a8 	lp	r2, 2
+     420:	03 00 00 a8 	lp	r3, 0
+     424:	24 00 00 a8 	lp	r4, 1
+     428:	05 00 00 a0 	lid	r5, 0
+     42c:	06 00 00 a1 	wgoff	r6, 0
+     430:	c1 14 00 10 	add	r1, r6, r5
+     434:	25 10 00 72 	lh	r5, r4[r1]
+     438:	26 04 00 21 	slli	r6, r1, 1
+     43c:	84 18 00 10 	add	r4, r4, r6
+     440:	84 78 00 35 	xori	r4, r4, 30
+     444:	84 0c 00 21 	slli	r4, r4, 3
+     448:	a4 10 00 20 	sll	r4, r5, r4
+     44c:	65 18 00 10 	add	r5, r3, r6
+     450:	23 0c 00 72 	lh	r3, r3[r1]
+     454:	a5 78 00 35 	xori	r5, r5, 30
+     458:	a5 0c 00 21 	slli	r5, r5, 3
+     45c:	63 14 00 20 	sll	r3, r3, r5
+     460:	63 40 00 29 	srli	r3, r3, 16
+     464:	84 40 00 29 	srli	r4, r4, 16
+     468:	83 0c 00 10 	add	r3, r4, r3
+     46c:	23 08 00 7a 	sh	r3, r2[r1]
+     470:	00 00 00 92 	ret
 
 vec_add_half_improved:
-      84:	42 00 00 a8 	lp	r2, 2
-      88:	03 00 00 a8 	lp	r3, 0
-      8c:	24 00 00 a8 	lp	r4, 1
-      90:	05 00 00 a0 	lid	r5, 0
-      94:	06 00 00 a1 	wgoff	r6, 0
-      98:	c1 14 00 10 	add	r1, r6, r5
-      9c:	24 10 00 74 	lw	r4, r4[r1]
-      a0:	23 0c 00 74 	lw	r3, r3[r1]
-      a4:	65 40 00 29 	srli	r5, r3, 16
-      a8:	86 40 00 29 	srli	r6, r4, 16
-      ac:	c5 14 00 10 	add	r5, r6, r5
-      b0:	21 08 00 21 	slli	r1, r1, 2
-      b4:	41 04 00 10 	add	r1, r2, r1
-      b8:	22 08 00 11 	addi	r2, r1, 2
-      bc:	05 08 00 7a 	sh	r5, r2[r0]
-      c0:	62 fc ff 19 	li	r2, 65535
-      c4:	02 00 00 1d 	lui	r2, 0
-      c8:	62 08 00 30 	and	r2, r3, r2
-      cc:	82 08 00 10 	add	r2, r4, r2
-      d0:	02 04 00 7a 	sh	r2, r1[r0]
-      d4:	00 00 00 92 	ret
+     474:	42 00 00 a8 	lp	r2, 2
+     478:	03 00 00 a8 	lp	r3, 0
+     47c:	24 00 00 a8 	lp	r4, 1
+     480:	05 00 00 a0 	lid	r5, 0
+     484:	06 00 00 a1 	wgoff	r6, 0
+     488:	c1 14 00 10 	add	r1, r6, r5
+     48c:	24 10 00 74 	lw	r4, r4[r1]
+     490:	23 0c 00 74 	lw	r3, r3[r1]
+     494:	65 40 00 29 	srli	r5, r3, 16
+     498:	86 40 00 29 	srli	r6, r4, 16
+     49c:	c5 14 00 10 	add	r5, r6, r5
+     4a0:	21 08 00 21 	slli	r1, r1, 2
+     4a4:	41 04 00 10 	add	r1, r2, r1
+     4a8:	22 08 00 11 	addi	r2, r1, 2
+     4ac:	05 08 00 7a 	sh	r5, r2[r0]
+     4b0:	62 fc ff 19 	li	r2, 65535
+     4b4:	02 00 00 1d 	lui	r2, 0
+     4b8:	62 08 00 30 	and	r2, r3, r2
+     4bc:	82 08 00 10 	add	r2, r4, r2
+     4c0:	02 04 00 7a 	sh	r2, r1[r0]
+     4c4:	00 00 00 92 	ret
 
 vec_add_byte:
-      d8:	42 00 00 a8 	lp	r2, 2
-      dc:	03 00 00 a8 	lp	r3, 0
-      e0:	24 00 00 a8 	lp	r4, 1
-      e4:	05 00 00 a0 	lid	r5, 0
-      e8:	06 00 00 a1 	wgoff	r6, 0
-      ec:	c1 14 00 10 	add	r1, r6, r5
-      f0:	25 10 00 71 	lb	r5, r4[r1]
-      f4:	84 04 00 10 	add	r4, r4, r1
-      f8:	84 7c 00 35 	xori	r4, r4, 31
-      fc:	84 0c 00 21 	slli	r4, r4, 3
-     100:	a4 10 00 20 	sll	r4, r5, r4
-     104:	25 0c 00 71 	lb	r5, r3[r1]
-     108:	63 04 00 10 	add	r3, r3, r1
-     10c:	63 7c 00 35 	xori	r3, r3, 31
-     110:	63 0c 00 21 	slli	r3, r3, 3
-     114:	a3 0c 00 20 	sll	r3, r5, r3
-     118:	63 60 00 29 	srli	r3, r3, 24
-     11c:	84 60 00 29 	srli	r4, r4, 24
-     120:	83 0c 00 10 	add	r3, r4, r3
-     124:	23 08 00 79 	sb	r3, r2[r1]
-     128:	00 00 00 92 	ret
+     4c8:	42 00 00 a8 	lp	r2, 2
+     4cc:	03 00 00 a8 	lp	r3, 0
+     4d0:	24 00 00 a8 	lp	r4, 1
+     4d4:	05 00 00 a0 	lid	r5, 0
+     4d8:	06 00 00 a1 	wgoff	r6, 0
+     4dc:	c1 14 00 10 	add	r1, r6, r5
+     4e0:	25 10 00 71 	lb	r5, r4[r1]
+     4e4:	84 04 00 10 	add	r4, r4, r1
+     4e8:	84 7c 00 35 	xori	r4, r4, 31
+     4ec:	84 0c 00 21 	slli	r4, r4, 3
+     4f0:	a4 10 00 20 	sll	r4, r5, r4
+     4f4:	25 0c 00 71 	lb	r5, r3[r1]
+     4f8:	63 04 00 10 	add	r3, r3, r1
+     4fc:	63 7c 00 35 	xori	r3, r3, 31
+     500:	63 0c 00 21 	slli	r3, r3, 3
+     504:	a3 0c 00 20 	sll	r3, r5, r3
+     508:	63 60 00 29 	srli	r3, r3, 24
+     50c:	84 60 00 29 	srli	r4, r4, 24
+     510:	83 0c 00 10 	add	r3, r4, r3
+     514:	23 08 00 79 	sb	r3, r2[r1]
+     518:	00 00 00 92 	ret
 
 vec_add_byte_improved:
-     12c:	42 00 00 a8 	lp	r2, 2
-     130:	03 00 00 a8 	lp	r3, 0
-     134:	24 00 00 a8 	lp	r4, 1
-     138:	05 00 00 a0 	lid	r5, 0
-     13c:	06 00 00 a1 	wgoff	r6, 0
-     140:	c1 14 00 10 	add	r1, r6, r5
-     144:	24 10 00 74 	lw	r4, r4[r1]
-     148:	23 0c 00 74 	lw	r3, r3[r1]
-     14c:	65 60 00 29 	srli	r5, r3, 24
-     150:	86 60 00 29 	srli	r6, r4, 24
-     154:	c5 14 00 10 	add	r5, r6, r5
-     158:	66 fc 03 31 	andi	r6, r3, 255
-     15c:	86 18 00 10 	add	r6, r4, r6
-     160:	21 08 00 21 	slli	r1, r1, 2
-     164:	26 08 00 79 	sb	r6, r2[r1]
-     168:	41 04 00 10 	add	r1, r2, r1
-     16c:	02 0c 00 11 	addi	r2, r0, 3
-     170:	45 04 00 79 	sb	r5, r1[r2]
-     174:	62 20 00 21 	slli	r2, r3, 8
-     178:	42 60 00 29 	srli	r2, r2, 24
-     17c:	85 40 00 29 	srli	r5, r4, 16
-     180:	a2 08 00 10 	add	r2, r5, r2
-     184:	05 08 00 11 	addi	r5, r0, 2
-     188:	a2 04 00 79 	sb	r2, r1[r5]
-     18c:	82 20 00 29 	srli	r2, r4, 8
-     190:	63 40 00 21 	slli	r3, r3, 16
-     194:	63 60 00 29 	srli	r3, r3, 24
-     198:	42 0c 00 10 	add	r2, r2, r3
-     19c:	03 04 00 11 	addi	r3, r0, 1
-     1a0:	62 04 00 79 	sb	r2, r1[r3]
-     1a4:	00 00 00 92 	ret
-
-__addsf3:
-     1a8:	ff fb ff 11 	addi	sp, sp, -2
-     1ac:	e9 07 00 dc 	lswi	r9, sp[1]
-     1b0:	ea 03 00 dc 	lswi	r10, sp[0]
-     1b4:	63 fc ff 19 	li	r3, 65535
-     1b8:	23 fc ff 1d 	lui	r3, 32767
-     1bc:	24 0c 00 30 	and	r4, r1, r3
-     1c0:	85 fc ff 11 	addi	r5, r4, -1
-     1c4:	66 f8 ff 19 	li	r6, 65534
-     1c8:	26 fc fd 1d 	lui	r6, 32639
-     1cc:	c6 14 00 b6 	sltu	r6, r6, r5
-     1d0:	45 0c 00 30 	and	r5, r2, r3
-     1d4:	06 14 00 63 	bne	r6, r0, 5
-     1d8:	a3 fc ff 11 	addi	r3, r5, -1
-     1dc:	66 fc ff 19 	li	r6, 65535
-     1e0:	26 fc fd 1d 	lui	r6, 32639
-     1e4:	63 18 00 b6 	sltu	r3, r3, r6
-     1e8:	03 64 00 63 	bne	r3, r0, 25
-
-LBB5_2:
-     1ec:	43 04 00 34 	xor	r3, r2, r1
-     1f0:	06 00 00 19 	li	r6, 0
-     1f4:	46 00 00 1d 	lui	r6, 32768
-     1f8:	63 18 00 34 	xor	r3, r3, r6
-     1fc:	08 00 00 19 	li	r8, 0
-     200:	28 00 ff 1d 	lui	r8, 32704
-     204:	07 04 00 10 	add	r7, r0, r1
-     208:	07 0d 00 48 	movz	r7, r8, r3
-     20c:	06 00 00 19 	li	r6, 0
-     210:	26 00 fe 1d 	lui	r6, 32640
-     214:	89 18 00 34 	xor	r9, r4, r6
-     218:	03 04 00 10 	add	r3, r0, r1
-     21c:	e3 24 00 48 	movz	r3, r7, r9
-     220:	c7 14 00 b6 	sltu	r7, r6, r5
-     224:	c9 10 00 b6 	sltu	r9, r6, r4
-     228:	27 1d 00 32 	or	r7, r9, r7
-     22c:	03 1d 00 40 	movn	r3, r8, r7
-     230:	c4 64 03 62 	beq	r4, r6, 217
-     234:	07 60 03 63 	bne	r7, r0, 216
-     238:	03 08 00 10 	add	r3, r0, r2
-     23c:	c5 58 03 62 	beq	r5, r6, 214
-     240:	04 04 00 63 	bne	r4, r0, 1
-     244:	00 dc 02 62 	beq	r0, r0, 183
-
-LBB5_8:
-     248:	03 04 00 10 	add	r3, r0, r1
-     24c:	05 48 03 62 	beq	r5, r0, 210
-
-LBB5_9:
-     250:	83 14 00 b6 	sltu	r3, r4, r5
-     254:	04 04 00 10 	add	r4, r0, r1
-     258:	44 0c 00 40 	movn	r4, r2, r3
-     25c:	22 0c 00 40 	movn	r2, r1, r3
-     260:	61 fc ff 19 	li	r1, 65535
-     264:	01 fc 01 1d 	lui	r1, 127
-     268:	83 04 00 30 	and	r3, r4, r1
-     26c:	45 5c 00 29 	srli	r5, r2, 23
-     270:	a6 fc 03 31 	andi	r6, r5, 255
-     274:	85 5c 00 29 	srli	r5, r4, 23
-     278:	a5 fc 03 31 	andi	r5, r5, 255
-     27c:	05 94 00 63 	bne	r5, r0, 37
-     280:	65 04 00 29 	srli	r5, r3, 1
-     284:	65 14 00 32 	or	r5, r3, r5
-     288:	a7 08 00 29 	srli	r7, r5, 2
-     28c:	a5 1c 00 32 	or	r5, r5, r7
-     290:	a7 10 00 29 	srli	r7, r5, 4
-     294:	a5 1c 00 32 	or	r5, r5, r7
-     298:	a7 20 00 29 	srli	r7, r5, 8
-     29c:	a5 1c 00 32 	or	r5, r5, r7
-     2a0:	a7 40 00 29 	srli	r7, r5, 16
-     2a4:	a5 1c 00 32 	or	r5, r5, r7
-     2a8:	07 fc ff 11 	addi	r7, r0, -1
-     2ac:	a5 1c 00 34 	xor	r5, r5, r7
-     2b0:	27 54 55 19 	li	r7, 21845
-     2b4:	27 54 55 1d 	lui	r7, 21845
-     2b8:	a8 04 00 29 	srli	r8, r5, 1
-     2bc:	07 1d 00 30 	and	r7, r8, r7
-     2c0:	a5 1c 00 12 	sub	r5, r5, r7
-     2c4:	07 cc cc 19 	li	r7, 13107
-     2c8:	07 cc cc 1d 	lui	r7, 13107
-     2cc:	a8 1c 00 30 	and	r8, r5, r7
-     2d0:	a5 08 00 29 	srli	r5, r5, 2
-     2d4:	a5 1c 00 30 	and	r5, r5, r7
-     2d8:	05 15 00 10 	add	r5, r8, r5
-     2dc:	a7 10 00 29 	srli	r7, r5, 4
-     2e0:	a5 1c 00 10 	add	r5, r5, r7
-     2e4:	07 3c 3c 19 	li	r7, 3855
-     2e8:	07 3c 3c 1d 	lui	r7, 3855
-     2ec:	a5 1c 00 30 	and	r5, r5, r7
-     2f0:	07 04 04 19 	li	r7, 257
-     2f4:	07 04 04 1d 	lui	r7, 257
-     2f8:	a5 1c 00 51 	mul	r5, r5, r7
-     2fc:	a7 60 00 29 	srli	r7, r5, 24
-     300:	05 24 00 11 	addi	r5, r0, 9
-     304:	a5 1c 00 12 	sub	r5, r5, r7
-     308:	e7 60 00 11 	addi	r7, r7, 24
-     30c:	e7 7c 00 31 	andi	r7, r7, 31
-     310:	63 1c 00 20 	sll	r3, r3, r7
-
-LBB5_11:
-     314:	47 04 00 30 	and	r7, r2, r1
-     318:	06 94 00 63 	bne	r6, r0, 37
-     31c:	e6 04 00 29 	srli	r6, r7, 1
-     320:	e6 18 00 32 	or	r6, r7, r6
-     324:	c8 08 00 29 	srli	r8, r6, 2
-     328:	c6 20 00 32 	or	r6, r6, r8
-     32c:	c8 10 00 29 	srli	r8, r6, 4
-     330:	c6 20 00 32 	or	r6, r6, r8
-     334:	c8 20 00 29 	srli	r8, r6, 8
-     338:	c6 20 00 32 	or	r6, r6, r8
-     33c:	c8 40 00 29 	srli	r8, r6, 16
-     340:	c6 20 00 32 	or	r6, r6, r8
-     344:	08 fc ff 11 	addi	r8, r0, -1
-     348:	c6 20 00 34 	xor	r6, r6, r8
-     34c:	28 54 55 19 	li	r8, 21845
-     350:	28 54 55 1d 	lui	r8, 21845
-     354:	c9 04 00 29 	srli	r9, r6, 1
-     358:	28 21 00 30 	and	r8, r9, r8
-     35c:	c6 20 00 12 	sub	r6, r6, r8
-     360:	08 cc cc 19 	li	r8, 13107
-     364:	08 cc cc 1d 	lui	r8, 13107
-     368:	c9 20 00 30 	and	r9, r6, r8
-     36c:	c6 08 00 29 	srli	r6, r6, 2
-     370:	c6 20 00 30 	and	r6, r6, r8
-     374:	26 19 00 10 	add	r6, r9, r6
-     378:	c8 10 00 29 	srli	r8, r6, 4
-     37c:	c6 20 00 10 	add	r6, r6, r8
-     380:	08 3c 3c 19 	li	r8, 3855
-     384:	08 3c 3c 1d 	lui	r8, 3855
-     388:	c6 20 00 30 	and	r6, r6, r8
-     38c:	08 04 04 19 	li	r8, 257
-     390:	08 04 04 1d 	lui	r8, 257
-     394:	c6 20 00 51 	mul	r6, r6, r8
-     398:	c8 60 00 29 	srli	r8, r6, 24
-     39c:	06 24 00 11 	addi	r6, r0, 9
-     3a0:	c6 20 00 12 	sub	r6, r6, r8
-     3a4:	08 61 00 11 	addi	r8, r8, 24
-     3a8:	08 7d 00 31 	andi	r8, r8, 31
-     3ac:	e7 20 00 20 	sll	r7, r7, r8
-
-LBB5_13:
-     3b0:	82 08 00 34 	xor	r2, r4, r2
-     3b4:	e7 0c 00 21 	slli	r7, r7, 3
-     3b8:	08 00 00 19 	li	r8, 0
-     3bc:	08 00 10 1d 	lui	r8, 1024
-     3c0:	e9 20 00 32 	or	r9, r7, r8
-     3c4:	63 0c 00 21 	slli	r3, r3, 3
-     3c8:	07 24 00 10 	add	r7, r0, r9
-     3cc:	c5 34 00 62 	beq	r5, r6, 13
-     3d0:	a6 18 00 12 	sub	r6, r5, r6
-     3d4:	07 7c 00 11 	addi	r7, r0, 31
-     3d8:	ea 18 00 b6 	sltu	r10, r7, r6
-     3dc:	07 04 00 11 	addi	r7, r0, 1
-     3e0:	0a 20 00 63 	bne	r10, r0, 8
-     3e4:	c7 7c 00 31 	andi	r7, r6, 31
-     3e8:	27 1d 00 28 	srl	r7, r9, r7
-     3ec:	06 18 00 12 	sub	r6, r0, r6
-     3f0:	c6 7c 00 31 	andi	r6, r6, 31
-     3f4:	26 19 00 20 	sll	r6, r9, r6
-     3f8:	c6 00 00 34 	xor	r6, r6, r0
-     3fc:	06 18 00 b6 	sltu	r6, r0, r6
-     400:	c7 1c 00 32 	or	r7, r6, r7
-
-LBB5_16:
-     404:	68 20 00 32 	or	r8, r3, r8
-     408:	06 fc ff 11 	addi	r6, r0, -1
-     40c:	c2 08 00 b2 	slt	r2, r6, r2
-     410:	02 04 00 63 	bne	r2, r0, 1
-     414:	00 18 00 62 	beq	r0, r0, 6
-
-LBB5_20:
-     418:	e2 20 00 10 	add	r2, r7, r8
-     41c:	06 00 00 19 	li	r6, 0
-     420:	06 00 20 1d 	lui	r6, 2048
-     424:	46 18 00 30 	and	r6, r2, r6
-     428:	06 c4 00 62 	beq	r6, r0, 49
-     42c:	00 ac 00 62 	beq	r0, r0, 43
-
-LBB5_17:
-     430:	03 00 00 11 	addi	r3, r0, 0
-     434:	e8 60 01 62 	beq	r8, r7, 88
-     438:	02 1d 00 12 	sub	r2, r8, r7
-     43c:	63 fc ff 19 	li	r3, 65535
-     440:	03 fc 0f 1d 	lui	r3, 1023
-     444:	63 08 00 b6 	sltu	r3, r3, r2
-     448:	03 a4 00 63 	bne	r3, r0, 41
-     44c:	43 04 00 29 	srli	r3, r2, 1
-     450:	43 0c 00 32 	or	r3, r2, r3
-     454:	67 08 00 29 	srli	r7, r3, 2
-     458:	63 1c 00 32 	or	r3, r3, r7
-     45c:	67 10 00 29 	srli	r7, r3, 4
-     460:	63 1c 00 32 	or	r3, r3, r7
-     464:	67 20 00 29 	srli	r7, r3, 8
-     468:	63 1c 00 32 	or	r3, r3, r7
-     46c:	67 40 00 29 	srli	r7, r3, 16
-     470:	63 1c 00 32 	or	r3, r3, r7
-     474:	63 18 00 34 	xor	r3, r3, r6
-     478:	26 54 55 19 	li	r6, 21845
-     47c:	26 54 55 1d 	lui	r6, 21845
-     480:	67 04 00 29 	srli	r7, r3, 1
-     484:	e6 18 00 30 	and	r6, r7, r6
-     488:	63 18 00 12 	sub	r3, r3, r6
-     48c:	06 cc cc 19 	li	r6, 13107
-     490:	06 cc cc 1d 	lui	r6, 13107
-     494:	67 18 00 30 	and	r7, r3, r6
-     498:	63 08 00 29 	srli	r3, r3, 2
-     49c:	63 18 00 30 	and	r3, r3, r6
-     4a0:	e3 0c 00 10 	add	r3, r7, r3
-     4a4:	66 10 00 29 	srli	r6, r3, 4
-     4a8:	63 18 00 10 	add	r3, r3, r6
-     4ac:	06 3c 3c 19 	li	r6, 3855
-     4b0:	06 3c 3c 1d 	lui	r6, 3855
-     4b4:	63 18 00 30 	and	r3, r3, r6
-     4b8:	06 04 04 19 	li	r6, 257
-     4bc:	06 04 04 1d 	lui	r6, 257
-     4c0:	63 18 00 51 	mul	r3, r3, r6
-     4c4:	63 60 00 29 	srli	r3, r3, 24
-     4c8:	63 ec ff 11 	addi	r3, r3, -5
-     4cc:	a5 0c 00 12 	sub	r5, r5, r3
-     4d0:	63 7c 00 31 	andi	r3, r3, 31
-     4d4:	42 0c 00 20 	sll	r2, r2, r3
-     4d8:	00 14 00 62 	beq	r0, r0, 5
-
-LBB5_21:
-     4dc:	e3 0c 00 10 	add	r3, r7, r3
-     4e0:	63 04 00 31 	andi	r3, r3, 1
-     4e4:	42 04 00 29 	srli	r2, r2, 1
-     4e8:	42 0c 00 32 	or	r2, r2, r3
-     4ec:	a5 04 00 11 	addi	r5, r5, 1
-
-LBB5_22:
-     4f0:	03 00 00 19 	li	r3, 0
-     4f4:	43 00 00 1d 	lui	r3, 32768
-     4f8:	83 0c 00 30 	and	r3, r4, r3
-     4fc:	04 fc 03 11 	addi	r4, r0, 255
-     500:	a4 10 00 b2 	slt	r4, r5, r4
-     504:	04 10 00 63 	bne	r4, r0, 4
-     508:	01 00 00 19 	li	r1, 0
-     50c:	21 00 fe 1d 	lui	r1, 32640
-     510:	63 04 00 32 	or	r3, r3, r1
-     514:	00 80 00 62 	beq	r0, r0, 32
-
-LBB5_24:
-     518:	04 14 00 b2 	slt	r4, r0, r5
-     51c:	04 40 00 63 	bne	r4, r0, 16
-     520:	00 10 00 62 	beq	r0, r0, 4
-
-LBB5_6:
-     524:	03 08 00 10 	add	r3, r0, r2
-     528:	05 6c 00 63 	bne	r5, r0, 27
-     52c:	43 04 00 30 	and	r3, r2, r1
-     530:	00 64 00 62 	beq	r0, r0, 25
-
-LBB5_25:
-     534:	04 04 00 11 	addi	r4, r0, 1
-     538:	84 14 00 12 	sub	r4, r4, r5
-     53c:	85 7c 00 31 	andi	r5, r4, 31
-     540:	46 14 00 28 	srl	r6, r2, r5
-     544:	05 00 00 11 	addi	r5, r0, 0
-     548:	04 10 00 12 	sub	r4, r0, r4
-     54c:	84 7c 00 31 	andi	r4, r4, 31
-     550:	42 10 00 20 	sll	r2, r2, r4
-     554:	42 00 00 34 	xor	r2, r2, r0
-     558:	02 08 00 b6 	sltu	r2, r0, r2
-     55c:	42 18 00 32 	or	r2, r2, r6
-
-LBB5_26:
-     560:	44 0c 00 29 	srli	r4, r2, 3
-     564:	81 04 00 30 	and	r1, r4, r1
-     568:	a4 5c 00 21 	slli	r4, r5, 23
-     56c:	83 0c 00 32 	or	r3, r4, r3
-     570:	61 04 00 32 	or	r1, r3, r1
-     574:	42 1c 00 31 	andi	r2, r2, 7
-     578:	03 10 00 11 	addi	r3, r0, 4
-     57c:	64 08 00 b6 	sltu	r4, r3, r2
-     580:	21 10 00 10 	add	r1, r1, r4
-     584:	42 0c 00 34 	xor	r2, r2, r3
-     588:	23 04 00 31 	andi	r3, r1, 1
-     58c:	04 00 00 11 	addi	r4, r0, 0
-     590:	64 08 00 48 	movz	r4, r3, r2
-     594:	83 04 00 10 	add	r3, r4, r1
-
-LBB5_27:
-     598:	01 0c 00 10 	add	r1, r0, r3
-     59c:	ea 03 00 d4 	llwi	r10, sp[0]
-     5a0:	e9 07 00 d4 	llwi	r9, sp[1]
-     5a4:	ff 0b 00 11 	addi	sp, sp, 2
-     5a8:	00 00 00 92 	ret
+     51c:	42 00 00 a8 	lp	r2, 2
+     520:	03 00 00 a8 	lp	r3, 0
+     524:	24 00 00 a8 	lp	r4, 1
+     528:	05 00 00 a0 	lid	r5, 0
+     52c:	06 00 00 a1 	wgoff	r6, 0
+     530:	c1 14 00 10 	add	r1, r6, r5
+     534:	24 10 00 74 	lw	r4, r4[r1]
+     538:	23 0c 00 74 	lw	r3, r3[r1]
+     53c:	65 60 00 29 	srli	r5, r3, 24
+     540:	86 60 00 29 	srli	r6, r4, 24
+     544:	c5 14 00 10 	add	r5, r6, r5
+     548:	66 fc 03 31 	andi	r6, r3, 255
+     54c:	86 18 00 10 	add	r6, r4, r6
+     550:	21 08 00 21 	slli	r1, r1, 2
+     554:	26 08 00 79 	sb	r6, r2[r1]
+     558:	41 04 00 10 	add	r1, r2, r1
+     55c:	02 0c 00 11 	addi	r2, r0, 3
+     560:	45 04 00 79 	sb	r5, r1[r2]
+     564:	62 20 00 21 	slli	r2, r3, 8
+     568:	42 60 00 29 	srli	r2, r2, 24
+     56c:	85 40 00 29 	srli	r5, r4, 16
+     570:	a2 08 00 10 	add	r2, r5, r2
+     574:	05 08 00 11 	addi	r5, r0, 2
+     578:	a2 04 00 79 	sb	r2, r1[r5]
+     57c:	82 20 00 29 	srli	r2, r4, 8
+     580:	63 40 00 21 	slli	r3, r3, 16
+     584:	63 60 00 29 	srli	r3, r3, 24
+     588:	42 0c 00 10 	add	r2, r2, r3
+     58c:	03 04 00 11 	addi	r3, r0, 1
+     590:	62 04 00 79 	sb	r2, r1[r3]
+     594:	00 00 00 92 	ret
 
 add_float:
-     5ac:	49 00 00 a8 	lp	r9, 2
-     5b0:	22 00 00 a8 	lp	r2, 1
-     5b4:	03 00 00 a8 	lp	r3, 0
-     5b8:	04 00 00 a0 	lid	r4, 0
-     5bc:	05 00 00 a1 	wgoff	r5, 0
-     5c0:	aa 10 00 10 	add	r10, r5, r4
-     5c4:	41 0d 00 74 	lw	r1, r3[r10]
-     5c8:	42 09 00 74 	lw	r2, r2[r10]
-     5cc:	00 dc fb 64 	jsub	-265
-     5d0:	41 25 00 7c 	sw	r1, r9[r10]
-     5d4:	00 00 00 92 	ret
+     598:	49 00 00 a8 	lp	r9, 2
+     59c:	22 00 00 a8 	lp	r2, 1
+     5a0:	03 00 00 a8 	lp	r3, 0
+     5a4:	04 00 00 a0 	lid	r4, 0
+     5a8:	05 00 00 a1 	wgoff	r5, 0
+     5ac:	aa 10 00 10 	add	r10, r5, r4
+     5b0:	41 0d 00 74 	lw	r1, r3[r10]
+     5b4:	42 09 00 74 	lw	r2, r2[r10]
+     5b8:	00 48 fa 64 	jsub	-366
+     5bc:	41 25 00 7c 	sw	r1, r9[r10]
+     5c0:	00 00 00 92 	ret

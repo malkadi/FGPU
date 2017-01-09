@@ -2,94 +2,8 @@
 target datalayout = "E-m:m-p:32:32-i8:8:32-i16:16:32-i64:64-n32-S64"
 target triple = "mips-unknown-uknown"
 
-; Function Attrs: nounwind
-define void @vec_add(i32* nocapture readonly %in1, i32* nocapture readonly %in2, i32* nocapture %out) #0 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
-  %add.i = add nsw i32 %1, %0
-  %arrayidx = getelementptr inbounds i32, i32* %in1, i32 %add.i
-  %2 = load i32, i32* %arrayidx, align 4, !tbaa !24
-  %arrayidx1 = getelementptr inbounds i32, i32* %in2, i32 %add.i
-  %3 = load i32, i32* %arrayidx1, align 4, !tbaa !24
-  %add = add nsw i32 %3, %2
-  %arrayidx2 = getelementptr inbounds i32, i32* %out, i32 %add.i
-  store i32 %add, i32* %arrayidx2, align 4, !tbaa !24
-  ret void
-}
-
-; Function Attrs: nounwind
-define void @vec_add_half(i16* nocapture readonly %in1, i16* nocapture readonly %in2, i16* nocapture %out) #0 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
-  %add.i = add nsw i32 %1, %0
-  %arrayidx = getelementptr inbounds i16, i16* %in1, i32 %add.i
-  %2 = load i16, i16* %arrayidx, align 2, !tbaa !28
-  %conv.8 = zext i16 %2 to i32
-  %arrayidx1 = getelementptr inbounds i16, i16* %in2, i32 %add.i
-  %3 = load i16, i16* %arrayidx1, align 2, !tbaa !28
-  %conv2.9 = zext i16 %3 to i32
-  %add = add nuw nsw i32 %conv2.9, %conv.8
-  %conv3 = trunc i32 %add to i16
-  %arrayidx4 = getelementptr inbounds i16, i16* %out, i32 %add.i
-  store i16 %conv3, i16* %arrayidx4, align 2, !tbaa !28
-  ret void
-}
-
-; Function Attrs: nounwind
-define void @vec_add_half_improved(<2 x i16>* nocapture readonly %in1, <2 x i16>* nocapture readonly %in2, <2 x i16>* nocapture %out) #0 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
-  %add.i = add nsw i32 %1, %0
-  %arrayidx = getelementptr inbounds <2 x i16>, <2 x i16>* %in1, i32 %add.i
-  %2 = load <2 x i16>, <2 x i16>* %arrayidx, align 4, !tbaa !30
-  %arrayidx1 = getelementptr inbounds <2 x i16>, <2 x i16>* %in2, i32 %add.i
-  %3 = load <2 x i16>, <2 x i16>* %arrayidx1, align 4, !tbaa !30
-  %add = add <2 x i16> %3, %2
-  %arrayidx2 = getelementptr inbounds <2 x i16>, <2 x i16>* %out, i32 %add.i
-  store <2 x i16> %add, <2 x i16>* %arrayidx2, align 4, !tbaa !30
-  ret void
-}
-
-; Function Attrs: nounwind
-define void @vec_add_byte(i8* nocapture readonly %in1, i8* nocapture readonly %in2, i8* nocapture %out) #0 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
-  %add.i = add nsw i32 %1, %0
-  %arrayidx = getelementptr inbounds i8, i8* %in1, i32 %add.i
-  %2 = load i8, i8* %arrayidx, align 1, !tbaa !30
-  %conv.8 = zext i8 %2 to i32
-  %arrayidx1 = getelementptr inbounds i8, i8* %in2, i32 %add.i
-  %3 = load i8, i8* %arrayidx1, align 1, !tbaa !30
-  %conv2.9 = zext i8 %3 to i32
-  %add = add nuw nsw i32 %conv2.9, %conv.8
-  %conv3 = trunc i32 %add to i8
-  %arrayidx4 = getelementptr inbounds i8, i8* %out, i32 %add.i
-  store i8 %conv3, i8* %arrayidx4, align 1, !tbaa !30
-  ret void
-}
-
-; Function Attrs: nounwind
-define void @vec_add_byte_improved(<4 x i8>* nocapture readonly %in1, <4 x i8>* nocapture readonly %in2, <4 x i8>* nocapture %out) #0 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
-  %add.i = add nsw i32 %1, %0
-  %arrayidx = getelementptr inbounds <4 x i8>, <4 x i8>* %in1, i32 %add.i
-  %2 = load <4 x i8>, <4 x i8>* %arrayidx, align 4, !tbaa !30
-  %arrayidx1 = getelementptr inbounds <4 x i8>, <4 x i8>* %in2, i32 %add.i
-  %3 = load <4 x i8>, <4 x i8>* %arrayidx1, align 4, !tbaa !30
-  %add = add <4 x i8> %3, %2
-  %arrayidx2 = getelementptr inbounds <4 x i8>, <4 x i8>* %out, i32 %add.i
-  store <4 x i8> %add, <4 x i8>* %arrayidx2, align 4, !tbaa !30
-  ret void
-}
-
 ; Function Attrs: nounwind readnone
-define float @__addsf3(float %a, float %b) #1 {
+define float @__addsf3(float %a, float %b) #0 {
 entry:
   %0 = bitcast float %a to i32
   %1 = bitcast float %b to i32
@@ -286,7 +200,93 @@ cleanup.163:                                      ; preds = %if.then, %if.then.2
 }
 
 ; Function Attrs: nounwind
-define void @add_float(float* nocapture readonly %in1, float* nocapture readonly %in2, float* nocapture %out) #0 {
+define void @vec_add(i32* nocapture readonly %in1, i32* nocapture readonly %in2, i32* nocapture %out) #1 {
+entry:
+  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
+  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
+  %add.i = add nsw i32 %1, %0
+  %arrayidx = getelementptr inbounds i32, i32* %in1, i32 %add.i
+  %2 = load i32, i32* %arrayidx, align 4, !tbaa !24
+  %arrayidx1 = getelementptr inbounds i32, i32* %in2, i32 %add.i
+  %3 = load i32, i32* %arrayidx1, align 4, !tbaa !24
+  %add = add nsw i32 %3, %2
+  %arrayidx2 = getelementptr inbounds i32, i32* %out, i32 %add.i
+  store i32 %add, i32* %arrayidx2, align 4, !tbaa !24
+  ret void
+}
+
+; Function Attrs: nounwind
+define void @vec_add_half(i16* nocapture readonly %in1, i16* nocapture readonly %in2, i16* nocapture %out) #1 {
+entry:
+  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
+  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
+  %add.i = add nsw i32 %1, %0
+  %arrayidx = getelementptr inbounds i16, i16* %in1, i32 %add.i
+  %2 = load i16, i16* %arrayidx, align 2, !tbaa !28
+  %conv.8 = zext i16 %2 to i32
+  %arrayidx1 = getelementptr inbounds i16, i16* %in2, i32 %add.i
+  %3 = load i16, i16* %arrayidx1, align 2, !tbaa !28
+  %conv2.9 = zext i16 %3 to i32
+  %add = add nuw nsw i32 %conv2.9, %conv.8
+  %conv3 = trunc i32 %add to i16
+  %arrayidx4 = getelementptr inbounds i16, i16* %out, i32 %add.i
+  store i16 %conv3, i16* %arrayidx4, align 2, !tbaa !28
+  ret void
+}
+
+; Function Attrs: nounwind
+define void @vec_add_half_improved(<2 x i16>* nocapture readonly %in1, <2 x i16>* nocapture readonly %in2, <2 x i16>* nocapture %out) #1 {
+entry:
+  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
+  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
+  %add.i = add nsw i32 %1, %0
+  %arrayidx = getelementptr inbounds <2 x i16>, <2 x i16>* %in1, i32 %add.i
+  %2 = load <2 x i16>, <2 x i16>* %arrayidx, align 4, !tbaa !30
+  %arrayidx1 = getelementptr inbounds <2 x i16>, <2 x i16>* %in2, i32 %add.i
+  %3 = load <2 x i16>, <2 x i16>* %arrayidx1, align 4, !tbaa !30
+  %add = add <2 x i16> %3, %2
+  %arrayidx2 = getelementptr inbounds <2 x i16>, <2 x i16>* %out, i32 %add.i
+  store <2 x i16> %add, <2 x i16>* %arrayidx2, align 4, !tbaa !30
+  ret void
+}
+
+; Function Attrs: nounwind
+define void @vec_add_byte(i8* nocapture readonly %in1, i8* nocapture readonly %in2, i8* nocapture %out) #1 {
+entry:
+  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
+  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
+  %add.i = add nsw i32 %1, %0
+  %arrayidx = getelementptr inbounds i8, i8* %in1, i32 %add.i
+  %2 = load i8, i8* %arrayidx, align 1, !tbaa !30
+  %conv.8 = zext i8 %2 to i32
+  %arrayidx1 = getelementptr inbounds i8, i8* %in2, i32 %add.i
+  %3 = load i8, i8* %arrayidx1, align 1, !tbaa !30
+  %conv2.9 = zext i8 %3 to i32
+  %add = add nuw nsw i32 %conv2.9, %conv.8
+  %conv3 = trunc i32 %add to i8
+  %arrayidx4 = getelementptr inbounds i8, i8* %out, i32 %add.i
+  store i8 %conv3, i8* %arrayidx4, align 1, !tbaa !30
+  ret void
+}
+
+; Function Attrs: nounwind
+define void @vec_add_byte_improved(<4 x i8>* nocapture readonly %in1, <4 x i8>* nocapture readonly %in2, <4 x i8>* nocapture %out) #1 {
+entry:
+  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
+  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
+  %add.i = add nsw i32 %1, %0
+  %arrayidx = getelementptr inbounds <4 x i8>, <4 x i8>* %in1, i32 %add.i
+  %2 = load <4 x i8>, <4 x i8>* %arrayidx, align 4, !tbaa !30
+  %arrayidx1 = getelementptr inbounds <4 x i8>, <4 x i8>* %in2, i32 %add.i
+  %3 = load <4 x i8>, <4 x i8>* %arrayidx1, align 4, !tbaa !30
+  %add = add <4 x i8> %3, %2
+  %arrayidx2 = getelementptr inbounds <4 x i8>, <4 x i8>* %out, i32 %add.i
+  store <4 x i8> %add, <4 x i8>* %arrayidx2, align 4, !tbaa !30
+  ret void
+}
+
+; Function Attrs: nounwind
+define void @add_float(float* nocapture readonly %in1, float* nocapture readonly %in2, float* nocapture %out) #1 {
 entry:
   %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
   %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
@@ -304,8 +304,8 @@ entry:
 ; Function Attrs: nounwind readnone
 declare i32 @llvm.ctlz.i32(i32, i1) #2
 
-attributes #0 = { nounwind "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="mips32r2" "target-features"="+mips32r2" "unsafe-fp-math"="false" "use-soft-float"="false" }
-attributes #1 = { nounwind readnone "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="mips32r2" "target-features"="+mips32r2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #0 = { nounwind readnone "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="mips32r2" "target-features"="+mips32r2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="mips32r2" "target-features"="+mips32r2" "unsafe-fp-math"="false" "use-soft-float"="false" }
 attributes #2 = { nounwind readnone }
 attributes #3 = { nounwind }
 

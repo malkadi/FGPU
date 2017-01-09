@@ -17,7 +17,7 @@ int main()
   // use vector types:short2 instead of short OR char4 instead of char
   const bool use_vector_types = 1;
   // use hard floating point units
-  const bool use_hard_float = 0;
+  const bool use_hard_float = 1;
   // control power measurement
   const unsigned sync_power_measurement = 0;
   

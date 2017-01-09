@@ -1,10 +1,13 @@
 #include "kernel_descriptor.hpp"
 
 #define PRINT_ERRORS  1
-extern unsigned int *code; // binary storde in code.c as an array
+
+extern unsigned *code; // binary storde in code.c as an array
+extern unsigned *code_hard_float; // binary storde in code_hard_float.c as an array
+extern unsigned *code_fadd_fmul_hard_float; // binary storde in code_fadd_fmul_hard_float.c as an array
 
 template<typename T>
-kernel<T>::kernel(unsigned maxDim)
+kernel<T>::kernel(unsigned maxDim, bool hard_float, bool fdiv_support)
 {
   param1 = new T[maxDim*maxDim];
   target_fgpu = new T[maxDim*maxDim]();
@@ -18,28 +21,44 @@ kernel<T>::kernel(unsigned maxDim)
   // L_fgpu=  (float*)0x14000000;
   // L_arm=  (float*)0x15000000;
   lram_ptr = (unsigned*) FGPU_BASEADDR;
+  use_hard_float = hard_float;
+  use_fdiv_support = fdiv_support;
 }
 template<typename T>
 kernel<T>::~kernel() 
 {
-  // delete[] param1;
-  // delete[] target_arm;
-  // delete[] target_fgpu;
-  // delete[] L_fgpu;
-  // delete[] L_arm;
+  delete[] param1;
+  delete[] target_arm;
+  delete[] target_fgpu;
+  delete[] L_fgpu;
+  delete[] L_arm;
 }
 template<typename T>
 void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
   unsigned int size = LUDECOMPOSITION_LEN;
-  if (typeid(T) == typeid(float))
-    start_addr = LUDECOMPOSITION_PASS_POS;
+  unsigned *code_ptr = code;
+  if (typeid(T) == typeid(float)) {
+    if(use_hard_float) {
+      if(use_fdiv_support) {
+        start_addr = LUDECOMPOSITION_PASS_HARD_FLOAT_POS;
+        code_ptr = code_hard_float;
+        size = LUDECOMPOSITION_HARD_FLOAT_LEN;
+      } else {
+        start_addr = LUDECOMPOSITION_PASS_FADD_FMUL_HARD_FLOAT_POS;
+        code_ptr = code_fadd_fmul_hard_float;
+        size = LUDECOMPOSITION_FADD_FMUL_HARD_FLOAT_LEN;
+      }
+    } else {
+      start_addr = LUDECOMPOSITION_PASS_POS;
+    }
+  }
   else
     assert(0 && "unsupported type");
-  unsigned i = 0;
-  for(; i < size; i++){
-    cram_ptr[i] = code[i];
+
+  for(unsigned i = 0; i < size; i++){
+    cram_ptr[i] = code_ptr[i];
   }
 }
 template<typename T>
@@ -365,7 +384,16 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
 template<typename T>
 void kernel<T>::print_name()
 {
-  xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is LU Decomposition\n\r" ANSI_COLOR_RESET);
+  xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is LU Decomposition");
+  if(use_hard_float) {
+    xil_printf(" (hard fadd&fmul, ");
+    if(use_fdiv_support)
+      xil_printf("hard div)\n\r" ANSI_COLOR_RESET);
+    else
+      xil_printf("soft div)\n\r" ANSI_COLOR_RESET);
+  }
+  else
+    xil_printf(" (soft)\n\r" ANSI_COLOR_RESET);
 }
 
 template class kernel<float>;

@@ -272,10 +272,7 @@ void kernel<T>::update_and_download()
 {
   stageIndx++;
   lram_ptr[17] = stageIndx;
-  printf("stageIndx = %d\n", stageIndx);
-  Xil_DCacheFlushRange((unsigned)lram_ptr, 32*4);
-  for(unsigned i = 0; i < 32; i++)
-    printf("lram[%d] = %x\n", i, lram_ptr[i]);
+  // Xil_DCacheFlushRange((unsigned)lram_ptr, 32*4);
 }
 template<typename T>
 unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
@@ -316,7 +313,6 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
       REG_WRITE(START_REG_ADDR, 1);
       while(REG_READ(STATUS_REG_ADDR)==0);
       update_and_download();
-      printf("here\n\r");
       // Xil_DCacheInvalidate();
       // for(unsigned i = 0; i < problemSize; i++) {
       //   printf("target_fgpu[%d]= %F + %Fj \n\r", i, creal(target_fgpu[i]), cimag(target_fgpu[i]));
