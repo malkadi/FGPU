@@ -8,6 +8,8 @@
 #ifndef KERNEL_DESCRIPTOR_H_
 #define KERNEL_DESCRIPTOR_H_
 
+#include "code.h"
+#include "code_hard_float.h"
 #include "aux_functions.hpp"
 #include <typeinfo>
 
@@ -35,11 +37,11 @@ class kernel{
   bool compute_without_atomics(unsigned n_runs, unsigned rfactor, unsigned &exec_time, bool check_results);
   bool update_reduce_factor_and_download(unsigned rfactor, bool swap_arrays);
   bool update_atomic_reduce_factor_and_download(unsigned rfactor);
-  bool use_atomics;
+  bool use_atomics, use_hard_float;
   //minimum size of an array to reduce. If problemSize <= minReduceSize; only one work-item will reduce the input array
   unsigned minReduceSize; 
 public:
-  kernel(unsigned max_size, bool atomics);
+  kernel(unsigned max_size, bool atomics, bool hard_float);
   ~kernel();
   void download_code();
   void download_descriptor();

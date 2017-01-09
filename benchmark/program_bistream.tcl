@@ -28,9 +28,14 @@ switch $benchmark {
     # set bitstream ../bitstreams/V2_8CUs_6Stations.bit
     # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_LMEM.bit
     # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_fdiv.bit
+    # set bitstream ../bitstreams/V2_8CUs.bit
+    # set bitstream ../bitstreams/V2_8CUs_2AXI.bit
+    # set bitstream ../bitstreams/V2_8CUs_2CACHE_WORDS.bit
+    # set bitstream ../bitstreams/V2_8CUs_6Stations.bit
+    set bitstream ../bitstreams/V2_8CUs_fadd_fmul_2AXI.bit
+    # set bitstream ../bitstreams/V2_8CUs_fadd_fmul.bit
     # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_2_CACHE_WORDS.bit
-    # set bitsrean ../bitstreams/V2_8CUs.bit
-    set bitstream ../bitstreams/V2_8CUs_2CACHE_WORDS.bit
+    # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_2AXI_2CACHE_WORDS.bit
   }
   "vec_mul" {
     set bitstream ../bitstreams/V2_8CUs_fadd_fmul_2AXI.bit
@@ -40,12 +45,12 @@ switch $benchmark {
   "parallel_selection" -
   "sum" 
   {
-    set bitstream ../bitstreams/V2_8CUs_fadd_fslt_2AXI.bit
+    # set bitstream ../bitstreams/V2_8CUs_fadd_fslt_2AXI.bit
     # set bitstream ../bitstreams/V2_8CUs_fadd_fslt.bit
     # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_2_CACHE_WORDS.bit
     # set bitstream ../bitstreams/V2_8CUs.bit
     # set bitstream ../bitstreams/V2_8CUs_2AXI.bit
-    # set bitstream ../bitstreams/V2_8CUs_4_CACHE_WORDS.bit
+    set bitstream ../bitstreams/V2_8CUs_4_CACHE_WORDS.bit
     # set bitstream ../bitstreams/V2_8CUs_4AXI_2TAGM.bit
     # set bitstream ../bitstreams/V2_8CUs_6Stations.bit
   }

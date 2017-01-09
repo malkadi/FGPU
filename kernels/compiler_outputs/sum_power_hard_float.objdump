@@ -1,0 +1,54 @@
+
+compiler_outputs/sum_power_hard_float.bin:	file format ELF32-fgpu
+
+Disassembly of section .text:
+sum_power_hard_float:
+       0:	43 00 00 a8 	lp	r3, 2
+       4:	22 00 00 a8 	lp	r2, 1
+       8:	64 00 00 a8 	lp	r4, 3
+       c:	06 00 00 a8 	lp	r6, 0
+      10:	05 00 00 a0 	lid	r5, 0
+      14:	07 00 00 a1 	wgoff	r7, 0
+      18:	e5 14 00 10 	add	r5, r7, r5
+      1c:	a1 08 00 21 	slli	r1, r5, 2
+      20:	c7 04 00 10 	add	r7, r6, r1
+      24:	06 00 00 19 	li	r6, 0
+      28:	06 00 00 1d 	lui	r6, 0
+      2c:	08 00 00 a2 	size	r8, 0
+      30:	01 09 00 21 	slli	r1, r8, 2
+
+LBB0_1:
+      34:	e8 04 00 10 	add	r8, r7, r1
+      38:	07 1c 00 74 	lw	r7, r7[r0]
+      3c:	e7 10 00 c8 	fsub	r7, r7, r4
+      40:	e7 1c 00 c1 	fmul	r7, r7, r7
+      44:	c6 1c 00 c0 	fadd	r6, r6, r7
+      48:	63 fc ff 11 	addi	r3, r3, -1
+      4c:	07 20 00 10 	add	r7, r0, r8
+      50:	03 e0 ff 63 	bne	r3, r0, -8
+      54:	a6 08 00 7c 	sw	r6, r2[r5]
+      58:	00 00 00 92 	ret
+
+sum_hard_float:
+      5c:	43 00 00 a8 	lp	r3, 2
+      60:	22 00 00 a8 	lp	r2, 1
+      64:	05 00 00 a8 	lp	r5, 0
+      68:	04 00 00 a0 	lid	r4, 0
+      6c:	06 00 00 a1 	wgoff	r6, 0
+      70:	c4 10 00 10 	add	r4, r6, r4
+      74:	81 08 00 21 	slli	r1, r4, 2
+      78:	a6 04 00 10 	add	r6, r5, r1
+      7c:	05 00 00 19 	li	r5, 0
+      80:	05 00 00 1d 	lui	r5, 0
+      84:	07 00 00 a2 	size	r7, 0
+      88:	e1 08 00 21 	slli	r1, r7, 2
+
+LBB1_1:
+      8c:	c7 04 00 10 	add	r7, r6, r1
+      90:	06 18 00 74 	lw	r6, r6[r0]
+      94:	a5 18 00 c0 	fadd	r5, r5, r6
+      98:	63 fc ff 11 	addi	r3, r3, -1
+      9c:	06 1c 00 10 	add	r6, r0, r7
+      a0:	03 e8 ff 63 	bne	r3, r0, -6
+      a4:	85 08 00 7c 	sw	r5, r2[r4]
+      a8:	00 00 00 92 	ret

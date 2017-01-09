@@ -1,11 +1,13 @@
 #include "kernel_descriptor.hpp"
 using namespace std;
-extern unsigned int *code; // binary storde in code.c as an array
 
-#define PRINT_ERRORS    1
+extern unsigned *code; // binary storde in code.c as an array
+extern unsigned *code_hard_float; // binary storde in code_hard_float.c as an array
+
+#define PRINT_ERRORS    0
 
 template<typename T>
-kernel<T>::kernel(unsigned max_size, bool atomics)
+kernel<T>::kernel(unsigned max_size, bool atomics, bool hard_float)
 {
   // The FGPU read wrong data from the dynamically allocated arrays
   // param1 = (T*)new int [max_size];
@@ -21,6 +23,7 @@ kernel<T>::kernel(unsigned max_size, bool atomics)
   minReduceSize = 32;
   lram_ptr = (unsigned*)FGPU_BASEADDR;
   mean = 100;
+  use_hard_float = hard_float;
 }
 template<typename T>
 kernel<T>::~kernel() 
@@ -34,8 +37,15 @@ void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
   unsigned int size = SUM_POWER_LEN;
+  unsigned *code_ptr = code;
   if(typeid(T) == typeid(float)) {
-    start_addr = SUM_POWER_FLOAT_POS;
+    if(use_hard_float) {
+      start_addr = SUM_POWER_HARD_FLOAT_POS;
+      code_ptr = code_hard_float;
+      size = SUM_POWER_HARD_FLOAT_LEN;
+    } else {
+      start_addr = SUM_POWER_FLOAT_POS;
+    }
   }else if(use_atomics) {
     if (typeid(T) == typeid(int))
       start_addr = SUM_POWER_ATOMIC_POS;
@@ -48,9 +58,8 @@ void kernel<T>::download_code()
       assert(0 && "unsupported type");
   }
 
-  unsigned i = 0;
-  for(; i < size; i++){
-    cram_ptr[i] = code[i];
+  for(unsigned i = 0; i < size; i++){
+    cram_ptr[i] = code_ptr[i];
   }
   Xil_DCacheFlush();
 }
@@ -259,10 +268,17 @@ bool kernel<T>::update_reduce_factor_and_download(unsigned rfactor, bool swap_ar
     reduce_factor = rfactor;
   }
   if(typeid(T) == typeid(float)) {
-    if(swap_arrays)
-      start_addr = SUM_FLOAT_POS;
-    else
-      start_addr = SUM_POWER_FLOAT_POS;
+    if(use_hard_float) {
+      if(swap_arrays)
+        start_addr = SUM_HARD_FLOAT_POS;
+      else
+        start_addr = SUM_POWER_HARD_FLOAT_POS;
+    } else {
+      if(swap_arrays)
+        start_addr = SUM_FLOAT_POS;
+      else
+        start_addr = SUM_POWER_FLOAT_POS;
+    }
   } else {
     if(swap_arrays)
       start_addr = SUM_POS;
@@ -405,7 +421,10 @@ void kernel<T>::print_name()
 {
   if(typeid(T) == typeid(float)) {
     xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is sum power float");
-    xil_printf(ANSI_COLOR_RESET"\n\r");
+    if(use_hard_float)
+      xil_printf(" (hard)\n\r" ANSI_COLOR_RESET);
+    else
+      xil_printf(" (soft)\n\r" ANSI_COLOR_RESET);
     return;
   }
   if( typeid(T) == typeid(int) )
