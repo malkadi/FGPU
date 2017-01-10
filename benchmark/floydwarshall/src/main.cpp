@@ -10,7 +10,9 @@ int main()
   // The kernel will be executed for problem sizes of 8*8, 16*16, ... 
   const unsigned test_vec_len = 1;
   // Executions & time measurements will be repeated nruns times 
-  const unsigned nruns = 2;
+  const unsigned nruns = 15;
+  // use hard floating point units
+  const bool use_hard_float = 1;
   // control power measurement
   const unsigned sync_power_measurement = 1;
   
@@ -28,7 +30,7 @@ int main()
   Xil_ICacheEnable();
   Xil_DCacheEnable();
   // create kernel
-  kernel<TYPE> floydwarshall_kernel(sqrt(MAX_PROBLEM_SIZE));
+  kernel<TYPE> floydwarshall_kernel(sqrt(MAX_PROBLEM_SIZE), use_hard_float);
   power_measure power;
   if( sync_power_measurement ) {
     power.set_idle();

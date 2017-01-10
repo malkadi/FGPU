@@ -46,12 +46,12 @@ void kernel<T>::download_code()
         code_ptr = code_hard_float;
         size = LUDECOMPOSITION_HARD_FLOAT_LEN;
       } else {
-        start_addr = LUDECOMPOSITION_PASS_FADD_FMUL_HARD_FLOAT_POS;
+        start_addr = LUDECOMPOSITION_L_PASS_FADD_FMUL_HARD_FLOAT_POS;
         code_ptr = code_fadd_fmul_hard_float;
         size = LUDECOMPOSITION_FADD_FMUL_HARD_FLOAT_LEN;
       }
     } else {
-      start_addr = LUDECOMPOSITION_PASS_POS;
+      start_addr = LUDECOMPOSITION_L_PASS_POS;
     }
   }
   else
@@ -158,7 +158,7 @@ void kernel<T>::initialize_memory()
         tmpf = rand() >> 24;
       param_ptr[i*size0 + j] = tmpf;
     }
-  Xil_DCacheFlush(); // flush data to global memory
+  Xil_DCacheFlush(); 
 }
 void LUDecomposition(unsigned n, float *mat, float *L)
 {
@@ -171,22 +171,23 @@ void LUDecomposition(unsigned n, float *mat, float *L)
         mat[i*n+j] -= L[i*n + k]*mat[k*n + j];
       }
     }
+    // break;
   }
-  /* printf("LUDecomposition function result\n"); */
-  /* printf("U:\n"); */
-  /* for(i = 0; i < n; i++) { */
-  /*   for(j = 0; j < n; j++) { */
-  /*     printf("%20f", mat[i*n+j]); */
-  /*   } */
-  /*   printf("\n"); */
-  /* } */
-  /* printf("L:\n"); */
-  /* for(i = 0; i < n; i++) { */
-  /*   for(j = 0; j < n; j++) { */
-  /*     printf("%20f", L[i*n+j]); */
-  /*   } */
-  /*   printf("\n"); */
-  /* } */
+  // printf("LUDecomposition function result\n");
+  // printf("U:\n");
+  // for(i = 0; i < n; i++) {
+  //   for(j = 0; j < n; j++) {
+  //     printf("%9.2f", mat[i*n+j]);
+  //   }
+  //   printf("\n");
+  // }
+  // printf("L:\n");
+  // for(i = 0; i < n; i++) {
+  //   for(j = 0; j < n; j++) {
+  //     printf("%9.2f", L[i*n+j]);
+  //   }
+  //   printf("\n");
+  // }
 }
 template<typename T>
 unsigned kernel<T>::compute_on_ARM(unsigned int n_runs)
@@ -302,7 +303,7 @@ void kernel<T>::update_and_download()
     lram_ptr[9] = n_wg1-1;
     lram_ptr[19] = passIndx;
   }
-  Xil_DCacheFlushRange((unsigned)lram_ptr, 32*4);
+  // Xil_DCacheFlushRange((unsigned) lram_ptr, 32*4);
 }
 template<typename T>
 unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
@@ -332,37 +333,65 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
     //   printf("\n");
     // }
     XTime_GetTime(&tStart);
+
+    if(use_hard_float && use_fdiv_support) {
+      do
+      {
+        REG_WRITE(START_REG_ADDR, 1);
+        while(REG_READ(STATUS_REG_ADDR)==0);
+        update_and_download();
+      }while(passIndx != 0);
+    }
+    else {
+      do
+      {
+        nDim = 1;
+        lram_ptr[7] = ((nDim-1) << 30) | (wg_size2 << 20) | (wg_size1 << 10) | (wg_size0);
+        REG_WRITE(START_REG_ADDR, 1);
+        while(REG_READ(STATUS_REG_ADDR)==0);
+        if(use_hard_float && !use_fdiv_support)
+          start_addr = LUDECOMPOSITION_U_PASS_FMUL_FADD_HARD_FLOAT_POS;
+        else
+          start_addr = LUDECOMPOSITION_U_PASS_POS;
+        lram_ptr[0] = ((nWF_WG-1) << 28) | (0 << 14) | (start_addr);
+        nDim = 2;
+        lram_ptr[7] = ((nDim-1) << 30) |  (wg_size1 << 10) | (wg_size0);
+        REG_WRITE(START_REG_ADDR, 1);
+        while(REG_READ(STATUS_REG_ADDR)==0);
+        if(use_hard_float && !use_fdiv_support)
+          start_addr = LUDECOMPOSITION_L_PASS_FADD_FMUL_HARD_FLOAT_POS;
+        else
+          start_addr = LUDECOMPOSITION_L_PASS_POS;
+        lram_ptr[0] = ((nWF_WG-1) << 28) | (0 << 14) | (start_addr);
+        update_and_download();
+        // Xil_DCacheInvalidate();
+        // for(unsigned i = 0; i < problemSize; i++) {
+        //   printf("target_fgpu[%d]= %F + %Fj \n\r", i, creal(target_fgpu[i]), cimag(target_fgpu[i]));
+        // }
+        // printf("\n");
+        // REG_WRITE(INITIATE_REG_ADDR, 0); // do not initiate FGPU for next iterations
+        // if(stageIndx == nStages-1 && passIndx == nStages-1){
+        //   REG_WRITE(CLEAN_CACHE_REG_ADDR, 1); // clean cache for the last iteration
+        // }
+        // Xil_DCacheFlush();
+        // Xil_DCacheInvalidate();
+        // printf("target_fgpu = \n");
+        // for(unsigned i = 0; i < size0_buffer; i++) {
+        //   for(unsigned j = 0; j < size0_buffer; j++)
+        //     printf("%9.2f ", target_fgpu[i*size0_buffer+j]);
+        //   printf("\n");
+        // }
+        // printf("L_fgpu = \n");
+        // for(unsigned i = 0; i < size0_buffer; i++) {
+        //   for(unsigned j = 0; j < size0_buffer; j++)
+        //     printf("%9.2F ", L_fgpu[i*size0_buffer+j]);
+        //   printf("\n");
+        // }
+        // printf("passIndx = %d\n", passIndx);
+        // break;
+      }while(passIndx != 0);
+    }
     
-    do
-    {
-      REG_WRITE(START_REG_ADDR, 1);
-      while(REG_READ(STATUS_REG_ADDR)==0);
-      update_and_download();
-      // Xil_DCacheInvalidate();
-      // for(unsigned i = 0; i < problemSize; i++) {
-      //   printf("target_fgpu[%d]= %F + %Fj \n\r", i, creal(target_fgpu[i]), cimag(target_fgpu[i]));
-      // }
-      // printf("\n");
-      // REG_WRITE(INITIATE_REG_ADDR, 0); // do not initiate FGPU for next iterations
-      // if(stageIndx == nStages-1 && passIndx == nStages-1){
-      //   REG_WRITE(CLEAN_CACHE_REG_ADDR, 1); // clean cache for the last iteration
-      // }
-      // Xil_DCacheInvalidate();
-      // printf("target_fgpu = \n");
-      // for(unsigned i = 0; i < size0_buffer; i++) {
-      //   for(unsigned j = 0; j < size0_buffer; j++)
-      //     printf("%9.2f ", target_fgpu[i*size0_buffer+j]);
-      //   printf("\n");
-      // }
-      // printf("L_fgpu = \n");
-      // for(unsigned i = 0; i < size0_buffer; i++) {
-      //   for(unsigned j = 0; j < size0_buffer; j++)
-      //     printf("%9.2F ", L_fgpu[i*size0_buffer+j]);
-      //   printf("\n");
-      // }
-      // printf("passIndx = %d\n", passIndx);
-      // break;
-    }while(passIndx != 0);
     
     XTime_GetTime(&tEnd);
     exec_time += elapsed_time_us(tStart, tEnd);

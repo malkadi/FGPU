@@ -1,6 +1,6 @@
 #include "kernel_descriptor.hpp"
 
-#define PRINT_ERRORS    1
+#define PRINT_ERRORS    0
 extern unsigned *code; // binary storde in code.c as an array
 extern unsigned *code_hard_float; // binary storde in code_hard_float.c as an array
 

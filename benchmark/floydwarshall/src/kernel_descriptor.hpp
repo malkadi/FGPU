@@ -8,6 +8,8 @@
 #ifndef KERNEL_DESCRIPTOR_H_
 #define KERNEL_DESCRIPTOR_H_
 
+#include "code.h"
+#include "code_hard_float.h"
 #include "aux_functions.hpp"
 #include <typeinfo>
 
@@ -30,8 +32,9 @@ class kernel{
   T *param1, *target_arm, *target_fgpu;
   void compute_descriptor();
   void update_and_download();
+  bool use_hard_float;
 public:
-  kernel(unsigned max_size);
+  kernel(unsigned max_size, bool hard_float);
   ~kernel();
   void download_code();
   void download_descriptor();

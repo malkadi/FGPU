@@ -14,7 +14,7 @@ int main()
   // use hard floating point units
   const bool use_hard_float = 1;
   // use hard floating point units (mul & add only, no division)
-  const bool fdiv_hard_support = 1;
+  const bool fdiv_hard_support = 0;
   // control power measurement
   const unsigned sync_power_measurement = 0;
   

@@ -11,13 +11,13 @@ switch $benchmark {
   }
   "vec_add" -
   "copy" {
-    set bitstream ../bitstreams/V2_8CUs_4_CACHE_WORDS.bit
+    set bitstream ../bitstreams/V2_8CUs_fadd_2AXI.bit
     # set bitstream ../bitstreams/V2_8CUs.bit
   }
   "div" {
     # set bitstream ../bitstreams/V2_4CUs_fdiv_max.bit
-    # set bitstream ../bitstreams/V2_8CUs_fdiv_225MHz.bit
-    set bitstream ../bitstreams/V21_8CUs_fdiv_2AXI.bit
+    set bitstream ../bitstreams/V2_8CUs_fdiv_2AXI.bit
+    # set bitstream ../bitstreams/V2_8CUs.bit
     # set bitstream ../bitstreams/V2_8CUs_fdiv_2AXI_215MHz.bit
   }
   "LUdecomposition" -
@@ -26,13 +26,16 @@ switch $benchmark {
   "sum_power" -
   "sum_power_another" {
     # set bitstream ../bitstreams/V2_8CUs_6Stations.bit
-    # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_LMEM.bit
+    # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_LMEM_4_CACHE_WORDS.bit
+    # set bitstream ../bitstreams/V2_4CUs_fadd_fmul_fdiv_max.bit
     # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_fdiv.bit
     # set bitstream ../bitstreams/V2_8CUs.bit
-    # set bitstream ../bitstreams/V2_8CUs_2AXI.bit
+    set bitstream ../bitstreams/V2_8CUs_fadd_fslt_2AXI_4CACHE_WORDS.bit
+    # set bitstream ../bitstreams/V2_8CUs_2AXI.bitA
+    # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_fdiv.bit
     # set bitstream ../bitstreams/V2_8CUs_2CACHE_WORDS.bit
     # set bitstream ../bitstreams/V2_8CUs_6Stations.bit
-    set bitstream ../bitstreams/V2_8CUs_fadd_fmul_2AXI.bit
+    # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_2AXI_2CACHE_WORDS.bit
     # set bitstream ../bitstreams/V2_8CUs_fadd_fmul.bit
     # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_2_CACHE_WORDS.bit
     # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_2AXI_2CACHE_WORDS.bit
@@ -47,10 +50,10 @@ switch $benchmark {
   {
     # set bitstream ../bitstreams/V2_8CUs_fadd_fslt_2AXI.bit
     # set bitstream ../bitstreams/V2_8CUs_fadd_fslt.bit
-    # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_2_CACHE_WORDS.bit
-    # set bitstream ../bitstreams/V2_8CUs.bit
+    set bitstream ../bitstreams/V2_8CUs_fslt_2AXI.bit
+    # set bitstream ../bitstreams/V2_8CUs_2AXI_2CACHE_WORDS.bit
     # set bitstream ../bitstreams/V2_8CUs_2AXI.bit
-    set bitstream ../bitstreams/V2_8CUs_4_CACHE_WORDS.bit
+    # set bitstream ../bitstreams/V2_8CUs_fslt_2AXI.bit
     # set bitstream ../bitstreams/V2_8CUs_4AXI_2TAGM.bit
     # set bitstream ../bitstreams/V2_8CUs_6Stations.bit
   }
@@ -60,8 +63,9 @@ switch $benchmark {
   "matrix_multiply" -
   "median" 
   {
-    # set bitstream ../bitstreams/V2_8CUs_SubInteger_2K_LMEM_240MHz.bit
-    set bitstream ../bitstreams/V2_8CUs_fadd_fmul_4_CACHE_WORDS.bit
+    # set bitstream ../bitstreams/V2_4CUs_8Stations_2AXI_2TAGM.bit
+    set bitstream ../bitstreams/V2_4CUs_8Stations_2AXI_2CACHE_W.bit
+    # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_2AXI_4CACHE_WORDS.bit
   }
   "power_measurement" {
   }

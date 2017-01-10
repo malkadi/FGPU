@@ -1,10 +1,12 @@
 #include "kernel_descriptor.hpp"
 
-#define PRINT_ERRORS  1
-extern unsigned int *code; // binary storde in code.c as an array
+#define PRINT_ERRORS  0
+
+extern unsigned *code; // binary storde in code.c as an array
+extern unsigned *code_hard_float; // binary storde in code_hard_float.c as an array
 
 template<typename T>
-kernel<T>::kernel(unsigned maxDim)
+kernel<T>::kernel(unsigned maxDim, bool hard_float)
 {
   param1 = new T[maxDim*maxDim];
   target_fgpu = new T[maxDim*maxDim];
@@ -13,6 +15,7 @@ kernel<T>::kernel(unsigned maxDim)
   // target_fgpu=  (float*)0x18000000;
   // target_arm=  (float*)0x1C000000;
   lram_ptr = (unsigned*) FGPU_BASEADDR;
+  use_hard_float = hard_float;
 }
 template<typename T>
 kernel<T>::~kernel() 
@@ -26,13 +29,20 @@ void kernel<T>::download_code()
 {
   volatile unsigned *cram_ptr = (unsigned *)(FGPU_BASEADDR+ 0x4000);
   unsigned int size = FLOYDWARSHALL_LEN;
-  if (typeid(T) == typeid(float))
-    start_addr = FLOYDWARSHALLPASS_POS;
+  unsigned *code_ptr = code;
+  if (typeid(T) == typeid(float)) {
+    if(use_hard_float) {
+      start_addr = FLOYDWARSHALLPASS_HARD_FLOAT_POS;
+      size = FLOYDWARSHALL_HARD_FLOAT_LEN;
+      code_ptr = code_hard_float;
+    } else {
+      start_addr = FLOYDWARSHALLPASS_POS;
+    }
+  }
   else
     assert(0 && "unsupported type");
-  unsigned i = 0;
-  for(; i < size; i++){
-    cram_ptr[i] = code[i];
+  for(unsigned i = 0; i < size; i++){
+    cram_ptr[i] = code_ptr[i];
   }
 }
 template<typename T>
@@ -291,7 +301,11 @@ unsigned kernel<T>::compute_on_FGPU(unsigned n_runs, bool check_results)
 template<typename T>
 void kernel<T>::print_name()
 {
-  xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is Floyd Warshall\n\r" ANSI_COLOR_RESET);
+  xil_printf("\n\r" ANSI_COLOR_YELLOW "Kernel is Floyd Warshall");
+  if(use_hard_float)
+    xil_printf(" (hard)\n\r" ANSI_COLOR_RESET);
+  else
+    xil_printf(" (soft)\n\r" ANSI_COLOR_RESET);
 }
 
 template class kernel<float>;
