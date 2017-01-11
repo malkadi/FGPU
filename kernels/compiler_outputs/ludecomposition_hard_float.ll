@@ -20,42 +20,42 @@ entry:
   %arrayidx4 = getelementptr inbounds float, float* %mat, i32 %add3
   %5 = load float, float* %arrayidx4, align 4, !tbaa !9
   %div = fdiv float %4, %5, !fpmath !13
+  %add7 = add i32 %add.i.67, %mul
+  %arrayidx8 = getelementptr inbounds float, float* %mat, i32 %add7
+  %6 = load float, float* %arrayidx8, align 4, !tbaa !9
+  %add10 = add i32 %add.i.67, %mul2
+  %arrayidx11 = getelementptr inbounds float, float* %mat, i32 %add10
+  %7 = load float, float* %arrayidx11, align 4, !tbaa !9
+  %neg = fsub float -0.000000e+00, %div
+  %8 = tail call float @llvm.fmuladd.f32(float %neg, float %7, float %6)
   %cmp = icmp ult i32 %add.i, %size
   br i1 %cmp, label %if.then, label %if.end.31
 
 if.then:                                          ; preds = %entry
-  %cmp5 = icmp eq i32 %add.i.67, %k
-  br i1 %cmp5, label %if.then.6, label %if.else
+  %cmp13 = icmp eq i32 %add.i.67, %k
+  br i1 %cmp13, label %if.then.14, label %if.else
 
-if.then.6:                                        ; preds = %if.then
-  %arrayidx9 = getelementptr inbounds float, float* %L, i32 %add
-  store float %div, float* %arrayidx9, align 4, !tbaa !9
-  %add10 = add i32 %k, 1
-  %cmp11 = icmp eq i32 %add.i, %add10
-  br i1 %cmp11, label %if.then.12, label %if.end.31
+if.then.14:                                       ; preds = %if.then
+  %arrayidx17 = getelementptr inbounds float, float* %L, i32 %add
+  store float %div, float* %arrayidx17, align 4, !tbaa !9
+  %add18 = add i32 %k, 1
+  %cmp19 = icmp eq i32 %add.i, %add18
+  br i1 %cmp19, label %if.then.20, label %if.end.31
 
-if.then.12:                                       ; preds = %if.then.6
-  %arrayidx15 = getelementptr inbounds float, float* %L, i32 %add3
-  store float 1.000000e+00, float* %arrayidx15, align 4, !tbaa !9
+if.then.20:                                       ; preds = %if.then.14
+  %arrayidx23 = getelementptr inbounds float, float* %L, i32 %add3
+  store float 1.000000e+00, float* %arrayidx23, align 4, !tbaa !9
   br label %if.end.31
 
 if.else:                                          ; preds = %if.then
-  %cmp16 = icmp ult i32 %add.i.67, %size
-  br i1 %cmp16, label %if.then.17, label %if.end.31
+  %cmp24 = icmp ult i32 %add.i.67, %size
+  br i1 %cmp24, label %if.then.25, label %if.end.31
 
-if.then.17:                                       ; preds = %if.else
-  %add20 = add i32 %add.i.67, %mul
-  %arrayidx21 = getelementptr inbounds float, float* %mat, i32 %add20
-  %6 = load float, float* %arrayidx21, align 4, !tbaa !9
-  %add23 = add i32 %add.i.67, %mul2
-  %arrayidx24 = getelementptr inbounds float, float* %mat, i32 %add23
-  %7 = load float, float* %arrayidx24, align 4, !tbaa !9
-  %neg = fsub float -0.000000e+00, %div
-  %8 = tail call float @llvm.fmuladd.f32(float %neg, float %7, float %6)
-  store float %8, float* %arrayidx21, align 4, !tbaa !9
+if.then.25:                                       ; preds = %if.else
+  store float %8, float* %arrayidx8, align 4, !tbaa !9
   br label %if.end.31
 
-if.end.31:                                        ; preds = %if.then.12, %if.then.6, %if.then.17, %if.else, %entry
+if.end.31:                                        ; preds = %if.then.20, %if.then.14, %if.then.25, %if.else, %entry
   ret void
 }
 
@@ -76,8 +76,8 @@ attributes #2 = { nounwind }
 !4 = !{!"kernel_arg_base_type", !"float*", !"float*", !"uint", !"uint"}
 !5 = !{!"kernel_arg_type_qual", !"", !"", !"", !""}
 !6 = !{!"clang version 3.7.0 (tags/RELEASE_371/final)"}
-!7 = !{i32 12058}
-!8 = !{i32 12198}
+!7 = !{i32 12054}
+!8 = !{i32 12194}
 !9 = !{!10, !10, i64 0}
 !10 = !{!"float", !11, i64 0}
 !11 = !{!"omnipotent char", !12, i64 0}
