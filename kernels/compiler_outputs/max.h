@@ -1,0 +1,12 @@
+#define MAX_LEN                             548
+#define MAX_FLOAT_POS                       176
+#define MAX_WORD_POS                        201
+#define MAX_HALF_POS                        223
+#define MAX_HALF_IMPROVED_POS               255
+#define MAX_BYTE_POS                        291
+#define MAX_BYTE_IMPROVED_POS               321
+#define MAX_BYTE_IMPROVED_ATOMIC_POS        373
+#define MAX_ATOMIC_POS                      425
+#define MAX_HALF_ATOMIC_POS                 448
+#define MAX_HALF_IMPROVED_ATOMIC_POS        481
+#define MAX_BYTE_ATOMIC_POS                 517
