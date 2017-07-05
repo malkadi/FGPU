@@ -7,8 +7,8 @@
 XNbody nbody_device;
 int main()
 {
-  const unsigned len = 1024;
-  const unsigned n_runs = 300;
+  const unsigned len = 8*1024;
+  const unsigned n_runs = 1;
   init_platform();
   power_measurement_set_idle();
 

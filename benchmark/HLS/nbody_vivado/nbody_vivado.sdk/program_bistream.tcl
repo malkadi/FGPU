@@ -1,7 +1,7 @@
 # connect to th eboard
 connect
 
-set bitstream solution1.bit
+set bitstream solution3_187MHz.bit
 
 
 fpga $bitstream

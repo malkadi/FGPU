@@ -5,7 +5,7 @@ SCRIPT_DIR=`pwd`
 BENCHMARK_DIR=`pwd`
 cd $SCRIPT_DIR
 benchmark="nbody"
-hdfFile="solution1.hdf"
+hdfFile="solution3.hdf"
 
 # create hardware and bsp projects
 xsct -quiet $SCRIPT_DIR/create_bsp.tcl $benchmark $hdfFile $BENCHMARK_DIR
