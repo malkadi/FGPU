@@ -1,8 +1,8 @@
-#define XCORR_LEN                           750
-#define XCORR_POS                           511
-#define XCORR_IMPROVED_POS                  530
-#define XCORR_HALF_POS                      570
-#define XCORR_HALF_IMPROVED_POS             597
-#define XCORR_BYTE_POS                      634
-#define XCORR_BYTE_IMPROVED_POS             660
-#define XCORR_FLOAT_POS                     727
+#define XCORR_LEN                           741
+#define XCORR_POS                           502
+#define XCORR_IMPROVED_POS                  521
+#define XCORR_HALF_POS                      561
+#define XCORR_HALF_IMPROVED_POS             588
+#define XCORR_BYTE_POS                      625
+#define XCORR_BYTE_IMPROVED_POS             651
+#define XCORR_FLOAT_POS                     718

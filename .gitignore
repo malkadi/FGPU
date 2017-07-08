@@ -1,4 +1,6 @@
 #ignore all hidden files exceot .gitignore
 .*
 !/.gitignore
+llvm-3.7.1.src
+llvm-3.7.1.build
 

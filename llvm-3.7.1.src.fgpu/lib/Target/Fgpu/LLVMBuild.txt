@@ -1,0 +1,50 @@
+;===- ./lib/Target/Fgpu/LLVMBuild.txt --------------------------*- Conf -*--===;
+;
+;                     The LLVM Compiler Infrastructure
+;
+; This file is distributed under the University of Illinois Open Source
+; License. See LICENSE.TXT for details.
+;
+;===------------------------------------------------------------------------===;
+;
+; This is an LLVMBuild description file for the components in this subdirectory.
+;
+; For more information on the LLVMBuild system, please see:
+;
+;   http://llvm.org/docs/LLVMBuild.html
+;
+;===------------------------------------------------------------------------===;
+
+; Following comments extracted from http://llvm.org/docs/LLVMBuild.html
+
+[common]
+subdirectories = 
+  MCTargetDesc TargetInfo
+  InstPrinter
+  Disassembler
+  AsmParser
+
+
+[component_0]
+type = TargetGroup
+name = Fgpu
+parent = Target
+has_asmprinter = 1
+has_disassembler = 1
+has_asmparser = 1
+
+[component_1]
+type = Library
+name = FgpuCodeGen
+parent = Fgpu
+required_libraries =
+                      CodeGen Core MC 
+                      FgpuDesc 
+                      AsmPrinter
+                      FgpuAsmPrinter
+                      FgpuInfo 
+                      SelectionDAG 
+                      Support 
+                      Target
+add_to_library_groups = Fgpu
+
