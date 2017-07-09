@@ -1,2 +1,2 @@
-#define FFT_LEN                             855
-#define BUTTERFLY_POS                       769
+#define FFT_LEN                             841
+#define BUTTERFLY_POS                       755

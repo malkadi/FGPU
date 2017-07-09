@@ -1,3 +1,6 @@
+Each subfolder is a standalone benchmark in the form of a Xilinx SDK project.
+HLS & MicroBlaze benchmarks can be found in the `HLS` and `MicroBlaze` folders, respectively.
+
 # To compile an existing application
 You may use Xilinx SDK or run the tcl script
 ```sh
@@ -9,12 +12,12 @@ You may use Xilinx SDK or run the tcl script
 ```sh
 open_sdk.sh <application path, e.g. copy>
 ```
-This will open the Xilinx command line tool (xsct).
+This will open the Xilinx command line tool (xsct). Then,
 + Program a bitstream:
 ```sh
 source program_bitstream.tcl
 ```
-An appropriate bitstream will be downloaded. You may change it by editing the script file.
+This script will select an appropriate bitstream. You may change it by editing the script `program bitstream.sh`.
 + Download and run the elf file by executing
 ```sh
 source download_elf.tcl

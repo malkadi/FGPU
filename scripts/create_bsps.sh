@@ -1,13 +1,52 @@
 #!/bin/sh
+
+
+# This script creates all HW and BSP projects in Xilinx SDK to run the FGPU benchmarks
+
+
 cd `dirname $0`
 source ./set_paths.sh
-SCRIPT_DIR=`pwd`
+SCRIPTS_DIR=`pwd`
 cd ../benchmark
 BENCHMARK_DIR=`pwd`
-cd $SCRIPT_DIR
+cd $SCRIPTS_DIR
 
-# create hardware and bsp projects
-xsct -quiet $SCRIPT_DIR/create_bsp.tcl "FGPU_V2" V2.hdf $BENCHMARK_DIR
-xsct -quiet $SCRIPT_DIR/create_bsp.tcl "FGPU_V1" V1.hdf $BENCHMARK_DIR
-xsct -quiet $SCRIPT_DIR/create_bsp.tcl "MicroBlaze" MicroBlaze.hdf $BENCHMARK_DIR
-xsct -quiet $SCRIPT_DIR/create_bsp.tcl "power_measurement" $BENCHMARK_DIR
+LOG_FILE=$SCRIPTS_DIR"/create_bsps.log"
+>$LOG_FILE
+
+
+echo "Creating FGPU V2 HW & BSP Xilinx SDK projects!"
+xsct -quiet $SCRIPTS_DIR/create_bsp.tcl "FGPU_V2" V2.hdf $BENCHMARK_DIR &>> $LOG_FILE
+a=$?
+if [ $a != 0 ]; then
+  echo "Creating FGPU V2 HW & BSP Xilinx SDK projects failed (exit code = "$a")!"
+  echo "See "$LOG_FILE
+  exit $a
+fi
+
+echo "Creating FGPU V1 HW & BSP Xilinx SDK projects!"
+xsct -quiet $SCRIPTS_DIR/create_bsp.tcl "FGPU_V1" V1.hdf $BENCHMARK_DIR &>> $LOG_FILE
+a=$?
+if [ $a != 0 ]; then
+  echo "Creating FGPU V1 HW & BSP Xilinx SDK projects failed (exit code = "$a")!"
+  echo "See "$LOG_FILE
+  exit $a
+fi
+
+echo "Creating MicroBlaze HW & BSP Xilinx SDK projects!"
+xsct -quiet $SCRIPTS_DIR/create_bsp.tcl "MicroBlaze" MicroBlaze.hdf $BENCHMARK_DIR &>> $LOG_FILE
+a=$?
+if [ $a != 0 ]; then
+  echo "Creating MicroBlaze HW & BSP Xilinx SDK projects failed (exit code = "$a")!"
+  echo "See "$LOG_FILE
+  exit $a
+fi
+
+echo "Creating BSP Xilinx SDK project for power measurement!"
+xsct -quiet $SCRIPTS_DIR/create_bsp.tcl "power_measurement" $BENCHMARK_DIR &>> $LOG_FILE
+a=$?
+if [ $a != 0 ]; then
+  echo "Creating BSP Xilinx SDK project for power measurement failed (exit code = "$a")!"
+  echo "See "$LOG_FILE
+  exit $a
+fi

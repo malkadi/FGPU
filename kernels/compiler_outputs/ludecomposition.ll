@@ -4,805 +4,798 @@ target triple = "mips-unknown-uknown"
 
 ; Function Attrs: nounwind readnone
 define float @__divsf3(float %a, float %b) #0 {
-entry:
-  %0 = bitcast float %a to i32
-  %shr = lshr i32 %0, 23
-  %and = and i32 %shr, 255
-  %1 = bitcast float %b to i32
-  %shr2 = lshr i32 %1, 23
-  %and3 = and i32 %shr2, 255
-  %xor = xor i32 %1, %0
-  %and6 = and i32 %xor, -2147483648
-  %and8 = and i32 %0, 8388607
-  %and10 = and i32 %1, 8388607
-  %sub = add nsw i32 %and, -1
-  %cmp = icmp ugt i32 %sub, 253
-  %sub11 = add nsw i32 %and3, -1
-  %cmp12 = icmp ugt i32 %sub11, 253
-  %or.cond = or i1 %cmp, %cmp12
-  br i1 %or.cond, label %if.then, label %if.end.61
+  %1 = bitcast float %a to i32
+  %2 = lshr i32 %1, 23
+  %3 = and i32 %2, 255
+  %4 = bitcast float %b to i32
+  %5 = lshr i32 %4, 23
+  %6 = and i32 %5, 255
+  %7 = xor i32 %4, %1
+  %8 = and i32 %7, -2147483648
+  %9 = and i32 %1, 8388607
+  %10 = and i32 %4, 8388607
+  %11 = add nsw i32 %3, -1
+  %12 = icmp ugt i32 %11, 253
+  %13 = add nsw i32 %6, -1
+  %14 = icmp ugt i32 %13, 253
+  %or.cond = or i1 %12, %14
+  br i1 %or.cond, label %15, label %64
 
-if.then:                                          ; preds = %entry
-  %and14 = and i32 %0, 2147483647
-  %and16 = and i32 %1, 2147483647
-  %cmp17 = icmp ugt i32 %and14, 2139095040
-  br i1 %cmp17, label %if.then.18, label %if.end
+; <label>:15                                      ; preds = %0
+  %16 = and i32 %1, 2147483647
+  %17 = and i32 %4, 2147483647
+  %18 = icmp ugt i32 %16, 2139095040
+  br i1 %18, label %19, label %22
 
-if.then.18:                                       ; preds = %if.then
-  %or = or i32 %0, 4194304
-  %2 = bitcast i32 %or to float
-  br label %cleanup.146
+; <label>:19                                      ; preds = %15
+  %20 = or i32 %1, 4194304
+  %21 = bitcast i32 %20 to float
+  br label %.thread
 
-if.end:                                           ; preds = %if.then
-  %cmp21 = icmp ugt i32 %and16, 2139095040
-  br i1 %cmp21, label %if.then.22, label %if.end.26
+; <label>:22                                      ; preds = %15
+  %23 = icmp ugt i32 %17, 2139095040
+  br i1 %23, label %24, label %27
 
-if.then.22:                                       ; preds = %if.end
-  %or24 = or i32 %1, 4194304
-  %3 = bitcast i32 %or24 to float
-  br label %cleanup.146
+; <label>:24                                      ; preds = %22
+  %25 = or i32 %4, 4194304
+  %26 = bitcast i32 %25 to float
+  br label %.thread
 
-if.end.26:                                        ; preds = %if.end
-  %cmp27 = icmp eq i32 %and14, 2139095040
-  %cmp29 = icmp eq i32 %and16, 2139095040
-  br i1 %cmp27, label %if.then.28, label %if.end.34
+; <label>:27                                      ; preds = %22
+  %28 = icmp eq i32 %16, 2139095040
+  %29 = icmp eq i32 %17, 2139095040
+  br i1 %28, label %30, label %35
 
-if.then.28:                                       ; preds = %if.end.26
-  br i1 %cmp29, label %cleanup.146, label %if.else
+; <label>:30                                      ; preds = %27
+  br i1 %29, label %.thread, label %31
 
-if.else:                                          ; preds = %if.then.28
-  %4 = and i32 %1, -2147483648
-  %or32 = xor i32 %4, %0
-  %5 = bitcast i32 %or32 to float
-  br label %cleanup.146
+; <label>:31                                      ; preds = %30
+  %32 = and i32 %4, -2147483648
+  %33 = xor i32 %32, %1
+  %34 = bitcast i32 %33 to float
+  br label %.thread
 
-if.end.34:                                        ; preds = %if.end.26
-  br i1 %cmp29, label %if.then.36, label %if.end.38
+; <label>:35                                      ; preds = %27
+  br i1 %29, label %36, label %38
 
-if.then.36:                                       ; preds = %if.end.34
-  %6 = bitcast i32 %and6 to float
-  br label %cleanup.146
+; <label>:36                                      ; preds = %35
+  %37 = bitcast i32 %8 to float
+  br label %.thread
 
-if.end.38:                                        ; preds = %if.end.34
-  %tobool = icmp eq i32 %and14, 0
-  %tobool46 = icmp ne i32 %and16, 0
-  br i1 %tobool, label %if.then.39, label %if.end.45
+; <label>:38                                      ; preds = %35
+  %39 = icmp eq i32 %16, 0
+  %40 = icmp ne i32 %17, 0
+  br i1 %39, label %41, label %43
 
-if.then.39:                                       ; preds = %if.end.38
-  %7 = bitcast i32 %and6 to float
-  %. = select i1 %tobool46, float %7, float 0x7FF8000000000000
+; <label>:41                                      ; preds = %38
+  %42 = bitcast i32 %8 to float
+  %. = select i1 %40, float %42, float 0x7FF8000000000000
   ret float %.
 
-if.end.45:                                        ; preds = %if.end.38
-  br i1 %tobool46, label %if.end.50, label %if.then.47
+; <label>:43                                      ; preds = %38
+  br i1 %40, label %47, label %44
 
-if.then.47:                                       ; preds = %if.end.45
-  %or48 = or i32 %and6, 2139095040
-  %8 = bitcast i32 %or48 to float
-  br label %cleanup.146
+; <label>:44                                      ; preds = %43
+  %45 = or i32 %8, 2139095040
+  %46 = bitcast i32 %45 to float
+  br label %.thread
 
-if.end.50:                                        ; preds = %if.end.45
-  %cmp51 = icmp ult i32 %and14, 8388608
-  br i1 %cmp51, label %if.then.52, label %if.end.54
+; <label>:47                                      ; preds = %43
+  %48 = icmp ult i32 %16, 8388608
+  br i1 %48, label %49, label %55
 
-if.then.52:                                       ; preds = %if.end.50
-  %9 = tail call i32 @llvm.ctlz.i32(i32 %and8, i1 false) #3
-  %sub.i.339 = add nuw nsw i32 %9, 24
-  %shl.mask.i.340 = and i32 %sub.i.339, 31
-  %shl.i.341 = shl i32 %and8, %shl.mask.i.340
-  %sub2.i.342 = sub nsw i32 9, %9
-  br label %if.end.54
+; <label>:49                                      ; preds = %47
+  %50 = tail call i32 @llvm.ctlz.i32(i32 %9, i1 false) #3
+  %51 = add nuw nsw i32 %50, 24
+  %52 = and i32 %51, 31
+  %53 = shl i32 %9, %52
+  %54 = sub nsw i32 9, %50
+  br label %55
 
-if.end.54:                                        ; preds = %if.then.52, %if.end.50
-  %aSignificand.0 = phi i32 [ %shl.i.341, %if.then.52 ], [ %and8, %if.end.50 ]
-  %scale.0 = phi i32 [ %sub2.i.342, %if.then.52 ], [ 0, %if.end.50 ]
-  %cmp55 = icmp ult i32 %and16, 8388608
-  br i1 %cmp55, label %if.then.56, label %if.end.61
+; <label>:55                                      ; preds = %49, %47
+  %aSignificand.0 = phi i32 [ %53, %49 ], [ %9, %47 ]
+  %scale.0 = phi i32 [ %54, %49 ], [ 0, %47 ]
+  %56 = icmp ult i32 %17, 8388608
+  br i1 %56, label %57, label %64
 
-if.then.56:                                       ; preds = %if.end.54
-  %10 = tail call i32 @llvm.ctlz.i32(i32 %and10, i1 false) #3
-  %sub.i = add nuw nsw i32 %10, 24
-  %shl.mask.i = and i32 %sub.i, 31
-  %shl.i = shl i32 %and10, %shl.mask.i
-  %sub2.i354 = add nsw i32 %scale.0, -9
-  %sub58 = add nsw i32 %sub2.i354, %10
-  br label %if.end.61
+; <label>:57                                      ; preds = %55
+  %58 = tail call i32 @llvm.ctlz.i32(i32 %10, i1 false) #3
+  %59 = add nuw nsw i32 %58, 24
+  %60 = and i32 %59, 31
+  %61 = shl i32 %10, %60
+  %62 = add nsw i32 %scale.0, -9
+  %63 = add nsw i32 %62, %58
+  br label %64
 
-if.end.61:                                        ; preds = %if.then.56, %if.end.54, %entry
-  %aSignificand.2 = phi i32 [ %and8, %entry ], [ %aSignificand.0, %if.then.56 ], [ %aSignificand.0, %if.end.54 ]
-  %bSignificand.1 = phi i32 [ %and10, %entry ], [ %shl.i, %if.then.56 ], [ %and10, %if.end.54 ]
-  %scale.3 = phi i32 [ 0, %entry ], [ %sub58, %if.then.56 ], [ %scale.0, %if.end.54 ]
-  %or62 = or i32 %aSignificand.2, 8388608
-  %or63 = or i32 %bSignificand.1, 8388608
-  %sub64 = sub nsw i32 %and, %and3
-  %add65 = add nsw i32 %sub64, %scale.3
-  %shl = shl i32 %or63, 8
-  %sub66 = sub i32 1963258675, %shl
-  %and.i.320 = and i32 %sub66, 65331
-  %and1.i.321 = and i32 %shl, 65280
-  %mul.i.322 = mul nuw i32 %and.i.320, %and1.i.321
-  %shr.i.323 = lshr i32 %sub66, 16
-  %mul3.i.324 = mul nuw i32 %shr.i.323, %and1.i.321
-  %11 = lshr i32 %or63, 8
-  %shr4.i.325 = and i32 %11, 65535
-  %mul6.i.326 = mul nuw i32 %and.i.320, %shr4.i.325
-  %mul9.i.327 = mul nuw i32 %shr.i.323, %shr4.i.325
-  %shr10.i.328 = lshr i32 %mul.i.322, 16
-  %and11.i.329 = and i32 %mul3.i.324, 65280
-  %add.i.330 = add nuw nsw i32 %shr10.i.328, %and11.i.329
-  %and12.i.331 = and i32 %mul6.i.326, 65535
-  %add13.i.332 = add nuw nsw i32 %add.i.330, %and12.i.331
-  %shr14.i.333 = lshr i32 %add13.i.332, 16
-  %shr15.i.334 = lshr i32 %mul3.i.324, 16
-  %shr17.i.335 = lshr i32 %mul6.i.326, 16
-  %add16.i.336 = add i32 %mul9.i.327, %shr15.i.334
-  %add18.i.337 = add i32 %shr17.i.335, %add16.i.336
-  %add19.i.338 = add i32 %add18.i.337, %shr14.i.333
-  %sub68 = sub i32 0, %add19.i.338
-  %and1.i.297 = and i32 %sub68, 65535
-  %mul.i.298 = mul nuw i32 %and1.i.297, %and.i.320
-  %shr.i.299 = lshr i32 %mul.i.298, 16
-  %mul9.i.302 = mul nuw i32 %and1.i.297, %shr.i.323
-  %add.i.303 = add i32 %shr.i.299, %mul9.i.302
-  %shr14.i.304 = lshr i32 %add.i.303, 16
-  %shr18.i.305 = and i32 %add.i.303, 65535
-  %shr22.i.306 = lshr i32 %sub68, 16
-  %mul24.i.307 = mul nuw i32 %shr22.i.306, %and.i.320
-  %add25.i.308 = add i32 %shr18.i.305, %mul24.i.307
-  %fold.i.309 = add i32 %add.i.303, %mul24.i.307
-  %shl27.i.310 = shl i32 %fold.i.309, 16
-  %shr31.i.312 = lshr i32 %add25.i.308, 16
-  %mul37.i.313 = mul nuw i32 %shr22.i.306, %shr.i.323
-  %add34.i.314 = add i32 %shr14.i.304, %mul37.i.313
-  %add40.i.315 = add i32 %add34.i.314, %shr31.i.312
-  %r.sroa.8.0.insert.ext.i.316 = zext i32 %shl27.i.310 to i64
-  %r.sroa.0.0.insert.ext.i.317 = zext i32 %add40.i.315 to i64
-  %r.sroa.0.0.insert.shift.i.318 = shl nuw i64 %r.sroa.0.0.insert.ext.i.317, 32
-  %r.sroa.0.0.insert.insert.i.319 = or i64 %r.sroa.0.0.insert.shift.i.318, %r.sroa.8.0.insert.ext.i.316
-  %shr70.224 = lshr i64 %r.sroa.0.0.insert.insert.i.319, 31
-  %conv = trunc i64 %shr70.224 to i32
-  %and.i.277 = and i32 %conv, 65535
-  %mul.i.279 = mul nuw i32 %and.i.277, %and1.i.321
-  %shr.i.280350 = lshr i32 %add40.i.315, 15
-  %shr.i.280 = and i32 %shr.i.280350, 65535
-  %mul3.i.281 = mul nuw i32 %shr.i.280, %and1.i.321
-  %mul6.i.283 = mul nuw i32 %and.i.277, %shr4.i.325
-  %mul9.i.284 = mul nuw i32 %shr.i.280, %shr4.i.325
-  %shr10.i.285 = lshr i32 %mul.i.279, 16
-  %and11.i.286 = and i32 %mul3.i.281, 65280
-  %add.i.287 = add nuw nsw i32 %shr10.i.285, %and11.i.286
-  %and12.i.288 = and i32 %mul6.i.283, 65535
-  %add13.i.289 = add nuw nsw i32 %add.i.287, %and12.i.288
-  %shr14.i.290 = lshr i32 %add13.i.289, 16
-  %shr15.i.291 = lshr i32 %mul3.i.281, 16
-  %shr17.i.292 = lshr i32 %mul6.i.283, 16
-  %add16.i.293 = add i32 %mul9.i.284, %shr15.i.291
-  %add18.i.294 = add i32 %add16.i.293, %shr17.i.292
-  %add19.i.295 = add i32 %add18.i.294, %shr14.i.290
-  %sub72 = sub i32 0, %add19.i.295
-  %and1.i.254 = and i32 %sub72, 65535
-  %mul.i.255 = mul nuw i32 %and1.i.254, %and.i.277
-  %shr.i.256 = lshr i32 %mul.i.255, 16
-  %mul9.i.259 = mul nuw i32 %and1.i.254, %shr.i.280
-  %add.i.260 = add i32 %shr.i.256, %mul9.i.259
-  %shr14.i.261 = lshr i32 %add.i.260, 16
-  %shr18.i.262 = and i32 %add.i.260, 65535
-  %shr22.i.263 = lshr i32 %sub72, 16
-  %mul24.i.264 = mul nuw i32 %shr22.i.263, %and.i.277
-  %add25.i.265 = add i32 %shr18.i.262, %mul24.i.264
-  %fold.i.266 = add i32 %add.i.260, %mul24.i.264
-  %shl27.i.267 = shl i32 %fold.i.266, 16
-  %shr31.i.269 = lshr i32 %add25.i.265, 16
-  %mul37.i.270 = mul nuw i32 %shr22.i.263, %shr.i.280
-  %add34.i.271 = add i32 %shr14.i.261, %mul37.i.270
-  %add40.i.272 = add i32 %add34.i.271, %shr31.i.269
-  %r.sroa.8.0.insert.ext.i.273 = zext i32 %shl27.i.267 to i64
-  %r.sroa.0.0.insert.ext.i.274 = zext i32 %add40.i.272 to i64
-  %r.sroa.0.0.insert.shift.i.275 = shl nuw i64 %r.sroa.0.0.insert.ext.i.274, 32
-  %r.sroa.0.0.insert.insert.i.276 = or i64 %r.sroa.0.0.insert.shift.i.275, %r.sroa.8.0.insert.ext.i.273
-  %shr74.225 = lshr i64 %r.sroa.0.0.insert.insert.i.276, 31
-  %conv75 = trunc i64 %shr74.225 to i32
-  %and.i.234 = and i32 %conv75, 65535
-  %mul.i.236 = mul nuw i32 %and.i.234, %and1.i.321
-  %shr.i.237352 = lshr i32 %add40.i.272, 15
-  %shr.i.237 = and i32 %shr.i.237352, 65535
-  %mul3.i.238 = mul nuw i32 %shr.i.237, %and1.i.321
-  %mul6.i.240 = mul nuw i32 %and.i.234, %shr4.i.325
-  %mul9.i.241 = mul nuw i32 %shr.i.237, %shr4.i.325
-  %shr10.i.242 = lshr i32 %mul.i.236, 16
-  %and11.i.243 = and i32 %mul3.i.238, 65280
-  %add.i.244 = add nuw nsw i32 %shr10.i.242, %and11.i.243
-  %and12.i.245 = and i32 %mul6.i.240, 65535
-  %add13.i.246 = add nuw nsw i32 %add.i.244, %and12.i.245
-  %shr14.i.247 = lshr i32 %add13.i.246, 16
-  %shr15.i.248 = lshr i32 %mul3.i.238, 16
-  %shr17.i.249 = lshr i32 %mul6.i.240, 16
-  %add16.i.250 = add i32 %mul9.i.241, %shr15.i.248
-  %add18.i.251 = add i32 %add16.i.250, %shr17.i.249
-  %add19.i.252 = add i32 %add18.i.251, %shr14.i.247
-  %sub77 = sub i32 0, %add19.i.252
-  %and1.i.228 = and i32 %sub77, 65535
-  %mul.i.229 = mul nuw i32 %and1.i.228, %and.i.234
-  %shr.i.230 = lshr i32 %mul.i.229, 16
-  %mul9.i.231 = mul nuw i32 %and1.i.228, %shr.i.237
-  %add.i.232 = add i32 %shr.i.230, %mul9.i.231
-  %shr14.i.233 = lshr i32 %add.i.232, 16
-  %shr18.i = and i32 %add.i.232, 65535
-  %shr22.i = lshr i32 %sub77, 16
-  %mul24.i = mul nuw i32 %shr22.i, %and.i.234
-  %add25.i = add i32 %shr18.i, %mul24.i
-  %fold.i = add i32 %add.i.232, %mul24.i
-  %shl27.i = shl i32 %fold.i, 16
-  %shr31.i = lshr i32 %add25.i, 16
-  %mul37.i = mul nuw i32 %shr22.i, %shr.i.237
-  %add34.i = add i32 %shr14.i.233, %mul37.i
-  %add40.i = add i32 %add34.i, %shr31.i
-  %r.sroa.8.0.insert.ext.i = zext i32 %shl27.i to i64
-  %r.sroa.0.0.insert.ext.i = zext i32 %add40.i to i64
-  %r.sroa.0.0.insert.shift.i = shl nuw i64 %r.sroa.0.0.insert.ext.i, 32
-  %r.sroa.0.0.insert.insert.i = or i64 %r.sroa.0.0.insert.shift.i, %r.sroa.8.0.insert.ext.i
-  %shr79.226 = lshr i64 %r.sroa.0.0.insert.insert.i, 31
-  %conv80 = trunc i64 %shr79.226 to i32
-  %sub81 = add i32 %conv80, -2
-  %shl82 = shl i32 %aSignificand.2, 1
-  %and.i = and i32 %sub81, 65535
-  %and1.i = and i32 %shl82, 65534
-  %mul.i = mul nuw i32 %and.i, %and1.i
-  %shr.i = lshr i32 %sub81, 16
-  %mul3.i = mul nuw i32 %shr.i, %and1.i
-  %12 = lshr i32 %or62, 15
-  %shr4.i = and i32 %12, 65535
-  %mul6.i = mul nuw i32 %and.i, %shr4.i
-  %mul9.i = mul nuw i32 %shr.i, %shr4.i
-  %shr10.i = lshr i32 %mul.i, 16
-  %and11.i = and i32 %mul3.i, 65534
-  %add.i = add nuw nsw i32 %shr10.i, %and11.i
-  %and12.i = and i32 %mul6.i, 65535
-  %add13.i = add nuw nsw i32 %add.i, %and12.i
-  %shr14.i = lshr i32 %add13.i, 16
-  %shr15.i = lshr i32 %mul3.i, 16
-  %shr17.i = lshr i32 %mul6.i, 16
-  %add16.i = add i32 %shr15.i, %mul9.i
-  %add18.i = add i32 %add16.i, %shr17.i
-  %add19.i = add i32 %add18.i, %shr14.i
-  %cmp84 = icmp ult i32 %add19.i, 16777216
-  %cond = zext i1 %cmp84 to i32
-  %cond.neg = sext i1 %cmp84 to i32
-  %sub87 = add i32 %add65, %cond.neg
-  %cond89 = xor i32 %cond, 1
-  %shr90 = lshr i32 %add19.i, %cond89
-  %add95 = add nsw i32 %sub87, 127
-  %cmp96 = icmp sgt i32 %add95, 254
-  br i1 %cmp96, label %if.then.98, label %if.else.101
+; <label>:64                                      ; preds = %57, %55, %0
+  %aSignificand.2 = phi i32 [ %9, %0 ], [ %aSignificand.0, %57 ], [ %aSignificand.0, %55 ]
+  %bSignificand.1 = phi i32 [ %10, %0 ], [ %61, %57 ], [ %10, %55 ]
+  %scale.3 = phi i32 [ 0, %0 ], [ %63, %57 ], [ %scale.0, %55 ]
+  %65 = or i32 %aSignificand.2, 8388608
+  %66 = or i32 %bSignificand.1, 8388608
+  %67 = sub nsw i32 %3, %6
+  %68 = add nsw i32 %67, %scale.3
+  %69 = shl i32 %66, 8
+  %70 = sub i32 1963258675, %69
+  %71 = and i32 %70, 65331
+  %72 = and i32 %69, 65280
+  %73 = mul nuw i32 %71, %72
+  %74 = lshr i32 %70, 16
+  %75 = mul nuw i32 %74, %72
+  %76 = lshr i32 %66, 8
+  %77 = and i32 %76, 65535
+  %78 = mul nuw i32 %71, %77
+  %79 = mul nuw i32 %74, %77
+  %80 = lshr i32 %73, 16
+  %81 = and i32 %75, 65280
+  %82 = add nuw nsw i32 %80, %81
+  %83 = and i32 %78, 65535
+  %84 = add nuw nsw i32 %82, %83
+  %85 = lshr i32 %84, 16
+  %86 = lshr i32 %75, 16
+  %87 = lshr i32 %78, 16
+  %88 = add i32 %79, %86
+  %89 = add i32 %87, %88
+  %90 = add i32 %89, %85
+  %91 = sub i32 0, %90
+  %92 = and i32 %91, 65535
+  %93 = mul nuw i32 %92, %71
+  %94 = lshr i32 %93, 16
+  %95 = mul nuw i32 %92, %74
+  %96 = add i32 %94, %95
+  %97 = lshr i32 %96, 16
+  %98 = and i32 %96, 65535
+  %99 = lshr i32 %91, 16
+  %100 = mul nuw i32 %99, %71
+  %101 = add i32 %98, %100
+  %fold.i.5 = add i32 %96, %100
+  %102 = shl i32 %fold.i.5, 16
+  %103 = lshr i32 %101, 16
+  %104 = mul nuw i32 %99, %74
+  %105 = add i32 %97, %104
+  %106 = add i32 %105, %103
+  %107 = zext i32 %102 to i64
+  %108 = zext i32 %106 to i64
+  %109 = shl nuw i64 %108, 32
+  %110 = or i64 %109, %107
+  %111 = lshr i64 %110, 31
+  %112 = trunc i64 %111 to i32
+  %113 = and i32 %112, 65535
+  %114 = mul nuw i32 %113, %72
+  %115 = lshr i32 %106, 15
+  %116 = and i32 %115, 65535
+  %117 = mul nuw i32 %116, %72
+  %118 = mul nuw i32 %113, %77
+  %119 = mul nuw i32 %116, %77
+  %120 = lshr i32 %114, 16
+  %121 = and i32 %117, 65280
+  %122 = add nuw nsw i32 %120, %121
+  %123 = and i32 %118, 65535
+  %124 = add nuw nsw i32 %122, %123
+  %125 = lshr i32 %124, 16
+  %126 = lshr i32 %117, 16
+  %127 = lshr i32 %118, 16
+  %128 = add i32 %119, %126
+  %129 = add i32 %128, %127
+  %130 = add i32 %129, %125
+  %131 = sub i32 0, %130
+  %132 = and i32 %131, 65535
+  %133 = mul nuw i32 %132, %113
+  %134 = lshr i32 %133, 16
+  %135 = mul nuw i32 %132, %116
+  %136 = add i32 %134, %135
+  %137 = lshr i32 %136, 16
+  %138 = and i32 %136, 65535
+  %139 = lshr i32 %131, 16
+  %140 = mul nuw i32 %139, %113
+  %141 = add i32 %138, %140
+  %fold.i.4 = add i32 %136, %140
+  %142 = shl i32 %fold.i.4, 16
+  %143 = lshr i32 %141, 16
+  %144 = mul nuw i32 %139, %116
+  %145 = add i32 %137, %144
+  %146 = add i32 %145, %143
+  %147 = zext i32 %142 to i64
+  %148 = zext i32 %146 to i64
+  %149 = shl nuw i64 %148, 32
+  %150 = or i64 %149, %147
+  %151 = lshr i64 %150, 31
+  %152 = trunc i64 %151 to i32
+  %153 = and i32 %152, 65535
+  %154 = mul nuw i32 %153, %72
+  %155 = lshr i32 %146, 15
+  %156 = and i32 %155, 65535
+  %157 = mul nuw i32 %156, %72
+  %158 = mul nuw i32 %153, %77
+  %159 = mul nuw i32 %156, %77
+  %160 = lshr i32 %154, 16
+  %161 = and i32 %157, 65280
+  %162 = add nuw nsw i32 %160, %161
+  %163 = and i32 %158, 65535
+  %164 = add nuw nsw i32 %162, %163
+  %165 = lshr i32 %164, 16
+  %166 = lshr i32 %157, 16
+  %167 = lshr i32 %158, 16
+  %168 = add i32 %159, %166
+  %169 = add i32 %168, %167
+  %170 = add i32 %169, %165
+  %171 = sub i32 0, %170
+  %172 = and i32 %171, 65535
+  %173 = mul nuw i32 %172, %153
+  %174 = lshr i32 %173, 16
+  %175 = mul nuw i32 %172, %156
+  %176 = add i32 %174, %175
+  %177 = lshr i32 %176, 16
+  %178 = and i32 %176, 65535
+  %179 = lshr i32 %171, 16
+  %180 = mul nuw i32 %179, %153
+  %181 = add i32 %178, %180
+  %fold.i = add i32 %176, %180
+  %182 = shl i32 %fold.i, 16
+  %183 = lshr i32 %181, 16
+  %184 = mul nuw i32 %179, %156
+  %185 = add i32 %177, %184
+  %186 = add i32 %185, %183
+  %187 = zext i32 %182 to i64
+  %188 = zext i32 %186 to i64
+  %189 = shl nuw i64 %188, 32
+  %190 = or i64 %189, %187
+  %191 = lshr i64 %190, 31
+  %192 = trunc i64 %191 to i32
+  %193 = add i32 %192, -2
+  %194 = shl i32 %aSignificand.2, 1
+  %195 = and i32 %193, 65535
+  %196 = and i32 %194, 65534
+  %197 = mul nuw i32 %195, %196
+  %198 = lshr i32 %193, 16
+  %199 = mul nuw i32 %198, %196
+  %200 = lshr i32 %65, 15
+  %201 = and i32 %200, 65535
+  %202 = mul nuw i32 %195, %201
+  %203 = mul nuw i32 %198, %201
+  %204 = lshr i32 %197, 16
+  %205 = and i32 %199, 65534
+  %206 = add nuw nsw i32 %204, %205
+  %207 = and i32 %202, 65535
+  %208 = add nuw nsw i32 %206, %207
+  %209 = lshr i32 %208, 16
+  %210 = lshr i32 %199, 16
+  %211 = lshr i32 %202, 16
+  %212 = add i32 %210, %203
+  %213 = add i32 %212, %211
+  %214 = add i32 %213, %209
+  %215 = icmp ult i32 %214, 16777216
+  %216 = zext i1 %215 to i32
+  %.neg6 = sext i1 %215 to i32
+  %217 = add i32 %68, %.neg6
+  %218 = xor i32 %216, 1
+  %219 = lshr i32 %214, %218
+  %220 = add nsw i32 %217, 127
+  %221 = icmp sgt i32 %220, 254
+  br i1 %221, label %222, label %225
 
-if.then.98:                                       ; preds = %if.end.61
-  %or99 = or i32 %and6, 2139095040
-  %13 = bitcast i32 %or99 to float
-  br label %cleanup.146
+; <label>:222                                     ; preds = %64
+  %223 = or i32 %8, 2139095040
+  %224 = bitcast i32 %223 to float
+  br label %.thread
 
-if.else.101:                                      ; preds = %if.end.61
-  %cond92 = select i1 %cmp84, i32 24, i32 23
-  %shl93 = shl i32 %or62, %cond92
-  %mul = mul i32 %shr90, %or63
-  %sub94 = sub i32 %shl93, %mul
-  %cmp102 = icmp slt i32 %add95, 1
-  %shl105 = shl i32 %sub94, 1
-  %cmp106 = icmp ugt i32 %shl105, %or63
-  br i1 %cmp102, label %if.then.104, label %if.else.122
+; <label>:225                                     ; preds = %64
+  %226 = select i1 %215, i32 24, i32 23
+  %227 = shl i32 %65, %226
+  %228 = mul i32 %219, %66
+  %229 = sub i32 %227, %228
+  %230 = icmp slt i32 %220, 1
+  %231 = shl i32 %229, 1
+  %232 = icmp ugt i32 %231, %66
+  br i1 %230, label %233, label %243
 
-if.then.104:                                      ; preds = %if.else.101
-  %sub108 = sub i32 -126, %sub87
-  %cmp109 = icmp ult i32 %sub108, 31
-  %cond111 = select i1 %cmp109, i32 %sub108, i32 31
-  %conv113 = zext i1 %cmp106 to i32
-  %add114 = add i32 %conv113, %shr90
-  %shr.mask115 = and i32 %cond111, 31
-  %shr116 = lshr i32 %add114, %shr.mask115
-  %or117 = or i32 %shr116, %and6
-  %14 = bitcast i32 %or117 to float
-  br label %cleanup.146
+; <label>:233                                     ; preds = %225
+  %234 = sub i32 -126, %217
+  %235 = icmp ult i32 %234, 31
+  %236 = select i1 %235, i32 %234, i32 31
+  %237 = zext i1 %232 to i32
+  %238 = add i32 %237, %219
+  %239 = and i32 %236, 31
+  %240 = lshr i32 %238, %239
+  %241 = or i32 %240, %8
+  %242 = bitcast i32 %241 to float
+  br label %.thread
 
-if.else.122:                                      ; preds = %if.else.101
-  %and128 = and i32 %shr90, 8388607
-  %shl129 = shl i32 %add95, 23
-  %or130 = or i32 %and128, %shl129
-  %conv132 = zext i1 %cmp106 to i32
-  %add133 = add i32 %conv132, %or130
-  %or134 = or i32 %add133, %and6
-  %15 = bitcast i32 %or134 to float
-  br label %cleanup.146
+; <label>:243                                     ; preds = %225
+  %244 = and i32 %219, 8388607
+  %245 = shl i32 %220, 23
+  %246 = or i32 %244, %245
+  %247 = zext i1 %232 to i32
+  %248 = add i32 %247, %246
+  %249 = or i32 %248, %8
+  %250 = bitcast i32 %249 to float
+  br label %.thread
 
-cleanup.146:                                      ; preds = %if.then.28, %if.then.47, %if.then.36, %if.else, %if.then.22, %if.then.18, %if.then.98, %if.then.104, %if.else.122
-  %retval.2 = phi float [ %13, %if.then.98 ], [ %14, %if.then.104 ], [ %15, %if.else.122 ], [ 0x7FF8000000000000, %if.then.28 ], [ %8, %if.then.47 ], [ %6, %if.then.36 ], [ %5, %if.else ], [ %3, %if.then.22 ], [ %2, %if.then.18 ]
-  ret float %retval.2
+.thread:                                          ; preds = %30, %44, %36, %31, %24, %19, %222, %233, %243
+  %.2 = phi float [ %224, %222 ], [ %242, %233 ], [ %250, %243 ], [ 0x7FF8000000000000, %30 ], [ %46, %44 ], [ %37, %36 ], [ %34, %31 ], [ %26, %24 ], [ %21, %19 ]
+  ret float %.2
 }
 
 ; Function Attrs: nounwind readnone
 define float @__subsf3(float %a, float %b) #0 {
-entry:
-  %0 = bitcast float %b to i32
-  %xor = xor i32 %0, -2147483648
-  %1 = bitcast i32 %xor to float
-  %2 = bitcast float %a to i32
-  %and = and i32 %2, 2147483647
-  %and4 = and i32 %0, 2147483647
-  %sub = add nsw i32 %and, -1
-  %cmp = icmp ugt i32 %sub, 2139095038
-  %sub5 = add nsw i32 %and4, -1
-  %cmp6 = icmp ugt i32 %sub5, 2139095038
-  %or.cond = or i1 %cmp, %cmp6
-  br i1 %or.cond, label %if.then, label %if.end.34
+  %1 = bitcast float %b to i32
+  %2 = xor i32 %1, -2147483648
+  %3 = bitcast i32 %2 to float
+  %4 = bitcast float %a to i32
+  %5 = and i32 %4, 2147483647
+  %6 = and i32 %1, 2147483647
+  %7 = add nsw i32 %5, -1
+  %8 = icmp ugt i32 %7, 2139095038
+  %9 = add nsw i32 %6, -1
+  %10 = icmp ugt i32 %9, 2139095038
+  %or.cond = or i1 %8, %10
+  br i1 %or.cond, label %11, label %30
 
-if.then:                                          ; preds = %entry
-  %cmp7 = icmp ugt i32 %and, 2139095040
-  %cmp8 = icmp ugt i32 %and4, 2139095040
-  %3 = or i1 %cmp7, %cmp8
-  %cmp9 = icmp eq i32 %and, 2139095040
-  %xor12 = xor i32 %xor, %2
-  %cmp13 = icmp eq i32 %xor12, -2147483648
-  %4 = and i1 %cmp9, %cmp13
-  %or238 = or i1 %3, %4
-  %brmerge = or i1 %cmp9, %3
-  %.mux = select i1 %or238, float 0x7FF8000000000000, float %a
-  br i1 %brmerge, label %cleanup.166, label %if.end.18
+; <label>:11                                      ; preds = %0
+  %12 = icmp ugt i32 %5, 2139095040
+  %13 = icmp ugt i32 %6, 2139095040
+  %14 = or i1 %12, %13
+  %15 = icmp eq i32 %5, 2139095040
+  %16 = xor i32 %2, %4
+  %17 = icmp eq i32 %16, -2147483648
+  %18 = and i1 %15, %17
+  %19 = or i1 %14, %18
+  %brmerge = or i1 %15, %14
+  %.mux = select i1 %19, float 0x7FF8000000000000, float %a
+  br i1 %brmerge, label %.thread, label %20
 
-if.end.18:                                        ; preds = %if.then
-  %cmp19 = icmp eq i32 %and4, 2139095040
-  br i1 %cmp19, label %cleanup.166, label %if.end.21
+; <label>:20                                      ; preds = %11
+  %21 = icmp eq i32 %6, 2139095040
+  br i1 %21, label %.thread, label %22
 
-if.end.21:                                        ; preds = %if.end.18
-  %tobool22 = icmp eq i32 %and, 0
-  %tobool31 = icmp ne i32 %and4, 0
-  br i1 %tobool22, label %if.then.23, label %cleanup
+; <label>:22                                      ; preds = %20
+  %23 = icmp eq i32 %5, 0
+  %24 = icmp ne i32 %6, 0
+  br i1 %23, label %25, label %29
 
-if.then.23:                                       ; preds = %if.end.21
-  br i1 %tobool31, label %cleanup.166, label %if.then.25
+; <label>:25                                      ; preds = %22
+  br i1 %24, label %.thread, label %26
 
-if.then.25:                                       ; preds = %if.then.23
-  %and28 = and i32 %xor, %2
-  %5 = bitcast i32 %and28 to float
-  br label %cleanup.166
+; <label>:26                                      ; preds = %25
+  %27 = and i32 %2, %4
+  %28 = bitcast i32 %27 to float
+  br label %.thread
 
-cleanup:                                          ; preds = %if.end.21
-  br i1 %tobool31, label %if.end.34, label %cleanup.166
+; <label>:29                                      ; preds = %22
+  br i1 %24, label %30, label %.thread
 
-if.end.34:                                        ; preds = %entry, %cleanup
-  %cmp35 = icmp ugt i32 %and4, %and
-  %cond = select i1 %cmp35, i32 %2, i32 %xor
-  %cond41 = select i1 %cmp35, i32 %xor, i32 %2
-  %shr = lshr i32 %cond41, 23
-  %and42 = and i32 %shr, 255
-  %shr43 = lshr i32 %cond, 23
-  %and44 = and i32 %shr43, 255
-  %and45 = and i32 %cond41, 8388607
-  %and46 = and i32 %cond, 8388607
-  %cmp47 = icmp eq i32 %and42, 0
-  br i1 %cmp47, label %if.then.49, label %if.end.51
+; <label>:30                                      ; preds = %0, %29
+  %31 = icmp ugt i32 %6, %5
+  %32 = select i1 %31, i32 %4, i32 %2
+  %33 = select i1 %31, i32 %2, i32 %4
+  %34 = lshr i32 %33, 23
+  %35 = and i32 %34, 255
+  %36 = lshr i32 %32, 23
+  %37 = and i32 %36, 255
+  %38 = and i32 %33, 8388607
+  %39 = and i32 %32, 8388607
+  %40 = icmp eq i32 %35, 0
+  br i1 %40, label %41, label %47
 
-if.then.49:                                       ; preds = %if.end.34
-  %6 = tail call i32 @llvm.ctlz.i32(i32 %and45, i1 false) #3
-  %sub.i.239 = add nuw nsw i32 %6, 24
-  %shl.mask.i.240 = and i32 %sub.i.239, 31
-  %shl.i.241 = shl i32 %and45, %shl.mask.i.240
-  %sub2.i.242 = sub nsw i32 9, %6
-  br label %if.end.51
+; <label>:41                                      ; preds = %30
+  %42 = tail call i32 @llvm.ctlz.i32(i32 %38, i1 false) #3
+  %43 = add nuw nsw i32 %42, 24
+  %44 = and i32 %43, 31
+  %45 = shl i32 %38, %44
+  %46 = sub nsw i32 9, %42
+  br label %47
 
-if.end.51:                                        ; preds = %if.then.49, %if.end.34
-  %aSignificand.0 = phi i32 [ %shl.i.241, %if.then.49 ], [ %and45, %if.end.34 ]
-  %aExponent.0 = phi i32 [ %sub2.i.242, %if.then.49 ], [ %and42, %if.end.34 ]
-  %cmp52 = icmp eq i32 %and44, 0
-  br i1 %cmp52, label %if.then.54, label %if.end.56
+; <label>:47                                      ; preds = %41, %30
+  %aSignificand.0 = phi i32 [ %45, %41 ], [ %38, %30 ]
+  %aExponent.0 = phi i32 [ %46, %41 ], [ %35, %30 ]
+  %48 = icmp eq i32 %37, 0
+  br i1 %48, label %49, label %55
 
-if.then.54:                                       ; preds = %if.end.51
-  %7 = tail call i32 @llvm.ctlz.i32(i32 %and46, i1 false) #3
-  %sub.i = add nuw nsw i32 %7, 24
-  %shl.mask.i = and i32 %sub.i, 31
-  %shl.i = shl i32 %and46, %shl.mask.i
-  %sub2.i = sub nsw i32 9, %7
-  br label %if.end.56
+; <label>:49                                      ; preds = %47
+  %50 = tail call i32 @llvm.ctlz.i32(i32 %39, i1 false) #3
+  %51 = add nuw nsw i32 %50, 24
+  %52 = and i32 %51, 31
+  %53 = shl i32 %39, %52
+  %54 = sub nsw i32 9, %50
+  br label %55
 
-if.end.56:                                        ; preds = %if.then.54, %if.end.51
-  %bSignificand.0 = phi i32 [ %shl.i, %if.then.54 ], [ %and46, %if.end.51 ]
-  %bExponent.0 = phi i32 [ %sub2.i, %if.then.54 ], [ %and44, %if.end.51 ]
-  %and57 = and i32 %cond41, -2147483648
-  %xor58 = xor i32 %cond41, %cond
-  %tobool60 = icmp slt i32 %xor58, 0
-  %or61 = shl i32 %aSignificand.0, 3
-  %shl = or i32 %or61, 67108864
-  %or62 = shl i32 %bSignificand.0, 3
-  %shl63 = or i32 %or62, 67108864
-  %sub64 = sub nsw i32 %aExponent.0, %bExponent.0
-  %tobool65 = icmp eq i32 %aExponent.0, %bExponent.0
-  br i1 %tobool65, label %if.end.80, label %if.then.66
+; <label>:55                                      ; preds = %49, %47
+  %bSignificand.0 = phi i32 [ %53, %49 ], [ %39, %47 ]
+  %bExponent.0 = phi i32 [ %54, %49 ], [ %37, %47 ]
+  %56 = and i32 %33, -2147483648
+  %57 = xor i32 %33, %32
+  %58 = icmp slt i32 %57, 0
+  %59 = shl i32 %aSignificand.0, 3
+  %60 = or i32 %59, 67108864
+  %61 = shl i32 %bSignificand.0, 3
+  %62 = or i32 %61, 67108864
+  %63 = sub nsw i32 %aExponent.0, %bExponent.0
+  %64 = icmp eq i32 %aExponent.0, %bExponent.0
+  br i1 %64, label %76, label %65
 
-if.then.66:                                       ; preds = %if.end.56
-  %cmp67 = icmp ult i32 %sub64, 32
-  br i1 %cmp67, label %if.then.69, label %if.end.80
+; <label>:65                                      ; preds = %55
+  %66 = icmp ult i32 %63, 32
+  br i1 %66, label %67, label %76
 
-if.then.69:                                       ; preds = %if.then.66
-  %8 = sub nsw i32 0, %sub64
-  %shl.mask = and i32 %8, 31
-  %shl71 = shl i32 %shl63, %shl.mask
-  %tobool72 = icmp ne i32 %shl71, 0
-  %shr.mask = and i32 %sub64, 31
-  %shr74 = lshr i32 %shl63, %shr.mask
-  %conv76 = zext i1 %tobool72 to i32
-  %or77 = or i32 %conv76, %shr74
-  br label %if.end.80
+; <label>:67                                      ; preds = %65
+  %68 = sub nsw i32 0, %63
+  %69 = and i32 %68, 31
+  %70 = shl i32 %62, %69
+  %71 = icmp ne i32 %70, 0
+  %72 = and i32 %63, 31
+  %73 = lshr i32 %62, %72
+  %74 = zext i1 %71 to i32
+  %75 = or i32 %74, %73
+  br label %76
 
-if.end.80:                                        ; preds = %if.then.66, %if.end.56, %if.then.69
-  %bSignificand.1 = phi i32 [ %shl63, %if.end.56 ], [ %or77, %if.then.69 ], [ 1, %if.then.66 ]
-  br i1 %tobool60, label %if.then.82, label %if.else.99
+; <label>:76                                      ; preds = %65, %55, %67
+  %bSignificand.1 = phi i32 [ %62, %55 ], [ %75, %67 ], [ 1, %65 ]
+  br i1 %58, label %77, label %88
 
-if.then.82:                                       ; preds = %if.end.80
-  %sub83 = sub i32 %shl, %bSignificand.1
-  %cmp84 = icmp eq i32 %shl, %bSignificand.1
-  br i1 %cmp84, label %cleanup.166, label %if.end.88
+; <label>:77                                      ; preds = %76
+  %78 = sub i32 %60, %bSignificand.1
+  %79 = icmp eq i32 %60, %bSignificand.1
+  br i1 %79, label %.thread, label %80
 
-if.end.88:                                        ; preds = %if.then.82
-  %cmp89 = icmp ult i32 %sub83, 67108864
-  br i1 %cmp89, label %if.then.91, label %if.end.113
+; <label>:80                                      ; preds = %77
+  %81 = icmp ult i32 %78, 67108864
+  br i1 %81, label %82, label %97
 
-if.then.91:                                       ; preds = %if.end.88
-  %9 = tail call i32 @llvm.ctlz.i32(i32 %sub83, i1 false) #3
-  %sub94 = add nsw i32 %9, -5
-  %shl.mask95 = and i32 %sub94, 31
-  %shl96 = shl i32 %sub83, %shl.mask95
-  %sub97 = sub nsw i32 %aExponent.0, %sub94
-  br label %if.end.113
+; <label>:82                                      ; preds = %80
+  %83 = tail call i32 @llvm.ctlz.i32(i32 %78, i1 false) #3
+  %84 = add nsw i32 %83, -5
+  %85 = and i32 %84, 31
+  %86 = shl i32 %78, %85
+  %87 = sub nsw i32 %aExponent.0, %84
+  br label %97
 
-if.else.99:                                       ; preds = %if.end.80
-  %add = add i32 %bSignificand.1, %shl
-  %and100 = and i32 %add, 134217728
-  %tobool101 = icmp eq i32 %and100, 0
-  br i1 %tobool101, label %if.end.113, label %if.then.102
+; <label>:88                                      ; preds = %76
+  %89 = add i32 %bSignificand.1, %60
+  %90 = and i32 %89, 134217728
+  %91 = icmp eq i32 %90, 0
+  br i1 %91, label %97, label %92
 
-if.then.102:                                      ; preds = %if.else.99
-  %fold = add i32 %bSignificand.1, %or61
-  %and104 = and i32 %fold, 1
-  %shr107 = lshr i32 %add, 1
-  %or110 = or i32 %shr107, %and104
-  %add111 = add nsw i32 %aExponent.0, 1
-  br label %if.end.113
+; <label>:92                                      ; preds = %88
+  %fold = add i32 %bSignificand.1, %59
+  %93 = and i32 %fold, 1
+  %94 = lshr i32 %89, 1
+  %95 = or i32 %94, %93
+  %96 = add nsw i32 %aExponent.0, 1
+  br label %97
 
-if.end.113:                                       ; preds = %if.else.99, %if.then.102, %if.end.88, %if.then.91
-  %aSignificand.1 = phi i32 [ %shl96, %if.then.91 ], [ %sub83, %if.end.88 ], [ %add, %if.else.99 ], [ %or110, %if.then.102 ]
-  %aExponent.1 = phi i32 [ %sub97, %if.then.91 ], [ %aExponent.0, %if.end.88 ], [ %aExponent.0, %if.else.99 ], [ %add111, %if.then.102 ]
-  %cmp114 = icmp sgt i32 %aExponent.1, 254
-  br i1 %cmp114, label %if.then.116, label %if.end.119
+; <label>:97                                      ; preds = %88, %92, %80, %82
+  %aSignificand.1 = phi i32 [ %86, %82 ], [ %78, %80 ], [ %89, %88 ], [ %95, %92 ]
+  %aExponent.1 = phi i32 [ %87, %82 ], [ %aExponent.0, %80 ], [ %aExponent.0, %88 ], [ %96, %92 ]
+  %98 = icmp sgt i32 %aExponent.1, 254
+  br i1 %98, label %99, label %102
 
-if.then.116:                                      ; preds = %if.end.113
-  %or117 = or i32 %and57, 2139095040
-  %10 = bitcast i32 %or117 to float
-  br label %cleanup.166
+; <label>:99                                      ; preds = %97
+  %100 = or i32 %56, 2139095040
+  %101 = bitcast i32 %100 to float
+  br label %.thread
 
-if.end.119:                                       ; preds = %if.end.113
-  %cmp120 = icmp slt i32 %aExponent.1, 1
-  br i1 %cmp120, label %if.then.122, label %if.end.136
+; <label>:102                                     ; preds = %97
+  %103 = icmp slt i32 %aExponent.1, 1
+  br i1 %103, label %104, label %114
 
-if.then.122:                                      ; preds = %if.end.119
-  %sub124 = sub nsw i32 1, %aExponent.1
-  %11 = sub nsw i32 0, %sub124
-  %shl.mask127 = and i32 %11, 31
-  %shl128 = shl i32 %aSignificand.1, %shl.mask127
-  %tobool129 = icmp ne i32 %shl128, 0
-  %shr.mask131 = and i32 %sub124, 31
-  %shr132 = lshr i32 %aSignificand.1, %shr.mask131
-  %conv134 = zext i1 %tobool129 to i32
-  %or135 = or i32 %conv134, %shr132
-  br label %if.end.136
+; <label>:104                                     ; preds = %102
+  %105 = sub nsw i32 1, %aExponent.1
+  %106 = sub nsw i32 0, %105
+  %107 = and i32 %106, 31
+  %108 = shl i32 %aSignificand.1, %107
+  %109 = icmp ne i32 %108, 0
+  %110 = and i32 %105, 31
+  %111 = lshr i32 %aSignificand.1, %110
+  %112 = zext i1 %109 to i32
+  %113 = or i32 %112, %111
+  br label %114
 
-if.end.136:                                       ; preds = %if.then.122, %if.end.119
-  %aSignificand.2 = phi i32 [ %or135, %if.then.122 ], [ %aSignificand.1, %if.end.119 ]
-  %aExponent.2 = phi i32 [ 0, %if.then.122 ], [ %aExponent.1, %if.end.119 ]
-  %and137 = and i32 %aSignificand.2, 7
-  %shr138 = lshr i32 %aSignificand.2, 3
-  %and139 = and i32 %shr138, 8388607
-  %shl140 = shl i32 %aExponent.2, 23
-  %or141 = or i32 %shl140, %and57
-  %or142 = or i32 %or141, %and139
-  %cmp143 = icmp ugt i32 %and137, 4
-  %inc = zext i1 %cmp143 to i32
-  %inc.or142 = add i32 %or142, %inc
-  %cmp147 = icmp eq i32 %and137, 4
-  %and150 = and i32 %inc.or142, 1
-  %add151 = select i1 %cmp147, i32 %and150, i32 0
-  %result.1 = add i32 %add151, %inc.or142
-  %12 = bitcast i32 %result.1 to float
-  br label %cleanup.166
+; <label>:114                                     ; preds = %104, %102
+  %aSignificand.2 = phi i32 [ %113, %104 ], [ %aSignificand.1, %102 ]
+  %aExponent.2 = phi i32 [ 0, %104 ], [ %aExponent.1, %102 ]
+  %115 = and i32 %aSignificand.2, 7
+  %116 = lshr i32 %aSignificand.2, 3
+  %117 = and i32 %116, 8388607
+  %118 = shl i32 %aExponent.2, 23
+  %119 = or i32 %118, %56
+  %120 = or i32 %119, %117
+  %121 = icmp ugt i32 %115, 4
+  %122 = zext i1 %121 to i32
+  %.6 = add i32 %120, %122
+  %123 = icmp eq i32 %115, 4
+  %124 = and i32 %.6, 1
+  %125 = select i1 %123, i32 %124, i32 0
+  %result.1 = add i32 %125, %.6
+  %126 = bitcast i32 %result.1 to float
+  br label %.thread
 
-cleanup.166:                                      ; preds = %if.then, %if.then.23, %if.end.18, %if.then.25, %if.then.116, %if.end.136, %if.then.82, %cleanup
-  %retval.2 = phi float [ %a, %cleanup ], [ %10, %if.then.116 ], [ %12, %if.end.136 ], [ 0.000000e+00, %if.then.82 ], [ %.mux, %if.then ], [ %1, %if.then.23 ], [ %1, %if.end.18 ], [ %5, %if.then.25 ]
-  ret float %retval.2
+.thread:                                          ; preds = %11, %25, %20, %26, %99, %114, %77, %29
+  %.2 = phi float [ %a, %29 ], [ %101, %99 ], [ %126, %114 ], [ 0.000000e+00, %77 ], [ %.mux, %11 ], [ %3, %25 ], [ %3, %20 ], [ %28, %26 ]
+  ret float %.2
 }
 
 ; Function Attrs: nounwind readnone
 define i64 @__muldsi3(i32 signext %a, i32 signext %b) #0 {
-entry:
-  %and = and i32 %a, 65535
-  %and1 = and i32 %b, 65535
-  %mul = mul nuw i32 %and1, %and
-  %shr = lshr i32 %mul, 16
-  %and6 = and i32 %mul, 65535
-  %shr7 = lshr i32 %a, 16
-  %mul9 = mul nuw i32 %and1, %shr7
-  %add = add i32 %shr, %mul9
-  %shr14 = lshr i32 %add, 16
-  %shr18 = and i32 %add, 65535
-  %shr22 = lshr i32 %b, 16
-  %mul24 = mul nuw i32 %shr22, %and
-  %add25 = add i32 %shr18, %mul24
-  %fold = add i32 %add, %mul24
-  %shl27 = shl i32 %fold, 16
-  %add30 = or i32 %shl27, %and6
-  %shr31 = lshr i32 %add25, 16
-  %mul37 = mul nuw i32 %shr22, %shr7
-  %add34 = add i32 %shr14, %mul37
-  %add40 = add i32 %add34, %shr31
-  %r.sroa.8.0.insert.ext = zext i32 %add30 to i64
-  %r.sroa.0.0.insert.ext = zext i32 %add40 to i64
-  %r.sroa.0.0.insert.shift = shl nuw i64 %r.sroa.0.0.insert.ext, 32
-  %r.sroa.0.0.insert.insert = or i64 %r.sroa.0.0.insert.shift, %r.sroa.8.0.insert.ext
-  ret i64 %r.sroa.0.0.insert.insert
+  %1 = and i32 %a, 65535
+  %2 = and i32 %b, 65535
+  %3 = mul nuw i32 %2, %1
+  %4 = lshr i32 %3, 16
+  %5 = and i32 %3, 65535
+  %6 = lshr i32 %a, 16
+  %7 = mul nuw i32 %2, %6
+  %8 = add i32 %4, %7
+  %9 = lshr i32 %8, 16
+  %10 = and i32 %8, 65535
+  %11 = lshr i32 %b, 16
+  %12 = mul nuw i32 %11, %1
+  %13 = add i32 %10, %12
+  %fold = add i32 %8, %12
+  %14 = shl i32 %fold, 16
+  %15 = or i32 %14, %5
+  %16 = lshr i32 %13, 16
+  %17 = mul nuw i32 %11, %6
+  %18 = add i32 %9, %17
+  %19 = add i32 %18, %16
+  %20 = zext i32 %15 to i64
+  %21 = zext i32 %19 to i64
+  %22 = shl nuw i64 %21, 32
+  %23 = or i64 %22, %20
+  ret i64 %23
 }
 
 ; Function Attrs: nounwind readnone
 define i64 @__muldi3(i64 signext %a, i64 signext %b) #0 {
-entry:
-  %x.sroa.0.0.extract.shift = lshr i64 %a, 32
-  %x.sroa.0.0.extract.trunc = trunc i64 %x.sroa.0.0.extract.shift to i32
-  %x.sroa.4.0.extract.trunc = trunc i64 %a to i32
-  %y.sroa.0.0.extract.shift = lshr i64 %b, 32
-  %y.sroa.0.0.extract.trunc = trunc i64 %y.sroa.0.0.extract.shift to i32
-  %y.sroa.4.0.extract.trunc = trunc i64 %b to i32
-  %and.i = and i32 %x.sroa.4.0.extract.trunc, 65535
-  %and1.i = and i32 %y.sroa.4.0.extract.trunc, 65535
-  %mul.i = mul nuw i32 %and1.i, %and.i
-  %shr.i = lshr i32 %mul.i, 16
-  %and6.i = and i32 %mul.i, 65535
-  %shr7.i = lshr i32 %x.sroa.4.0.extract.trunc, 16
-  %mul9.i = mul nuw i32 %and1.i, %shr7.i
-  %add.i = add i32 %shr.i, %mul9.i
-  %shr14.i = lshr i32 %add.i, 16
-  %shr18.i = and i32 %add.i, 65535
-  %shr22.i = lshr i32 %y.sroa.4.0.extract.trunc, 16
-  %mul24.i = mul nuw i32 %shr22.i, %and.i
-  %add25.i = add i32 %shr18.i, %mul24.i
-  %fold.i = add i32 %add.i, %mul24.i
-  %shl27.i = shl i32 %fold.i, 16
-  %add30.i = or i32 %shl27.i, %and6.i
-  %shr31.i = lshr i32 %add25.i, 16
-  %mul37.i = mul nuw i32 %shr22.i, %shr7.i
-  %r.sroa.8.0.insert.ext.i = zext i32 %add30.i to i64
-  %mul = mul i32 %x.sroa.0.0.extract.trunc, %y.sroa.4.0.extract.trunc
-  %mul12 = mul i32 %y.sroa.0.0.extract.trunc, %x.sroa.4.0.extract.trunc
-  %add34.i = add i32 %mul12, %mul
-  %add40.i = add i32 %add34.i, %mul37.i
-  %add = add i32 %add40.i, %shr14.i
-  %add15 = add i32 %add, %shr31.i
-  %r.sroa.0.0.insert.ext = zext i32 %add15 to i64
-  %r.sroa.0.0.insert.shift = shl nuw i64 %r.sroa.0.0.insert.ext, 32
-  %r.sroa.0.0.insert.insert = or i64 %r.sroa.0.0.insert.shift, %r.sroa.8.0.insert.ext.i
-  ret i64 %r.sroa.0.0.insert.insert
+  %1 = lshr i64 %a, 32
+  %2 = trunc i64 %1 to i32
+  %3 = trunc i64 %a to i32
+  %4 = lshr i64 %b, 32
+  %5 = trunc i64 %4 to i32
+  %6 = trunc i64 %b to i32
+  %7 = and i32 %3, 65535
+  %8 = and i32 %6, 65535
+  %9 = mul nuw i32 %8, %7
+  %10 = lshr i32 %9, 16
+  %11 = and i32 %9, 65535
+  %12 = lshr i32 %3, 16
+  %13 = mul nuw i32 %8, %12
+  %14 = add i32 %10, %13
+  %15 = lshr i32 %14, 16
+  %16 = and i32 %14, 65535
+  %17 = lshr i32 %6, 16
+  %18 = mul nuw i32 %17, %7
+  %19 = add i32 %16, %18
+  %fold.i = add i32 %14, %18
+  %20 = shl i32 %fold.i, 16
+  %21 = or i32 %20, %11
+  %22 = lshr i32 %19, 16
+  %23 = mul nuw i32 %17, %12
+  %24 = zext i32 %21 to i64
+  %25 = mul i32 %2, %6
+  %26 = mul i32 %5, %3
+  %27 = add i32 %26, %25
+  %28 = add i32 %27, %23
+  %29 = add i32 %28, %15
+  %30 = add i32 %29, %22
+  %31 = zext i32 %30 to i64
+  %32 = shl nuw i64 %31, 32
+  %33 = or i64 %32, %24
+  ret i64 %33
 }
 
 ; Function Attrs: nounwind readnone
 define float @__mulsf3(float %a, float %b) #0 {
-entry:
-  %0 = bitcast float %a to i32
-  %shr = lshr i32 %0, 23
-  %and = and i32 %shr, 255
-  %1 = bitcast float %b to i32
-  %shr2 = lshr i32 %1, 23
-  %and3 = and i32 %shr2, 255
-  %xor = xor i32 %1, %0
-  %and6 = and i32 %xor, -2147483648
-  %and8 = and i32 %0, 8388607
-  %and10 = and i32 %1, 8388607
-  %sub = add nsw i32 %and, -1
-  %cmp = icmp ugt i32 %sub, 253
-  %sub11 = add nsw i32 %and3, -1
-  %cmp12 = icmp ugt i32 %sub11, 253
-  %or.cond = or i1 %cmp, %cmp12
-  br i1 %or.cond, label %if.then, label %if.end.59
+  %1 = bitcast float %a to i32
+  %2 = lshr i32 %1, 23
+  %3 = and i32 %2, 255
+  %4 = bitcast float %b to i32
+  %5 = lshr i32 %4, 23
+  %6 = and i32 %5, 255
+  %7 = xor i32 %4, %1
+  %8 = and i32 %7, -2147483648
+  %9 = and i32 %1, 8388607
+  %10 = and i32 %4, 8388607
+  %11 = add nsw i32 %3, -1
+  %12 = icmp ugt i32 %11, 253
+  %13 = add nsw i32 %6, -1
+  %14 = icmp ugt i32 %13, 253
+  %or.cond = or i1 %12, %14
+  br i1 %or.cond, label %15, label %.thread11
 
-if.then:                                          ; preds = %entry
-  %and14 = and i32 %0, 2147483647
-  %and16 = and i32 %1, 2147483647
-  %cmp17 = icmp ugt i32 %and14, 2139095040
-  %cmp18 = icmp ugt i32 %and16, 2139095040
-  %2 = or i1 %cmp17, %cmp18
-  br i1 %2, label %cleanup.123, label %if.end
+; <label>:15                                      ; preds = %0
+  %16 = and i32 %1, 2147483647
+  %17 = and i32 %4, 2147483647
+  %18 = icmp ugt i32 %16, 2139095040
+  %19 = icmp ugt i32 %17, 2139095040
+  %20 = or i1 %18, %19
+  br i1 %20, label %.thread, label %21
 
-if.end:                                           ; preds = %if.then
-  %cmp21 = icmp eq i32 %and14, 2139095040
-  %cmp23 = icmp eq i32 %and16, 2139095040
-  %3 = or i1 %cmp21, %cmp23
-  br i1 %3, label %if.then.28, label %if.end.35
+; <label>:21                                      ; preds = %15
+  %22 = icmp eq i32 %16, 2139095040
+  %23 = icmp eq i32 %17, 2139095040
+  %24 = or i1 %22, %23
+  br i1 %24, label %25, label %31
 
-if.then.28:                                       ; preds = %if.end
-  %cond = select i1 %cmp21, i32 %and16, i32 %and14
-  %tobool29 = icmp ne i32 %cond, 0
-  %or = or i32 %and6, 2139095040
-  %4 = bitcast i32 %or to float
-  %5 = select i1 %tobool29, float %4, float 0x7FF8000000000000
-  br label %cleanup.123
+; <label>:25                                      ; preds = %21
+  %26 = select i1 %22, i32 %17, i32 %16
+  %27 = icmp ne i32 %26, 0
+  %28 = or i32 %8, 2139095040
+  %29 = bitcast i32 %28 to float
+  %30 = select i1 %27, float %29, float 0x7FF8000000000000
+  br label %.thread
 
-if.end.35:                                        ; preds = %if.end
-  %tobool36 = icmp eq i32 %and14, 0
-  %lnot = icmp eq i32 %and16, 0
-  %.lnot = or i1 %tobool36, %lnot
-  br i1 %.lnot, label %if.then.42, label %if.end.44
+; <label>:31                                      ; preds = %21
+  %32 = icmp eq i32 %16, 0
+  %33 = icmp eq i32 %17, 0
+  %. = or i1 %32, %33
+  br i1 %., label %34, label %36
 
-if.then.42:                                       ; preds = %if.end.35
-  %6 = bitcast i32 %and6 to float
-  br label %cleanup.123
+; <label>:34                                      ; preds = %31
+  %35 = bitcast i32 %8 to float
+  br label %.thread
 
-if.end.44:                                        ; preds = %if.end.35
-  %cmp45 = icmp ult i32 %and14, 8388608
-  br i1 %cmp45, label %if.then.46, label %if.end.48
+; <label>:36                                      ; preds = %31
+  %37 = icmp ult i32 %16, 8388608
+  br i1 %37, label %38, label %44
 
-if.then.46:                                       ; preds = %if.end.44
-  %7 = tail call i32 @llvm.ctlz.i32(i32 %and8, i1 false) #3
-  %sub.i.181 = add nuw nsw i32 %7, 24
-  %shl.mask.i.182 = and i32 %sub.i.181, 31
-  %shl.i.183 = shl i32 %and8, %shl.mask.i.182
-  %sub2.i.184 = sub nsw i32 9, %7
-  br label %if.end.48
+; <label>:38                                      ; preds = %36
+  %39 = tail call i32 @llvm.ctlz.i32(i32 %9, i1 false) #3
+  %40 = add nuw nsw i32 %39, 24
+  %41 = and i32 %40, 31
+  %42 = shl i32 %9, %41
+  %43 = sub nsw i32 9, %39
+  br label %44
 
-if.end.48:                                        ; preds = %if.then.46, %if.end.44
-  %aSignificand.0 = phi i32 [ %shl.i.183, %if.then.46 ], [ %and8, %if.end.44 ]
-  %scale.0 = phi i32 [ %sub2.i.184, %if.then.46 ], [ 0, %if.end.44 ]
-  %cmp49 = icmp ult i32 %and16, 8388608
-  br i1 %cmp49, label %if.then.50, label %if.end.59
+; <label>:44                                      ; preds = %38, %36
+  %aSignificand.0 = phi i32 [ %42, %38 ], [ %9, %36 ]
+  %scale.0 = phi i32 [ %43, %38 ], [ 0, %36 ]
+  %45 = icmp ult i32 %17, 8388608
+  br i1 %45, label %46, label %.thread11
 
-if.then.50:                                       ; preds = %if.end.48
-  %8 = tail call i32 @llvm.ctlz.i32(i32 %and10, i1 false) #3
-  %sub.i = add nuw nsw i32 %8, 24
-  %shl.mask.i.179 = and i32 %sub.i, 31
-  %shl.i.180 = shl i32 %and10, %shl.mask.i.179
-  %sub2.i = add nsw i32 %scale.0, 9
-  %add52 = sub nsw i32 %sub2.i, %8
-  br label %if.end.59
+; <label>:46                                      ; preds = %44
+  %47 = tail call i32 @llvm.ctlz.i32(i32 %10, i1 false) #3
+  %48 = add nuw nsw i32 %47, 24
+  %49 = and i32 %48, 31
+  %50 = shl i32 %10, %49
+  %51 = add nsw i32 %scale.0, 9
+  %52 = sub nsw i32 %51, %47
+  br label %.thread11
 
-if.end.59:                                        ; preds = %if.end.48, %if.then.50, %entry
-  %aSignificand.2 = phi i32 [ %and8, %entry ], [ %aSignificand.0, %if.then.50 ], [ %aSignificand.0, %if.end.48 ]
-  %bSignificand.1 = phi i32 [ %and10, %entry ], [ %shl.i.180, %if.then.50 ], [ %and10, %if.end.48 ]
-  %scale.5 = phi i32 [ 0, %entry ], [ %add52, %if.then.50 ], [ %scale.0, %if.end.48 ]
-  %or60 = or i32 %aSignificand.2, 8388608
-  %or61 = shl i32 %bSignificand.1, 8
-  %shl = or i32 %or61, -2147483648
-  %conv.i.177 = zext i32 %or60 to i64
-  %conv1.i = zext i32 %shl to i64
-  %mul.i = mul nuw i64 %conv1.i, %conv.i.177
-  %shr.i.178 = lshr i64 %mul.i, 32
-  %conv2.i = trunc i64 %shr.i.178 to i32
-  %conv3.i = trunc i64 %mul.i to i32
-  %shl65206 = shl nuw nsw i64 %shr.i.178, 1
-  %shl65 = trunc i64 %shl65206 to i32
-  %shr66 = lshr i32 %conv3.i, 31
-  %or67 = or i32 %shl65, %shr66
-  %and70 = and i32 %conv2.i, 8388608
-  %tobool71 = icmp ne i32 %and70, 0
-  %and70.lobit = lshr exact i32 %and70, 23
-  %add62 = add nsw i32 %and, -127
-  %sub63 = add nsw i32 %add62, %and3
-  %add64 = add nsw i32 %sub63, %scale.5
-  %add73 = add i32 %add64, %and70.lobit
-  %cond78 = select i1 %tobool71, i32 %conv2.i, i32 %or67
-  %shl68 = xor i32 %and70.lobit, 1
-  %cond83 = shl i32 %conv3.i, %shl68
-  %cmp84 = icmp slt i32 %add73, 1
-  br i1 %cmp84, label %if.then.85, label %if.else
+.thread11:                                        ; preds = %44, %46, %0
+  %aSignificand.2 = phi i32 [ %9, %0 ], [ %aSignificand.0, %46 ], [ %aSignificand.0, %44 ]
+  %bSignificand.1 = phi i32 [ %10, %0 ], [ %50, %46 ], [ %10, %44 ]
+  %scale.5 = phi i32 [ 0, %0 ], [ %52, %46 ], [ %scale.0, %44 ]
+  %53 = or i32 %aSignificand.2, 8388608
+  %54 = shl i32 %bSignificand.1, 8
+  %55 = or i32 %54, -2147483648
+  %56 = zext i32 %53 to i64
+  %57 = zext i32 %55 to i64
+  %58 = mul nuw i64 %57, %56
+  %59 = lshr i64 %58, 32
+  %60 = trunc i64 %59 to i32
+  %61 = trunc i64 %58 to i32
+  %62 = shl nuw nsw i64 %59, 1
+  %63 = trunc i64 %62 to i32
+  %64 = lshr i32 %61, 31
+  %65 = or i32 %63, %64
+  %66 = and i32 %60, 8388608
+  %67 = icmp ne i32 %66, 0
+  %.lobit = lshr exact i32 %66, 23
+  %68 = add nsw i32 %3, -127
+  %69 = add nsw i32 %68, %6
+  %70 = add nsw i32 %69, %scale.5
+  %71 = add i32 %70, %.lobit
+  %72 = select i1 %67, i32 %60, i32 %65
+  %73 = xor i32 %.lobit, 1
+  %74 = shl i32 %61, %73
+  %75 = icmp slt i32 %71, 1
+  br i1 %75, label %76, label %92
 
-if.then.85:                                       ; preds = %if.end.59
-  %sub86 = sub i32 1, %add73
-  %cmp87 = icmp ugt i32 %sub86, 31
-  br i1 %cmp87, label %cleanup.91, label %cleanup.91.thread
+; <label>:76                                      ; preds = %.thread11
+  %77 = sub i32 1, %71
+  %78 = icmp ugt i32 %77, 31
+  br i1 %78, label %90, label %.thread13
 
-cleanup.91.thread:                                ; preds = %if.then.85
-  %9 = sub i32 0, %sub86
-  %shl.mask.i = and i32 %9, 31
-  %shl.i = shl i32 %cond83, %shl.mask.i
-  %tobool.i = icmp ne i32 %shl.i, 0
-  %shl3.i = shl i32 %cond78, %shl.mask.i
-  %shr.mask.i = and i32 %sub86, 31
-  %shr.i = lshr i32 %cond83, %shr.mask.i
-  %or.i = or i32 %shl3.i, %shr.i
-  %conv.i = zext i1 %tobool.i to i32
-  %or5.i = or i32 %or.i, %conv.i
-  %shr7.i = lshr i32 %cond78, %shr.mask.i
-  br label %if.end.97
+.thread13:                                        ; preds = %76
+  %79 = sub i32 0, %77
+  %80 = and i32 %79, 31
+  %81 = shl i32 %74, %80
+  %82 = icmp ne i32 %81, 0
+  %83 = shl i32 %72, %80
+  %84 = and i32 %77, 31
+  %85 = lshr i32 %74, %84
+  %86 = or i32 %83, %85
+  %87 = zext i1 %82 to i32
+  %88 = or i32 %86, %87
+  %89 = lshr i32 %72, %84
+  br label %96
 
-cleanup.91:                                       ; preds = %if.then.85
-  %10 = bitcast i32 %and6 to float
-  br label %cleanup.123
+; <label>:90                                      ; preds = %76
+  %91 = bitcast i32 %8 to float
+  br label %.thread
 
-if.else:                                          ; preds = %if.end.59
-  %and94 = and i32 %cond78, 8388607
-  %shl95 = shl i32 %add73, 23
-  %or96 = or i32 %and94, %shl95
-  br label %if.end.97
+; <label>:92                                      ; preds = %.thread11
+  %93 = and i32 %72, 8388607
+  %94 = shl i32 %71, 23
+  %95 = or i32 %93, %94
+  br label %96
 
-if.end.97:                                        ; preds = %cleanup.91.thread, %if.else
-  %productHi.2 = phi i32 [ %or96, %if.else ], [ %shr7.i, %cleanup.91.thread ]
-  %productLo.2 = phi i32 [ %cond83, %if.else ], [ %or5.i, %cleanup.91.thread ]
-  %or98 = or i32 %productHi.2, %and6
-  %cmp99 = icmp ugt i32 %productLo.2, -2147483648
-  %conv = zext i1 %cmp99 to i32
-  %add100 = add i32 %conv, %or98
-  %cmp101 = icmp eq i32 %productLo.2, -2147483648
-  %and104 = and i32 %add100, 1
-  %cond107 = select i1 %cmp101, i32 %and104, i32 0
-  %add108 = add i32 %cond107, %add100
-  %cmp109 = icmp sgt i32 %add73, 254
-  %or112 = or i32 %and6, 2139095040
-  %cond115 = select i1 %cmp109, i32 %or112, i32 %add108
-  %11 = bitcast i32 %cond115 to float
-  br label %cleanup.123
+; <label>:96                                      ; preds = %.thread13, %92
+  %productHi.2 = phi i32 [ %95, %92 ], [ %89, %.thread13 ]
+  %productLo.2 = phi i32 [ %74, %92 ], [ %88, %.thread13 ]
+  %97 = or i32 %productHi.2, %8
+  %98 = icmp ugt i32 %productLo.2, -2147483648
+  %99 = zext i1 %98 to i32
+  %100 = add i32 %99, %97
+  %101 = icmp eq i32 %productLo.2, -2147483648
+  %102 = and i32 %100, 1
+  %103 = select i1 %101, i32 %102, i32 0
+  %104 = add i32 %103, %100
+  %105 = icmp sgt i32 %71, 254
+  %106 = or i32 %8, 2139095040
+  %107 = select i1 %105, i32 %106, i32 %104
+  %108 = bitcast i32 %107 to float
+  br label %.thread
 
-cleanup.123:                                      ; preds = %if.then, %if.then.42, %if.then.28, %if.end.97, %cleanup.91
-  %retval.6 = phi float [ %11, %if.end.97 ], [ %10, %cleanup.91 ], [ 0x7FF8000000000000, %if.then ], [ %6, %if.then.42 ], [ %5, %if.then.28 ]
-  ret float %retval.6
+.thread:                                          ; preds = %15, %34, %25, %96, %90
+  %.6 = phi float [ %108, %96 ], [ %91, %90 ], [ 0x7FF8000000000000, %15 ], [ %35, %34 ], [ %30, %25 ]
+  ret float %.6
 }
 
 ; Function Attrs: nounwind
 define void @ludecomposition_L_pass(float* nocapture readonly %mat, float* nocapture %L, i32 signext %size, i32 signext %k) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !8
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !9
-  %add.i = add nsw i32 %1, %0
-  %cmp = icmp ult i32 %add.i, %size
-  br i1 %cmp, label %if.then, label %if.end.13
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !8
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !9
+  %3 = add nsw i32 %2, %1
+  %4 = icmp ult i32 %3, %size
+  br i1 %4, label %5, label %20
 
-if.then:                                          ; preds = %entry
-  %mul = mul i32 %add.i, %size
-  %add = add i32 %mul, %k
-  %arrayidx = getelementptr inbounds float, float* %mat, i32 %add
-  %2 = load float, float* %arrayidx, align 4, !tbaa !10
-  %mul1 = mul i32 %k, %size
-  %add2 = add i32 %mul1, %k
-  %arrayidx3 = getelementptr inbounds float, float* %mat, i32 %add2
-  %3 = load float, float* %arrayidx3, align 4, !tbaa !10
-  %div = fdiv float %2, %3, !fpmath !14
-  %arrayidx6 = getelementptr inbounds float, float* %L, i32 %add
-  store float %div, float* %arrayidx6, align 4, !tbaa !10
-  %add7 = add i32 %k, 1
-  %cmp8 = icmp eq i32 %add.i, %add7
-  br i1 %cmp8, label %if.then.9, label %if.end.13
+; <label>:5                                       ; preds = %0
+  %6 = mul i32 %3, %size
+  %7 = add i32 %6, %k
+  %8 = getelementptr inbounds float, float* %mat, i32 %7
+  %9 = load float, float* %8, align 4, !tbaa !10
+  %10 = mul i32 %k, %size
+  %11 = add i32 %10, %k
+  %12 = getelementptr inbounds float, float* %mat, i32 %11
+  %13 = load float, float* %12, align 4, !tbaa !10
+  %14 = fdiv float %9, %13, !fpmath !14
+  %15 = getelementptr inbounds float, float* %L, i32 %7
+  store float %14, float* %15, align 4, !tbaa !10
+  %16 = add i32 %k, 1
+  %17 = icmp eq i32 %3, %16
+  br i1 %17, label %18, label %20
 
-if.then.9:                                        ; preds = %if.then
-  %arrayidx12 = getelementptr inbounds float, float* %L, i32 %add2
-  store float 1.000000e+00, float* %arrayidx12, align 4, !tbaa !10
-  br label %if.end.13
+; <label>:18                                      ; preds = %5
+  %19 = getelementptr inbounds float, float* %L, i32 %11
+  store float 1.000000e+00, float* %19, align 4, !tbaa !10
+  br label %20
 
-if.end.13:                                        ; preds = %if.then, %if.then.9, %entry
+; <label>:20                                      ; preds = %5, %18, %0
   ret void
 }
 
 ; Function Attrs: nounwind
 define void @ludecomposition_U_pass(float* nocapture %mat, float* nocapture readonly %L, i32 signext %size, i32 signext %k) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 1) #3, !srcloc !8
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 1) #3, !srcloc !9
-  %add.i = add nsw i32 %1, %0
-  %2 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !8
-  %3 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !9
-  %add.i.39 = add nsw i32 %3, %2
-  %mul = mul i32 %add.i, %size
-  %add = add i32 %mul, %k
-  %arrayidx = getelementptr inbounds float, float* %L, i32 %add
-  %4 = load float, float* %arrayidx, align 4, !tbaa !10
-  %add9 = add i32 %add.i.39, %mul
-  %arrayidx10 = getelementptr inbounds float, float* %mat, i32 %add9
-  %5 = load float, float* %arrayidx10, align 4, !tbaa !10
-  %mul11 = mul i32 %k, %size
-  %add12 = add i32 %add.i.39, %mul11
-  %arrayidx13 = getelementptr inbounds float, float* %mat, i32 %add12
-  %6 = load float, float* %arrayidx13, align 4, !tbaa !10
-  %neg = fsub float -0.000000e+00, %4
-  %7 = tail call float @llvm.fmuladd.f32(float %neg, float %6, float %5)
-  store float %7, float* %arrayidx10, align 4, !tbaa !10
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 1) #3, !srcloc !8
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 1) #3, !srcloc !9
+  %3 = add nsw i32 %2, %1
+  %4 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !8
+  %5 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !9
+  %6 = add nsw i32 %5, %4
+  %7 = mul i32 %3, %size
+  %8 = add i32 %7, %k
+  %9 = getelementptr inbounds float, float* %L, i32 %8
+  %10 = load float, float* %9, align 4, !tbaa !10
+  %11 = add i32 %6, %7
+  %12 = getelementptr inbounds float, float* %mat, i32 %11
+  %13 = load float, float* %12, align 4, !tbaa !10
+  %14 = mul i32 %k, %size
+  %15 = add i32 %6, %14
+  %16 = getelementptr inbounds float, float* %mat, i32 %15
+  %17 = load float, float* %16, align 4, !tbaa !10
+  %18 = fsub float -0.000000e+00, %10
+  %19 = tail call float @llvm.fmuladd.f32(float %18, float %17, float %13)
+  store float %19, float* %12, align 4, !tbaa !10
   ret void
 }
 
@@ -827,7 +820,7 @@ attributes #3 = { nounwind }
 !4 = !{!"kernel_arg_base_type", !"float*", !"float*", !"uint", !"uint"}
 !5 = !{!"kernel_arg_type_qual", !"", !"", !"", !""}
 !6 = !{void (float*, float*, i32, i32)* @ludecomposition_U_pass, !1, !2, !3, !4, !5}
-!7 = !{!"clang version 3.7.0 (tags/RELEASE_371/final)"}
+!7 = !{!"clang version 3.7.1 (tags/RELEASE_371/final)"}
 !8 = !{i32 12926}
 !9 = !{i32 13066}
 !10 = !{!11, !11, i64 0}

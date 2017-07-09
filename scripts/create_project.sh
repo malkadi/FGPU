@@ -42,15 +42,16 @@ if [ $# -eq 0 ]; then
       cp lscript.ld $BENCHMARK_DIR/$benchmark/src/
     fi
     # delete some unnecessary files that are generated on project creation
-    rm $BENCHMARK_DIR/$benchmark/src/main.cc
-    rm $BENCHMARK_DIR/$benchmark/src/Xilinx.spec
-    rm $BENCHMARK_DIR/$benchmark/src/README.txt
+    rm -f $BENCHMARK_DIR/$benchmark/src/main.cc
+    rm -f $BENCHMARK_DIR/$benchmark/src/Xilinx.spec
+    rm -f $BENCHMARK_DIR/$benchmark/src/README.txt
     
     ./compile.sh $BENCHMARK_DIR/$benchmark
     
   done
 else
   benchmark=`basename $1`
+  echo "Building" $benchmark
 
   if [ "$benchmark" = "MicroBlaze" ]; then
     # create MicroBlaze benchmark
@@ -70,9 +71,9 @@ else
   fi
 
   # delete some unnecessary files that are generated on project creation
-  rm $BENCHMARK_DIR/$benchmark/src/main.cc
-  rm $BENCHMARK_DIR/$benchmark/src/Xilinx.spec
-  rm $BENCHMARK_DIR/$benchmark/src/README.txt
+  rm -f $BENCHMARK_DIR/$benchmark/src/main.cc
+  rm -f $BENCHMARK_DIR/$benchmark/src/Xilinx.spec
+  rm -f $BENCHMARK_DIR/$benchmark/src/README.txt
 
   ./compile.sh $BENCHMARK_DIR/$benchmark
   

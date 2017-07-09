@@ -4,32 +4,31 @@ target triple = "mips-unknown-uknown"
 
 ; Function Attrs: nounwind
 define void @max_hard_float(float* nocapture readonly %in, float* nocapture %out, i32 signext %reduce_factor) #0 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !7
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !8
-  %add.i = add nsw i32 %1, %0
-  %2 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !9
-  %arrayidx = getelementptr inbounds float, float* %in, i32 %add.i
-  %3 = load float, float* %arrayidx, align 4, !tbaa !10
-  br label %do.body
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !7
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !8
+  %3 = add nsw i32 %2, %1
+  %4 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !9
+  %5 = getelementptr inbounds float, float* %in, i32 %3
+  %6 = load float, float* %5, align 4, !tbaa !10
+  br label %7
 
-do.body:                                          ; preds = %do.body, %entry
-  %i.0 = phi i32 [ 1, %entry ], [ %inc, %do.body ]
-  %begin.0 = phi i32 [ %add.i, %entry ], [ %add, %do.body ]
-  %max_val.0 = phi float [ %3, %entry ], [ %cond, %do.body ]
-  %add = add i32 %begin.0, %2
-  %arrayidx3 = getelementptr inbounds float, float* %in, i32 %add
-  %4 = load float, float* %arrayidx3, align 4, !tbaa !10
-  %cmp = fcmp olt float %4, %max_val.0
-  %cond = select i1 %cmp, float %max_val.0, float %4
-  %inc = add nuw nsw i32 %i.0, 1
-  %cmp4 = icmp eq i32 %inc, %reduce_factor
-  br i1 %cmp4, label %do.end, label %do.body
+; <label>:7                                       ; preds = %7, %0
+  %i.0 = phi i32 [ 1, %0 ], [ %13, %7 ]
+  %begin.0 = phi i32 [ %3, %0 ], [ %8, %7 ]
+  %max_val.0 = phi float [ %6, %0 ], [ %12, %7 ]
+  %8 = add i32 %begin.0, %4
+  %9 = getelementptr inbounds float, float* %in, i32 %8
+  %10 = load float, float* %9, align 4, !tbaa !10
+  %11 = fcmp olt float %10, %max_val.0
+  %12 = select i1 %11, float %max_val.0, float %10
+  %13 = add nuw nsw i32 %i.0, 1
+  %14 = icmp eq i32 %13, %reduce_factor
+  br i1 %14, label %15, label %7
 
-do.end:                                           ; preds = %do.body
-  %cond.lcssa = phi float [ %cond, %do.body ]
-  %arrayidx5 = getelementptr inbounds float, float* %out, i32 %add.i
-  store float %cond.lcssa, float* %arrayidx5, align 4, !tbaa !10
+; <label>:15                                      ; preds = %7
+  %.lcssa = phi float [ %12, %7 ]
+  %16 = getelementptr inbounds float, float* %out, i32 %3
+  store float %.lcssa, float* %16, align 4, !tbaa !10
   ret void
 }
 
@@ -45,7 +44,7 @@ attributes #1 = { nounwind }
 !3 = !{!"kernel_arg_type", !"float*", !"float*", !"uint"}
 !4 = !{!"kernel_arg_base_type", !"float*", !"float*", !"uint"}
 !5 = !{!"kernel_arg_type_qual", !"", !"", !""}
-!6 = !{!"clang version 3.7.0 (tags/RELEASE_371/final)"}
+!6 = !{!"clang version 3.7.1 (tags/RELEASE_371/final)"}
 !7 = !{i32 11771}
 !8 = !{i32 11911}
 !9 = !{i32 11550}

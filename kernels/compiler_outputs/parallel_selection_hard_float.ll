@@ -4,35 +4,34 @@ target triple = "mips-unknown-uknown"
 
 ; Function Attrs: nounwind
 define void @ParallelSelection_hard_float(float* nocapture readonly %in, float* nocapture %out) #0 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !7
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !8
-  %add.i = add nsw i32 %1, %0
-  %2 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !9
-  %arrayidx = getelementptr inbounds float, float* %in, i32 %add.i
-  %3 = load float, float* %arrayidx, align 4, !tbaa !10
-  br label %do.body
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !7
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !8
+  %3 = add nsw i32 %2, %1
+  %4 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !9
+  %5 = getelementptr inbounds float, float* %in, i32 %3
+  %6 = load float, float* %5, align 4, !tbaa !10
+  br label %7
 
-do.body:                                          ; preds = %do.body, %entry
-  %j.0 = phi i32 [ 0, %entry ], [ %inc, %do.body ]
-  %pos.0 = phi i32 [ 0, %entry ], [ %add, %do.body ]
-  %arrayidx2 = getelementptr inbounds float, float* %in, i32 %j.0
-  %4 = load float, float* %arrayidx2, align 4, !tbaa !10
-  %cmp = fcmp olt float %4, %3
-  %cmp3 = fcmp oeq float %4, %3
-  %cmp4 = icmp slt i32 %j.0, %add.i
-  %5 = and i1 %cmp4, %cmp3
-  %6 = or i1 %cmp, %5
-  %lor.ext = zext i1 %6 to i32
-  %add = add nsw i32 %lor.ext, %pos.0
-  %inc = add nuw nsw i32 %j.0, 1
-  %cmp7 = icmp eq i32 %inc, %2
-  br i1 %cmp7, label %do.end, label %do.body
+; <label>:7                                       ; preds = %7, %0
+  %j.0 = phi i32 [ 0, %0 ], [ %17, %7 ]
+  %pos.0 = phi i32 [ 0, %0 ], [ %16, %7 ]
+  %8 = getelementptr inbounds float, float* %in, i32 %j.0
+  %9 = load float, float* %8, align 4, !tbaa !10
+  %10 = fcmp olt float %9, %6
+  %11 = fcmp oeq float %9, %6
+  %12 = icmp slt i32 %j.0, %3
+  %13 = and i1 %12, %11
+  %14 = or i1 %10, %13
+  %15 = zext i1 %14 to i32
+  %16 = add nsw i32 %15, %pos.0
+  %17 = add nuw nsw i32 %j.0, 1
+  %18 = icmp eq i32 %17, %4
+  br i1 %18, label %19, label %7
 
-do.end:                                           ; preds = %do.body
-  %add.lcssa = phi i32 [ %add, %do.body ]
-  %arrayidx8 = getelementptr inbounds float, float* %out, i32 %add.lcssa
-  store float %3, float* %arrayidx8, align 4, !tbaa !10
+; <label>:19                                      ; preds = %7
+  %.lcssa = phi i32 [ %16, %7 ]
+  %20 = getelementptr inbounds float, float* %out, i32 %.lcssa
+  store float %6, float* %20, align 4, !tbaa !10
   ret void
 }
 
@@ -48,7 +47,7 @@ attributes #1 = { nounwind }
 !3 = !{!"kernel_arg_type", !"float*", !"float*"}
 !4 = !{!"kernel_arg_base_type", !"float*", !"float*"}
 !5 = !{!"kernel_arg_type_qual", !"", !""}
-!6 = !{!"clang version 3.7.0 (tags/RELEASE_371/final)"}
+!6 = !{!"clang version 3.7.1 (tags/RELEASE_371/final)"}
 !7 = !{i32 11885}
 !8 = !{i32 12025}
 !9 = !{i32 11664}

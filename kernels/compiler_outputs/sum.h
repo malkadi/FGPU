@@ -1,0 +1,12 @@
+#define SUM_LEN                             514
+#define SUM_ATOMIC_WORD_POS                 252
+#define SUM_HALF_ATOMIC_POS                 271
+#define SUM_HALF_IMPROVED_ATOMIC_POS        294
+#define SUM_BYTE_ATOMIC_POS                 320
+#define SUM_BYTE_IMPROVED_ATOMIC_POS        341
+#define SUM_POS                             373
+#define SUM_HALF_POS                        392
+#define SUM_HALF_IMPROVED_POS               415
+#define SUM_BYTE_POS                        441
+#define SUM_BYTE_IMPROVED_POS               462
+#define SUM_FLOAT_POS                       494

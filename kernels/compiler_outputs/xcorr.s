@@ -186,8 +186,7 @@ LBB0_20:
 	beq	r6, r0, LBB0_22
 	beq	r0, r0, LBB0_21
 LBB0_17:
-	li	r3, 0
-	lui	r3, 0
+	addi	r3, r0, 0
 	beq	r6, r7, LBB0_27
 # BB#18:
 	sub	r2, r6, r7
@@ -986,34 +985,36 @@ xcorr_float:
 	.set	noreorder
 	.set	nomacro
 # BB#0:
-	lp	r2, 2
-	lp	r3, 0
-	lp	r5, 1
+	lp	r10, 2
+	lp	r11, 0
+	lp	r2, 1
 	#APP
-	lid r4, 0
+	lid r3, 0
 	#NO_APP
 	#APP
-	wgoff r6, 0
+	wgoff r4, 0
 	#NO_APP
-	add	r4, r6, r4
-	slli	r1, r4, 2
-	add	r6, r5, r1
-	li	r5, 0
-	lui	r5, 0
+	add	r12, r4, r3
+	slli	r1, r12, 2
+	add	r13, r2, r1
+	addi	r9, r0, 0
 	#APP
-	size r7, 0
+	size r14, 0
 	#NO_APP
 LBB10_1:                                # =>This Inner Loop Header: Depth=1
-	lw	r1, r6[r0]
-	lw	r8, r3[r0]
-	fmul	r1, r8, r1
-	fadd	r5, r5, r1
-	addi	r3, r3, 4
-	addi	r6, r6, 4
-	addi	r7, r7, -1
-	bne	r7, r0, LBB10_1
+	lw	r1, r11[r0]
+	lw	r2, r13[r0]
+	jsub	__mulsf3
+	add	r2, r0, r1
+	add	r1, r0, r9
+	jsub	__addsf3
+	add	r9, r0, r1
+	addi	r11, r11, 4
+	addi	r13, r13, 4
+	addi	r14, r14, -1
+	bne	r14, r0, LBB10_1
 # BB#2:
-	sw	r5, r2[r4]
+	sw	r9, r10[r12]
 	ret
 	.set	macro
 	.set	reorder

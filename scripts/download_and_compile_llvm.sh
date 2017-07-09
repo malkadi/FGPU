@@ -4,13 +4,13 @@ DOWNLOAD_DIR="/tmp"       # tempral directory to download the source files
 N_THREADS=3               # number of threads for compilation
 COMPILE_STRATEGY="Debug"  # Set at "Release" for shorter compilation times. Set to "Debug" for debugging your LLVM code.
 
+SCRIPTS_DIR=`dirname $0`
 
-
-LOG_FILE=$DOWNLOAD_DIR/"download_and_compile_llvm.log"
+LOG_FILE=$SCRIPTS_DIR"/download_and_compile_llvm.log"
 LLVM_SRC_NAME="llvm-3.7.1"
 CLANG_SRC_NAME="cfe-3.7.1"
 
-cd `dirname $0`/../
+cd `dirname $0`/../ # go to FGPU main directory
 
 HOME_DIR=`pwd`
 LLVM_SRC_DIR=`pwd`"/"$LLVM_SRC_NAME.src

@@ -4,38 +4,37 @@ target triple = "mips-unknown-uknown"
 
 ; Function Attrs: nounwind
 define void @bitonicSort_hard_float(float* nocapture %a, i32 signext %stage, i32 signext %passOfStage, i32 signext %direction) #0 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !7
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !8
-  %add.i = add nsw i32 %1, %0
-  %sub = sub i32 %stage, %passOfStage
-  %shl.mask = and i32 %sub, 31
-  %shl = shl i32 1, %shl.mask
-  %mul = shl i32 %shl, 1
-  %2 = add i32 %shl, -1
-  %rem = and i32 %add.i, %2
-  %div = lshr i32 %add.i, %shl.mask
-  %mul1 = mul i32 %mul, %div
-  %add = add i32 %mul1, %rem
-  %add2 = add i32 %add, %shl
-  %arrayidx = getelementptr inbounds float, float* %a, i32 %add
-  %3 = load float, float* %arrayidx, align 4, !tbaa !9
-  %arrayidx3 = getelementptr inbounds float, float* %a, i32 %add2
-  %4 = load float, float* %arrayidx3, align 4, !tbaa !9
-  %shl.mask4 = and i32 %stage, 31
-  %5 = shl i32 1, %shl.mask4
-  %rem762 = and i32 %add.i, %5
-  %cmp = icmp eq i32 %rem762, 0
-  %sub8 = sub i32 1, %direction
-  %direction.sub8 = select i1 %cmp, i32 %direction, i32 %sub8
-  %cmp9 = fcmp ogt float %3, %4
-  %cond = select i1 %cmp9, float %3, float %4
-  %cond14 = select i1 %cmp9, float %4, float %3
-  %tobool15 = icmp ne i32 %direction.sub8, 0
-  %cond19 = select i1 %tobool15, float %cond14, float %cond
-  %cond24 = select i1 %tobool15, float %cond, float %cond14
-  store float %cond19, float* %arrayidx, align 4, !tbaa !9
-  store float %cond24, float* %arrayidx3, align 4, !tbaa !9
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !7
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !8
+  %3 = add nsw i32 %2, %1
+  %4 = sub i32 %stage, %passOfStage
+  %5 = and i32 %4, 31
+  %6 = shl i32 1, %5
+  %7 = shl i32 %6, 1
+  %8 = add i32 %6, -1
+  %9 = and i32 %3, %8
+  %10 = lshr i32 %3, %5
+  %11 = mul i32 %7, %10
+  %12 = add i32 %11, %9
+  %13 = add i32 %12, %6
+  %14 = getelementptr inbounds float, float* %a, i32 %12
+  %15 = load float, float* %14, align 4, !tbaa !9
+  %16 = getelementptr inbounds float, float* %a, i32 %13
+  %17 = load float, float* %16, align 4, !tbaa !9
+  %18 = and i32 %stage, 31
+  %19 = shl i32 1, %18
+  %20 = and i32 %3, %19
+  %21 = icmp eq i32 %20, 0
+  %22 = sub i32 1, %direction
+  %direction. = select i1 %21, i32 %direction, i32 %22
+  %23 = fcmp ogt float %15, %17
+  %24 = select i1 %23, float %15, float %17
+  %25 = select i1 %23, float %17, float %15
+  %26 = icmp ne i32 %direction., 0
+  %27 = select i1 %26, float %25, float %24
+  %28 = select i1 %26, float %24, float %25
+  store float %27, float* %14, align 4, !tbaa !9
+  store float %28, float* %16, align 4, !tbaa !9
   ret void
 }
 
@@ -51,7 +50,7 @@ attributes #1 = { nounwind }
 !3 = !{!"kernel_arg_type", !"float*", !"uint", !"uint", !"uint"}
 !4 = !{!"kernel_arg_base_type", !"float*", !"uint", !"uint", !"uint"}
 !5 = !{!"kernel_arg_type_qual", !"", !"", !"", !""}
-!6 = !{!"clang version 3.7.0 (tags/RELEASE_371/final)"}
+!6 = !{!"clang version 3.7.1 (tags/RELEASE_371/final)"}
 !7 = !{i32 12447}
 !8 = !{i32 12587}
 !9 = !{!10, !10, i64 0}

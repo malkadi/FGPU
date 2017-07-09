@@ -4,30 +4,29 @@ target triple = "mips-unknown-uknown"
 
 ; Function Attrs: nounwind
 define void @fir_hard_float(float* nocapture readonly %in, float* nocapture readonly %coeff, float* nocapture %out, i32 signext %filter_len) #0 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !7
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !8
-  %add.i = add nsw i32 %1, %0
-  br label %do.body
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !7
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !8
+  %3 = add nsw i32 %2, %1
+  br label %4
 
-do.body:                                          ; preds = %do.body, %entry
-  %i.0 = phi i32 [ 0, %entry ], [ %inc, %do.body ]
-  %acc.0 = phi float [ 0.000000e+00, %entry ], [ %add2, %do.body ]
-  %add = add nsw i32 %i.0, %add.i
-  %arrayidx = getelementptr inbounds float, float* %in, i32 %add
-  %2 = load float, float* %arrayidx, align 4, !tbaa !9
-  %arrayidx1 = getelementptr inbounds float, float* %coeff, i32 %i.0
-  %3 = load float, float* %arrayidx1, align 4, !tbaa !9
-  %mul = fmul float %2, %3
-  %add2 = fadd float %acc.0, %mul
-  %inc = add nuw nsw i32 %i.0, 1
-  %cmp = icmp eq i32 %inc, %filter_len
-  br i1 %cmp, label %do.end, label %do.body
+; <label>:4                                       ; preds = %4, %0
+  %i.0 = phi i32 [ 0, %0 ], [ %12, %4 ]
+  %acc.0 = phi float [ 0.000000e+00, %0 ], [ %11, %4 ]
+  %5 = add nsw i32 %i.0, %3
+  %6 = getelementptr inbounds float, float* %in, i32 %5
+  %7 = load float, float* %6, align 4, !tbaa !9
+  %8 = getelementptr inbounds float, float* %coeff, i32 %i.0
+  %9 = load float, float* %8, align 4, !tbaa !9
+  %10 = fmul float %7, %9
+  %11 = fadd float %acc.0, %10
+  %12 = add nuw nsw i32 %i.0, 1
+  %13 = icmp eq i32 %12, %filter_len
+  br i1 %13, label %14, label %4
 
-do.end:                                           ; preds = %do.body
-  %add2.lcssa = phi float [ %add2, %do.body ]
-  %arrayidx3 = getelementptr inbounds float, float* %out, i32 %add.i
-  store float %add2.lcssa, float* %arrayidx3, align 4, !tbaa !9
+; <label>:14                                      ; preds = %4
+  %.lcssa = phi float [ %11, %4 ]
+  %15 = getelementptr inbounds float, float* %out, i32 %3
+  store float %.lcssa, float* %15, align 4, !tbaa !9
   ret void
 }
 
@@ -43,7 +42,7 @@ attributes #1 = { nounwind }
 !3 = !{!"kernel_arg_type", !"float*", !"float*", !"float*", !"int"}
 !4 = !{!"kernel_arg_base_type", !"float*", !"float*", !"float*", !"int"}
 !5 = !{!"kernel_arg_type_qual", !"", !"", !"", !""}
-!6 = !{!"clang version 3.7.0 (tags/RELEASE_371/final)"}
+!6 = !{!"clang version 3.7.1 (tags/RELEASE_371/final)"}
 !7 = !{i32 11663}
 !8 = !{i32 11803}
 !9 = !{!10, !10, i64 0}

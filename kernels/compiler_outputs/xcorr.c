@@ -1,4 +1,4 @@
-const unsigned int xcorr[] = {
+unsigned int xcorr[] = {
 	0x11fffbff,
 	0xdc0007e9,
 	0xdc0003ea,
@@ -485,11 +485,11 @@ const unsigned int xcorr[] = {
 	0x31000464,
 	0x48000489,
 	0x10000d21,
+	0x1103f803,
+	0xb2000862,
 	0x19000003,
 	0x1dfe0023,
 	0x32000d43,
-	0x1103f804,
-	0xb2000882,
 	0x40000861,
 	0xd40003f0,
 	0xd40007ef,
@@ -741,3 +741,4 @@ const unsigned int xcorr[] = {
 	0x7c002989,
 	0x92000000
 };
+unsigned *code = xcorr;

@@ -5,7 +5,7 @@ The PYNQ interface of FGPU can be accessed on this [link](https://github.com/mal
 
 
 + Setup information is available in the `scripts` folder
-
++ Benchmarks are available in the `benchmark` folder
 ##Supported Boards
 + ZC706
 

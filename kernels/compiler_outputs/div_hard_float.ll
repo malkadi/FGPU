@@ -4,15 +4,14 @@ target triple = "mips-unknown-uknown"
 
 ; Function Attrs: nounwind
 define void @div_hard_float(float* nocapture readonly %in1, float* nocapture %out, float %val) #0 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !7
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !8
-  %add.i = add nsw i32 %1, %0
-  %arrayidx = getelementptr inbounds float, float* %in1, i32 %add.i
-  %2 = load float, float* %arrayidx, align 4, !tbaa !9
-  %div = fdiv float %2, %val, !fpmath !13
-  %arrayidx1 = getelementptr inbounds float, float* %out, i32 %add.i
-  store float %div, float* %arrayidx1, align 4, !tbaa !9
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !7
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !8
+  %3 = add nsw i32 %2, %1
+  %4 = getelementptr inbounds float, float* %in1, i32 %3
+  %5 = load float, float* %4, align 4, !tbaa !9
+  %6 = fdiv float %5, %val, !fpmath !13
+  %7 = getelementptr inbounds float, float* %out, i32 %3
+  store float %6, float* %7, align 4, !tbaa !9
   ret void
 }
 
@@ -28,7 +27,7 @@ attributes #1 = { nounwind }
 !3 = !{!"kernel_arg_type", !"float*", !"float*", !"float"}
 !4 = !{!"kernel_arg_base_type", !"float*", !"float*", !"float"}
 !5 = !{!"kernel_arg_type_qual", !"", !"", !""}
-!6 = !{!"clang version 3.7.0 (tags/RELEASE_371/final)"}
+!6 = !{!"clang version 3.7.1 (tags/RELEASE_371/final)"}
 !7 = !{i32 11527}
 !8 = !{i32 11667}
 !9 = !{!10, !10, i64 0}

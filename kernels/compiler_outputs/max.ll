@@ -4,659 +4,641 @@ target triple = "mips-unknown-uknown"
 
 ; Function Attrs: nounwind readnone
 define i32 @__eqsf2(float %a, float %b) #0 {
-entry:
-  %0 = bitcast float %a to i32
-  %1 = bitcast float %b to i32
-  %and.i = and i32 %0, 2147483647
-  %and2.i = and i32 %1, 2147483647
-  %cmp.i = icmp slt i32 %0, %1
-  %cond.i = select i1 %cmp.i, i32 -1, i32 1
-  %cmp3.i = icmp sgt i32 %0, %1
-  %cond4.i = select i1 %cmp3.i, i32 -1, i32 1
-  %and5.i = and i32 %1, %0
-  %cmp6.i = icmp sgt i32 %and5.i, -1
-  %cond7.i = select i1 %cmp6.i, i32 %cond.i, i32 %cond4.i
-  %cmp8.i = icmp eq i32 %0, %1
-  %or.i = or i32 %and2.i, %and.i
-  %cmp13.i = icmp eq i32 %or.i, 0
-  %2 = or i1 %cmp8.i, %cmp13.i
-  %cond17.i = select i1 %2, i32 0, i32 %cond7.i
-  %cmp18.i = icmp ugt i32 %and.i, 2139095040
-  %cmp19.i = icmp ugt i32 %and2.i, 2139095040
-  %3 = or i1 %cmp18.i, %cmp19.i
-  %cond23.i = select i1 %3, i32 1, i32 %cond17.i
-  ret i32 %cond23.i
+  %1 = bitcast float %a to i32
+  %2 = bitcast float %b to i32
+  %3 = and i32 %1, 2147483647
+  %4 = and i32 %2, 2147483647
+  %5 = icmp slt i32 %1, %2
+  %6 = select i1 %5, i32 -1, i32 1
+  %7 = icmp sgt i32 %1, %2
+  %8 = select i1 %7, i32 -1, i32 1
+  %9 = and i32 %2, %1
+  %10 = icmp sgt i32 %9, -1
+  %11 = select i1 %10, i32 %6, i32 %8
+  %12 = icmp eq i32 %1, %2
+  %13 = or i32 %4, %3
+  %14 = icmp eq i32 %13, 0
+  %15 = or i1 %12, %14
+  %16 = select i1 %15, i32 0, i32 %11
+  %17 = icmp ugt i32 %3, 2139095040
+  %18 = icmp ugt i32 %4, 2139095040
+  %19 = or i1 %17, %18
+  %20 = select i1 %19, i32 1, i32 %16
+  ret i32 %20
 }
 
 ; Function Attrs: nounwind readnone
 define i32 @__nesf2(float %a, float %b) #0 {
-entry:
-  %0 = bitcast float %a to i32
-  %1 = bitcast float %b to i32
-  %and.i = and i32 %0, 2147483647
-  %and2.i = and i32 %1, 2147483647
-  %cmp.i = icmp slt i32 %0, %1
-  %cond.i = select i1 %cmp.i, i32 -1, i32 1
-  %cmp3.i = icmp sgt i32 %0, %1
-  %cond4.i = select i1 %cmp3.i, i32 -1, i32 1
-  %and5.i = and i32 %1, %0
-  %cmp6.i = icmp sgt i32 %and5.i, -1
-  %cond7.i = select i1 %cmp6.i, i32 %cond.i, i32 %cond4.i
-  %cmp8.i = icmp eq i32 %0, %1
-  %or.i = or i32 %and2.i, %and.i
-  %cmp13.i = icmp eq i32 %or.i, 0
-  %2 = or i1 %cmp8.i, %cmp13.i
-  %cond17.i = select i1 %2, i32 0, i32 %cond7.i
-  %cmp18.i = icmp ugt i32 %and.i, 2139095040
-  %cmp19.i = icmp ugt i32 %and2.i, 2139095040
-  %3 = or i1 %cmp18.i, %cmp19.i
-  %cond23.i = select i1 %3, i32 1, i32 %cond17.i
-  ret i32 %cond23.i
+  %1 = bitcast float %a to i32
+  %2 = bitcast float %b to i32
+  %3 = and i32 %1, 2147483647
+  %4 = and i32 %2, 2147483647
+  %5 = icmp slt i32 %1, %2
+  %6 = select i1 %5, i32 -1, i32 1
+  %7 = icmp sgt i32 %1, %2
+  %8 = select i1 %7, i32 -1, i32 1
+  %9 = and i32 %2, %1
+  %10 = icmp sgt i32 %9, -1
+  %11 = select i1 %10, i32 %6, i32 %8
+  %12 = icmp eq i32 %1, %2
+  %13 = or i32 %4, %3
+  %14 = icmp eq i32 %13, 0
+  %15 = or i1 %12, %14
+  %16 = select i1 %15, i32 0, i32 %11
+  %17 = icmp ugt i32 %3, 2139095040
+  %18 = icmp ugt i32 %4, 2139095040
+  %19 = or i1 %17, %18
+  %20 = select i1 %19, i32 1, i32 %16
+  ret i32 %20
 }
 
 ; Function Attrs: nounwind readnone
 define i32 @__lesf2(float %a, float %b) #0 {
-entry:
-  %0 = bitcast float %a to i32
-  %1 = bitcast float %b to i32
-  %and.i = and i32 %0, 2147483647
-  %and2.i = and i32 %1, 2147483647
-  %cmp.i = icmp slt i32 %0, %1
-  %cond.i = select i1 %cmp.i, i32 -1, i32 1
-  %cmp3.i = icmp sgt i32 %0, %1
-  %cond4.i = select i1 %cmp3.i, i32 -1, i32 1
-  %and5.i = and i32 %1, %0
-  %cmp6.i = icmp sgt i32 %and5.i, -1
-  %cond7.i = select i1 %cmp6.i, i32 %cond.i, i32 %cond4.i
-  %cmp8.i = icmp eq i32 %0, %1
-  %or.i = or i32 %and2.i, %and.i
-  %cmp13.i = icmp eq i32 %or.i, 0
-  %2 = or i1 %cmp8.i, %cmp13.i
-  %cond17.i = select i1 %2, i32 0, i32 %cond7.i
-  %cmp18.i = icmp ugt i32 %and.i, 2139095040
-  %cmp19.i = icmp ugt i32 %and2.i, 2139095040
-  %3 = or i1 %cmp18.i, %cmp19.i
-  %cond23.i = select i1 %3, i32 1, i32 %cond17.i
-  ret i32 %cond23.i
+  %1 = bitcast float %a to i32
+  %2 = bitcast float %b to i32
+  %3 = and i32 %1, 2147483647
+  %4 = and i32 %2, 2147483647
+  %5 = icmp slt i32 %1, %2
+  %6 = select i1 %5, i32 -1, i32 1
+  %7 = icmp sgt i32 %1, %2
+  %8 = select i1 %7, i32 -1, i32 1
+  %9 = and i32 %2, %1
+  %10 = icmp sgt i32 %9, -1
+  %11 = select i1 %10, i32 %6, i32 %8
+  %12 = icmp eq i32 %1, %2
+  %13 = or i32 %4, %3
+  %14 = icmp eq i32 %13, 0
+  %15 = or i1 %12, %14
+  %16 = select i1 %15, i32 0, i32 %11
+  %17 = icmp ugt i32 %3, 2139095040
+  %18 = icmp ugt i32 %4, 2139095040
+  %19 = or i1 %17, %18
+  %20 = select i1 %19, i32 1, i32 %16
+  ret i32 %20
 }
 
 ; Function Attrs: nounwind readnone
 define i32 @__ltsf2(float %a, float %b) #0 {
-entry:
-  %0 = bitcast float %a to i32
-  %1 = bitcast float %b to i32
-  %and.i = and i32 %0, 2147483647
-  %and2.i = and i32 %1, 2147483647
-  %cmp.i = icmp slt i32 %0, %1
-  %cond.i = select i1 %cmp.i, i32 -1, i32 1
-  %cmp3.i = icmp sgt i32 %0, %1
-  %cond4.i = select i1 %cmp3.i, i32 -1, i32 1
-  %and5.i = and i32 %1, %0
-  %cmp6.i = icmp sgt i32 %and5.i, -1
-  %cond7.i = select i1 %cmp6.i, i32 %cond.i, i32 %cond4.i
-  %cmp8.i = icmp eq i32 %0, %1
-  %or.i = or i32 %and2.i, %and.i
-  %cmp13.i = icmp eq i32 %or.i, 0
-  %2 = or i1 %cmp8.i, %cmp13.i
-  %cond17.i = select i1 %2, i32 0, i32 %cond7.i
-  %cmp18.i = icmp ugt i32 %and.i, 2139095040
-  %cmp19.i = icmp ugt i32 %and2.i, 2139095040
-  %3 = or i1 %cmp18.i, %cmp19.i
-  %cond23.i = select i1 %3, i32 1, i32 %cond17.i
-  ret i32 %cond23.i
+  %1 = bitcast float %a to i32
+  %2 = bitcast float %b to i32
+  %3 = and i32 %1, 2147483647
+  %4 = and i32 %2, 2147483647
+  %5 = icmp slt i32 %1, %2
+  %6 = select i1 %5, i32 -1, i32 1
+  %7 = icmp sgt i32 %1, %2
+  %8 = select i1 %7, i32 -1, i32 1
+  %9 = and i32 %2, %1
+  %10 = icmp sgt i32 %9, -1
+  %11 = select i1 %10, i32 %6, i32 %8
+  %12 = icmp eq i32 %1, %2
+  %13 = or i32 %4, %3
+  %14 = icmp eq i32 %13, 0
+  %15 = or i1 %12, %14
+  %16 = select i1 %15, i32 0, i32 %11
+  %17 = icmp ugt i32 %3, 2139095040
+  %18 = icmp ugt i32 %4, 2139095040
+  %19 = or i1 %17, %18
+  %20 = select i1 %19, i32 1, i32 %16
+  ret i32 %20
 }
 
 ; Function Attrs: nounwind readnone
 define i32 @__gesf2(float %a, float %b) #0 {
-entry:
-  %0 = bitcast float %a to i32
-  %1 = bitcast float %b to i32
-  %and.i = and i32 %0, 2147483647
-  %and2.i = and i32 %1, 2147483647
-  %cmp.i = icmp slt i32 %0, %1
-  %cond.i = select i1 %cmp.i, i32 -1, i32 1
-  %cmp3.i = icmp sgt i32 %0, %1
-  %cond4.i = select i1 %cmp3.i, i32 -1, i32 1
-  %and5.i = and i32 %1, %0
-  %cmp6.i = icmp sgt i32 %and5.i, -1
-  %cond7.i = select i1 %cmp6.i, i32 %cond.i, i32 %cond4.i
-  %cmp8.i = icmp eq i32 %0, %1
-  %or.i = or i32 %and2.i, %and.i
-  %cmp13.i = icmp eq i32 %or.i, 0
-  %2 = or i1 %cmp8.i, %cmp13.i
-  %cond17.i = select i1 %2, i32 0, i32 %cond7.i
-  %cmp18.i = icmp ugt i32 %and.i, 2139095040
-  %cmp19.i = icmp ugt i32 %and2.i, 2139095040
-  %3 = or i1 %cmp18.i, %cmp19.i
-  %cond23.i = select i1 %3, i32 -1, i32 %cond17.i
-  ret i32 %cond23.i
+  %1 = bitcast float %a to i32
+  %2 = bitcast float %b to i32
+  %3 = and i32 %1, 2147483647
+  %4 = and i32 %2, 2147483647
+  %5 = icmp slt i32 %1, %2
+  %6 = select i1 %5, i32 -1, i32 1
+  %7 = icmp sgt i32 %1, %2
+  %8 = select i1 %7, i32 -1, i32 1
+  %9 = and i32 %2, %1
+  %10 = icmp sgt i32 %9, -1
+  %11 = select i1 %10, i32 %6, i32 %8
+  %12 = icmp eq i32 %1, %2
+  %13 = or i32 %4, %3
+  %14 = icmp eq i32 %13, 0
+  %15 = or i1 %12, %14
+  %16 = select i1 %15, i32 0, i32 %11
+  %17 = icmp ugt i32 %3, 2139095040
+  %18 = icmp ugt i32 %4, 2139095040
+  %19 = or i1 %17, %18
+  %20 = select i1 %19, i32 -1, i32 %16
+  ret i32 %20
 }
 
 ; Function Attrs: nounwind readnone
 define i32 @__gtsf2(float %a, float %b) #0 {
-entry:
-  %0 = bitcast float %a to i32
-  %1 = bitcast float %b to i32
-  %and.i = and i32 %0, 2147483647
-  %and2.i = and i32 %1, 2147483647
-  %cmp.i = icmp slt i32 %0, %1
-  %cond.i = select i1 %cmp.i, i32 -1, i32 1
-  %cmp3.i = icmp sgt i32 %0, %1
-  %cond4.i = select i1 %cmp3.i, i32 -1, i32 1
-  %and5.i = and i32 %1, %0
-  %cmp6.i = icmp sgt i32 %and5.i, -1
-  %cond7.i = select i1 %cmp6.i, i32 %cond.i, i32 %cond4.i
-  %cmp8.i = icmp eq i32 %0, %1
-  %or.i = or i32 %and2.i, %and.i
-  %cmp13.i = icmp eq i32 %or.i, 0
-  %2 = or i1 %cmp8.i, %cmp13.i
-  %cond17.i = select i1 %2, i32 0, i32 %cond7.i
-  %cmp18.i = icmp ugt i32 %and.i, 2139095040
-  %cmp19.i = icmp ugt i32 %and2.i, 2139095040
-  %3 = or i1 %cmp18.i, %cmp19.i
-  %cond23.i = select i1 %3, i32 -1, i32 %cond17.i
-  ret i32 %cond23.i
+  %1 = bitcast float %a to i32
+  %2 = bitcast float %b to i32
+  %3 = and i32 %1, 2147483647
+  %4 = and i32 %2, 2147483647
+  %5 = icmp slt i32 %1, %2
+  %6 = select i1 %5, i32 -1, i32 1
+  %7 = icmp sgt i32 %1, %2
+  %8 = select i1 %7, i32 -1, i32 1
+  %9 = and i32 %2, %1
+  %10 = icmp sgt i32 %9, -1
+  %11 = select i1 %10, i32 %6, i32 %8
+  %12 = icmp eq i32 %1, %2
+  %13 = or i32 %4, %3
+  %14 = icmp eq i32 %13, 0
+  %15 = or i1 %12, %14
+  %16 = select i1 %15, i32 0, i32 %11
+  %17 = icmp ugt i32 %3, 2139095040
+  %18 = icmp ugt i32 %4, 2139095040
+  %19 = or i1 %17, %18
+  %20 = select i1 %19, i32 -1, i32 %16
+  ret i32 %20
 }
 
 ; Function Attrs: nounwind readnone
 define i32 @__unordsf2(float %a, float %b) #0 {
-entry:
-  %0 = bitcast float %a to i32
-  %and = and i32 %0, 2147483647
-  %1 = bitcast float %b to i32
-  %and2 = and i32 %1, 2147483647
-  %cmp = icmp ugt i32 %and, 2139095040
-  %cmp3 = icmp ugt i32 %and2, 2139095040
-  %2 = or i1 %cmp, %cmp3
-  %lor.ext = zext i1 %2 to i32
-  ret i32 %lor.ext
+  %1 = bitcast float %a to i32
+  %2 = and i32 %1, 2147483647
+  %3 = bitcast float %b to i32
+  %4 = and i32 %3, 2147483647
+  %5 = icmp ugt i32 %2, 2139095040
+  %6 = icmp ugt i32 %4, 2139095040
+  %7 = or i1 %5, %6
+  %8 = zext i1 %7 to i32
+  ret i32 %8
 }
 
 ; Function Attrs: nounwind
 define void @max_float(float* nocapture readonly %in, float* nocapture %out, i32 signext %reduce_factor) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
-  %add.i = add nsw i32 %1, %0
-  %2 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
-  %arrayidx = getelementptr inbounds float, float* %in, i32 %add.i
-  %3 = load float, float* %arrayidx, align 4, !tbaa !30
-  br label %do.body
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
+  %3 = add nsw i32 %2, %1
+  %4 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
+  %5 = getelementptr inbounds float, float* %in, i32 %3
+  %6 = load float, float* %5, align 4, !tbaa !30
+  br label %7
 
-do.body:                                          ; preds = %do.body, %entry
-  %i.0 = phi i32 [ 1, %entry ], [ %inc, %do.body ]
-  %begin.0 = phi i32 [ %add.i, %entry ], [ %add, %do.body ]
-  %max_val.0 = phi float [ %3, %entry ], [ %cond, %do.body ]
-  %add = add i32 %begin.0, %2
-  %arrayidx3 = getelementptr inbounds float, float* %in, i32 %add
-  %4 = load float, float* %arrayidx3, align 4, !tbaa !30
-  %cmp = fcmp olt float %4, %max_val.0
-  %cond = select i1 %cmp, float %max_val.0, float %4
-  %inc = add nuw nsw i32 %i.0, 1
-  %cmp4 = icmp eq i32 %inc, %reduce_factor
-  br i1 %cmp4, label %do.end, label %do.body
+; <label>:7                                       ; preds = %7, %0
+  %i.0 = phi i32 [ 1, %0 ], [ %13, %7 ]
+  %begin.0 = phi i32 [ %3, %0 ], [ %8, %7 ]
+  %max_val.0 = phi float [ %6, %0 ], [ %12, %7 ]
+  %8 = add i32 %begin.0, %4
+  %9 = getelementptr inbounds float, float* %in, i32 %8
+  %10 = load float, float* %9, align 4, !tbaa !30
+  %11 = fcmp olt float %10, %max_val.0
+  %12 = select i1 %11, float %max_val.0, float %10
+  %13 = add nuw nsw i32 %i.0, 1
+  %14 = icmp eq i32 %13, %reduce_factor
+  br i1 %14, label %15, label %7
 
-do.end:                                           ; preds = %do.body
-  %cond.lcssa = phi float [ %cond, %do.body ]
-  %arrayidx5 = getelementptr inbounds float, float* %out, i32 %add.i
-  store float %cond.lcssa, float* %arrayidx5, align 4, !tbaa !30
+; <label>:15                                      ; preds = %7
+  %.lcssa = phi float [ %12, %7 ]
+  %16 = getelementptr inbounds float, float* %out, i32 %3
+  store float %.lcssa, float* %16, align 4, !tbaa !30
   ret void
 }
 
 ; Function Attrs: nounwind
 define void @max_word(i32* nocapture readonly %in, i32* nocapture %out, i32 signext %reduce_factor) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
-  %add.i = add nsw i32 %1, %0
-  %2 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
-  %arrayidx = getelementptr inbounds i32, i32* %in, i32 %add.i
-  %3 = load i32, i32* %arrayidx, align 4, !tbaa !34
-  br label %do.body
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
+  %3 = add nsw i32 %2, %1
+  %4 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
+  %5 = getelementptr inbounds i32, i32* %in, i32 %3
+  %6 = load i32, i32* %5, align 4, !tbaa !34
+  br label %7
 
-do.body:                                          ; preds = %do.body, %entry
-  %i.0 = phi i32 [ 1, %entry ], [ %inc, %do.body ]
-  %begin.0 = phi i32 [ %add.i, %entry ], [ %add, %do.body ]
-  %max_val.0 = phi i32 [ %3, %entry ], [ %cond, %do.body ]
-  %add = add i32 %begin.0, %2
-  %arrayidx3 = getelementptr inbounds i32, i32* %in, i32 %add
-  %4 = load i32, i32* %arrayidx3, align 4, !tbaa !34
-  %cmp = icmp slt i32 %4, %max_val.0
-  %cond = select i1 %cmp, i32 %max_val.0, i32 %4
-  %inc = add nuw nsw i32 %i.0, 1
-  %cmp4 = icmp eq i32 %inc, %reduce_factor
-  br i1 %cmp4, label %do.end, label %do.body
+; <label>:7                                       ; preds = %7, %0
+  %i.0 = phi i32 [ 1, %0 ], [ %13, %7 ]
+  %begin.0 = phi i32 [ %3, %0 ], [ %8, %7 ]
+  %max_val.0 = phi i32 [ %6, %0 ], [ %12, %7 ]
+  %8 = add i32 %begin.0, %4
+  %9 = getelementptr inbounds i32, i32* %in, i32 %8
+  %10 = load i32, i32* %9, align 4, !tbaa !34
+  %11 = icmp slt i32 %10, %max_val.0
+  %12 = select i1 %11, i32 %max_val.0, i32 %10
+  %13 = add nuw nsw i32 %i.0, 1
+  %14 = icmp eq i32 %13, %reduce_factor
+  br i1 %14, label %15, label %7
 
-do.end:                                           ; preds = %do.body
-  %cond.lcssa = phi i32 [ %cond, %do.body ]
-  %arrayidx5 = getelementptr inbounds i32, i32* %out, i32 %add.i
-  store i32 %cond.lcssa, i32* %arrayidx5, align 4, !tbaa !34
+; <label>:15                                      ; preds = %7
+  %.lcssa = phi i32 [ %12, %7 ]
+  %16 = getelementptr inbounds i32, i32* %out, i32 %3
+  store i32 %.lcssa, i32* %16, align 4, !tbaa !34
   ret void
 }
 
 ; Function Attrs: nounwind
 define void @max_half(i16* nocapture readonly %in, i16* nocapture %out, i32 signext %reduce_factor) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
-  %add.i = add nsw i32 %1, %0
-  %2 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
-  %arrayidx = getelementptr inbounds i16, i16* %in, i32 %add.i
-  %3 = load i16, i16* %arrayidx, align 2, !tbaa !36
-  %conv = sext i16 %3 to i32
-  br label %do.body
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
+  %3 = add nsw i32 %2, %1
+  %4 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
+  %5 = getelementptr inbounds i16, i16* %in, i32 %3
+  %6 = load i16, i16* %5, align 2, !tbaa !36
+  %7 = sext i16 %6 to i32
+  br label %8
 
-do.body:                                          ; preds = %do.body, %entry
-  %i.0 = phi i32 [ 1, %entry ], [ %inc, %do.body ]
-  %begin.0 = phi i32 [ %add.i, %entry ], [ %add, %do.body ]
-  %max_val.0 = phi i32 [ %conv, %entry ], [ %cond, %do.body ]
-  %add = add i32 %begin.0, %2
-  %arrayidx3 = getelementptr inbounds i16, i16* %in, i32 %add
-  %4 = load i16, i16* %arrayidx3, align 2, !tbaa !36
-  %conv4 = sext i16 %4 to i32
-  %cmp = icmp slt i32 %conv4, %max_val.0
-  %cond = select i1 %cmp, i32 %max_val.0, i32 %conv4
-  %inc = add nuw nsw i32 %i.0, 1
-  %cmp6 = icmp eq i32 %inc, %reduce_factor
-  br i1 %cmp6, label %do.end, label %do.body
+; <label>:8                                       ; preds = %8, %0
+  %i.0 = phi i32 [ 1, %0 ], [ %15, %8 ]
+  %begin.0 = phi i32 [ %3, %0 ], [ %9, %8 ]
+  %max_val.0 = phi i32 [ %7, %0 ], [ %14, %8 ]
+  %9 = add i32 %begin.0, %4
+  %10 = getelementptr inbounds i16, i16* %in, i32 %9
+  %11 = load i16, i16* %10, align 2, !tbaa !36
+  %12 = sext i16 %11 to i32
+  %13 = icmp slt i32 %12, %max_val.0
+  %14 = select i1 %13, i32 %max_val.0, i32 %12
+  %15 = add nuw nsw i32 %i.0, 1
+  %16 = icmp eq i32 %15, %reduce_factor
+  br i1 %16, label %17, label %8
 
-do.end:                                           ; preds = %do.body
-  %cond.lcssa = phi i32 [ %cond, %do.body ]
-  %conv8 = trunc i32 %cond.lcssa to i16
-  %arrayidx9 = getelementptr inbounds i16, i16* %out, i32 %add.i
-  store i16 %conv8, i16* %arrayidx9, align 2, !tbaa !36
+; <label>:17                                      ; preds = %8
+  %.lcssa = phi i32 [ %14, %8 ]
+  %18 = trunc i32 %.lcssa to i16
+  %19 = getelementptr inbounds i16, i16* %out, i32 %3
+  store i16 %18, i16* %19, align 2, !tbaa !36
   ret void
 }
 
 ; Function Attrs: nounwind
 define void @max_half_improved(<2 x i16>* nocapture readonly %in, i16* nocapture %out, i32 signext %reduce_factor) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
-  %add.i = add nsw i32 %1, %0
-  %2 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
-  %arrayidx = getelementptr inbounds <2 x i16>, <2 x i16>* %in, i32 %add.i
-  %3 = load <2 x i16>, <2 x i16>* %arrayidx, align 4, !tbaa !38
-  %4 = extractelement <2 x i16> %3, i32 0
-  %5 = extractelement <2 x i16> %3, i32 1
-  %cmp = icmp slt i16 %5, %4
-  %.sink = select i1 %cmp, i16 %4, i16 %5
-  %conv = sext i16 %.sink to i32
-  %div = lshr i32 %reduce_factor, 1
-  %cmp7.51 = icmp ugt i32 %reduce_factor, 3
-  br i1 %cmp7.51, label %for.body.preheader, label %for.end
-
-for.body.preheader:                               ; preds = %entry
-  br label %for.body
-
-for.body:                                         ; preds = %for.body.preheader, %for.body
-  %i.054 = phi i32 [ %inc, %for.body ], [ 1, %for.body.preheader ]
-  %max_val.053 = phi i32 [ %cond25, %for.body ], [ %conv, %for.body.preheader ]
-  %begin.052 = phi i32 [ %add, %for.body ], [ %add.i, %for.body.preheader ]
-  %add = add i32 %begin.052, %2
-  %arrayidx9 = getelementptr inbounds <2 x i16>, <2 x i16>* %in, i32 %add
-  %6 = load <2 x i16>, <2 x i16>* %arrayidx9, align 4, !tbaa !38
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
+  %3 = add nsw i32 %2, %1
+  %4 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
+  %5 = getelementptr inbounds <2 x i16>, <2 x i16>* %in, i32 %3
+  %6 = load <2 x i16>, <2 x i16>* %5, align 4, !tbaa !38
   %7 = extractelement <2 x i16> %6, i32 0
-  %conv10 = sext i16 %7 to i32
-  %cmp11 = icmp slt i32 %conv10, %max_val.053
-  %max_val.0.conv10 = select i1 %cmp11, i32 %max_val.053, i32 %conv10
   %8 = extractelement <2 x i16> %6, i32 1
-  %conv18 = sext i16 %8 to i32
-  %cmp19 = icmp slt i32 %conv18, %max_val.0.conv10
-  %cond25 = select i1 %cmp19, i32 %max_val.0.conv10, i32 %conv18
-  %inc = add nuw nsw i32 %i.054, 1
-  %cmp7 = icmp ult i32 %inc, %div
-  br i1 %cmp7, label %for.body, label %for.end.loopexit
+  %9 = icmp slt i16 %8, %7
+  %.sink = select i1 %9, i16 %7, i16 %8
+  %10 = sext i16 %.sink to i32
+  %11 = lshr i32 %reduce_factor, 1
+  %12 = icmp ugt i32 %reduce_factor, 3
+  br i1 %12, label %.lr.ph.preheader, label %._crit_edge
 
-for.end.loopexit:                                 ; preds = %for.body
-  %cond25.lcssa = phi i32 [ %cond25, %for.body ]
-  br label %for.end
+.lr.ph.preheader:                                 ; preds = %0
+  br label %.lr.ph
 
-for.end:                                          ; preds = %for.end.loopexit, %entry
-  %max_val.0.lcssa = phi i32 [ %conv, %entry ], [ %cond25.lcssa, %for.end.loopexit ]
-  %conv26 = trunc i32 %max_val.0.lcssa to i16
-  %arrayidx27 = getelementptr inbounds i16, i16* %out, i32 %add.i
-  store i16 %conv26, i16* %arrayidx27, align 2, !tbaa !36
+.lr.ph:                                           ; preds = %.lr.ph.preheader, %.lr.ph
+  %i.03 = phi i32 [ %23, %.lr.ph ], [ 1, %.lr.ph.preheader ]
+  %max_val.02 = phi i32 [ %22, %.lr.ph ], [ %10, %.lr.ph.preheader ]
+  %begin.01 = phi i32 [ %13, %.lr.ph ], [ %3, %.lr.ph.preheader ]
+  %13 = add i32 %begin.01, %4
+  %14 = getelementptr inbounds <2 x i16>, <2 x i16>* %in, i32 %13
+  %15 = load <2 x i16>, <2 x i16>* %14, align 4, !tbaa !38
+  %16 = extractelement <2 x i16> %15, i32 0
+  %17 = sext i16 %16 to i32
+  %18 = icmp slt i32 %17, %max_val.02
+  %max_val.0. = select i1 %18, i32 %max_val.02, i32 %17
+  %19 = extractelement <2 x i16> %15, i32 1
+  %20 = sext i16 %19 to i32
+  %21 = icmp slt i32 %20, %max_val.0.
+  %22 = select i1 %21, i32 %max_val.0., i32 %20
+  %23 = add nuw nsw i32 %i.03, 1
+  %24 = icmp ult i32 %23, %11
+  br i1 %24, label %.lr.ph, label %._crit_edge.loopexit
+
+._crit_edge.loopexit:                             ; preds = %.lr.ph
+  %.lcssa = phi i32 [ %22, %.lr.ph ]
+  br label %._crit_edge
+
+._crit_edge:                                      ; preds = %._crit_edge.loopexit, %0
+  %max_val.0.lcssa = phi i32 [ %10, %0 ], [ %.lcssa, %._crit_edge.loopexit ]
+  %25 = trunc i32 %max_val.0.lcssa to i16
+  %26 = getelementptr inbounds i16, i16* %out, i32 %3
+  store i16 %25, i16* %26, align 2, !tbaa !36
   ret void
 }
 
 ; Function Attrs: nounwind
 define void @max_byte(i8* nocapture readonly %in, i8* nocapture %out, i32 signext %reduce_factor) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
-  %add.i = add nsw i32 %1, %0
-  %2 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
-  %arrayidx = getelementptr inbounds i8, i8* %in, i32 %add.i
-  %3 = load i8, i8* %arrayidx, align 1, !tbaa !38
-  %conv = sext i8 %3 to i32
-  br label %do.body
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
+  %3 = add nsw i32 %2, %1
+  %4 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
+  %5 = getelementptr inbounds i8, i8* %in, i32 %3
+  %6 = load i8, i8* %5, align 1, !tbaa !38
+  %7 = sext i8 %6 to i32
+  br label %8
 
-do.body:                                          ; preds = %do.body, %entry
-  %i.0 = phi i32 [ 1, %entry ], [ %inc, %do.body ]
-  %begin.0 = phi i32 [ %add.i, %entry ], [ %add, %do.body ]
-  %max_val.0 = phi i32 [ %conv, %entry ], [ %cond, %do.body ]
-  %add = add i32 %begin.0, %2
-  %arrayidx3 = getelementptr inbounds i8, i8* %in, i32 %add
-  %4 = load i8, i8* %arrayidx3, align 1, !tbaa !38
-  %conv4 = sext i8 %4 to i32
-  %cmp = icmp slt i32 %conv4, %max_val.0
-  %cond = select i1 %cmp, i32 %max_val.0, i32 %conv4
-  %inc = add nuw nsw i32 %i.0, 1
-  %cmp6 = icmp eq i32 %inc, %reduce_factor
-  br i1 %cmp6, label %do.end, label %do.body
+; <label>:8                                       ; preds = %8, %0
+  %i.0 = phi i32 [ 1, %0 ], [ %15, %8 ]
+  %begin.0 = phi i32 [ %3, %0 ], [ %9, %8 ]
+  %max_val.0 = phi i32 [ %7, %0 ], [ %14, %8 ]
+  %9 = add i32 %begin.0, %4
+  %10 = getelementptr inbounds i8, i8* %in, i32 %9
+  %11 = load i8, i8* %10, align 1, !tbaa !38
+  %12 = sext i8 %11 to i32
+  %13 = icmp slt i32 %12, %max_val.0
+  %14 = select i1 %13, i32 %max_val.0, i32 %12
+  %15 = add nuw nsw i32 %i.0, 1
+  %16 = icmp eq i32 %15, %reduce_factor
+  br i1 %16, label %17, label %8
 
-do.end:                                           ; preds = %do.body
-  %cond.lcssa = phi i32 [ %cond, %do.body ]
-  %conv8 = trunc i32 %cond.lcssa to i8
-  %arrayidx9 = getelementptr inbounds i8, i8* %out, i32 %add.i
-  store i8 %conv8, i8* %arrayidx9, align 1, !tbaa !38
+; <label>:17                                      ; preds = %8
+  %.lcssa = phi i32 [ %14, %8 ]
+  %18 = trunc i32 %.lcssa to i8
+  %19 = getelementptr inbounds i8, i8* %out, i32 %3
+  store i8 %18, i8* %19, align 1, !tbaa !38
   ret void
 }
 
 ; Function Attrs: nounwind
 define void @max_byte_improved(<4 x i8>* nocapture readonly %in, i8* nocapture %out, i32 signext %reduce_factor) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
-  %add.i = add nsw i32 %1, %0
-  %2 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
-  %arrayidx = getelementptr inbounds <4 x i8>, <4 x i8>* %in, i32 %add.i
-  %3 = load <4 x i8>, <4 x i8>* %arrayidx, align 4, !tbaa !38
-  %4 = extractelement <4 x i8> %3, i32 0
-  %5 = extractelement <4 x i8> %3, i32 1
-  %cmp = icmp slt i8 %5, %4
-  %.sink = select i1 %cmp, i8 %4, i8 %5
-  %conv = sext i8 %.sink to i32
-  %6 = extractelement <4 x i8> %3, i32 2
-  %conv6 = sext i8 %6 to i32
-  %cmp7 = icmp slt i32 %conv6, %conv
-  %conv.conv6 = select i1 %cmp7, i32 %conv, i32 %conv6
-  %7 = extractelement <4 x i8> %3, i32 3
-  %conv14 = sext i8 %7 to i32
-  %cmp15 = icmp slt i32 %conv14, %conv.conv6
-  %cond21 = select i1 %cmp15, i32 %conv.conv6, i32 %conv14
-  %div = lshr i32 %reduce_factor, 2
-  %cmp23.99 = icmp ugt i32 %reduce_factor, 7
-  br i1 %cmp23.99, label %for.body.preheader, label %for.end
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
+  %3 = add nsw i32 %2, %1
+  %4 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
+  %5 = getelementptr inbounds <4 x i8>, <4 x i8>* %in, i32 %3
+  %6 = load <4 x i8>, <4 x i8>* %5, align 4, !tbaa !38
+  %7 = extractelement <4 x i8> %6, i32 0
+  %8 = extractelement <4 x i8> %6, i32 1
+  %9 = icmp slt i8 %8, %7
+  %.sink = select i1 %9, i8 %7, i8 %8
+  %10 = sext i8 %.sink to i32
+  %11 = extractelement <4 x i8> %6, i32 2
+  %12 = sext i8 %11 to i32
+  %13 = icmp slt i32 %12, %10
+  %. = select i1 %13, i32 %10, i32 %12
+  %14 = extractelement <4 x i8> %6, i32 3
+  %15 = sext i8 %14 to i32
+  %16 = icmp slt i32 %15, %.
+  %17 = select i1 %16, i32 %., i32 %15
+  %18 = lshr i32 %reduce_factor, 2
+  %19 = icmp ugt i32 %reduce_factor, 7
+  br i1 %19, label %.lr.ph.preheader, label %._crit_edge
 
-for.body.preheader:                               ; preds = %entry
-  br label %for.body
+.lr.ph.preheader:                                 ; preds = %0
+  br label %.lr.ph
 
-for.body:                                         ; preds = %for.body.preheader, %for.body
-  %i.0102 = phi i32 [ %inc, %for.body ], [ 1, %for.body.preheader ]
-  %max_val.0101 = phi i32 [ %cond57, %for.body ], [ %cond21, %for.body.preheader ]
-  %begin.0100 = phi i32 [ %add, %for.body ], [ %add.i, %for.body.preheader ]
-  %add = add i32 %begin.0100, %2
-  %arrayidx25 = getelementptr inbounds <4 x i8>, <4 x i8>* %in, i32 %add
-  %8 = load <4 x i8>, <4 x i8>* %arrayidx25, align 4, !tbaa !38
-  %9 = extractelement <4 x i8> %8, i32 0
-  %conv26 = sext i8 %9 to i32
-  %cmp27 = icmp slt i32 %conv26, %max_val.0101
-  %max_val.0.conv26 = select i1 %cmp27, i32 %max_val.0101, i32 %conv26
-  %10 = extractelement <4 x i8> %8, i32 1
-  %conv34 = sext i8 %10 to i32
-  %cmp35 = icmp slt i32 %conv34, %max_val.0.conv26
-  %cond41 = select i1 %cmp35, i32 %max_val.0.conv26, i32 %conv34
-  %11 = extractelement <4 x i8> %8, i32 2
-  %conv42 = sext i8 %11 to i32
-  %cmp43 = icmp slt i32 %conv42, %cond41
-  %cond41.conv42 = select i1 %cmp43, i32 %cond41, i32 %conv42
-  %12 = extractelement <4 x i8> %8, i32 3
-  %conv50 = sext i8 %12 to i32
-  %cmp51 = icmp slt i32 %conv50, %cond41.conv42
-  %cond57 = select i1 %cmp51, i32 %cond41.conv42, i32 %conv50
-  %inc = add nuw nsw i32 %i.0102, 1
-  %cmp23 = icmp ult i32 %inc, %div
-  br i1 %cmp23, label %for.body, label %for.end.loopexit
+.lr.ph:                                           ; preds = %.lr.ph.preheader, %.lr.ph
+  %i.04 = phi i32 [ %37, %.lr.ph ], [ 1, %.lr.ph.preheader ]
+  %max_val.03 = phi i32 [ %36, %.lr.ph ], [ %17, %.lr.ph.preheader ]
+  %begin.02 = phi i32 [ %20, %.lr.ph ], [ %3, %.lr.ph.preheader ]
+  %20 = add i32 %begin.02, %4
+  %21 = getelementptr inbounds <4 x i8>, <4 x i8>* %in, i32 %20
+  %22 = load <4 x i8>, <4 x i8>* %21, align 4, !tbaa !38
+  %23 = extractelement <4 x i8> %22, i32 0
+  %24 = sext i8 %23 to i32
+  %25 = icmp slt i32 %24, %max_val.03
+  %max_val.0. = select i1 %25, i32 %max_val.03, i32 %24
+  %26 = extractelement <4 x i8> %22, i32 1
+  %27 = sext i8 %26 to i32
+  %28 = icmp slt i32 %27, %max_val.0.
+  %29 = select i1 %28, i32 %max_val.0., i32 %27
+  %30 = extractelement <4 x i8> %22, i32 2
+  %31 = sext i8 %30 to i32
+  %32 = icmp slt i32 %31, %29
+  %.1 = select i1 %32, i32 %29, i32 %31
+  %33 = extractelement <4 x i8> %22, i32 3
+  %34 = sext i8 %33 to i32
+  %35 = icmp slt i32 %34, %.1
+  %36 = select i1 %35, i32 %.1, i32 %34
+  %37 = add nuw nsw i32 %i.04, 1
+  %38 = icmp ult i32 %37, %18
+  br i1 %38, label %.lr.ph, label %._crit_edge.loopexit
 
-for.end.loopexit:                                 ; preds = %for.body
-  %cond57.lcssa = phi i32 [ %cond57, %for.body ]
-  br label %for.end
+._crit_edge.loopexit:                             ; preds = %.lr.ph
+  %.lcssa = phi i32 [ %36, %.lr.ph ]
+  br label %._crit_edge
 
-for.end:                                          ; preds = %for.end.loopexit, %entry
-  %max_val.0.lcssa = phi i32 [ %cond21, %entry ], [ %cond57.lcssa, %for.end.loopexit ]
-  %conv58 = trunc i32 %max_val.0.lcssa to i8
-  %arrayidx59 = getelementptr inbounds i8, i8* %out, i32 %add.i
-  store i8 %conv58, i8* %arrayidx59, align 1, !tbaa !38
+._crit_edge:                                      ; preds = %._crit_edge.loopexit, %0
+  %max_val.0.lcssa = phi i32 [ %17, %0 ], [ %.lcssa, %._crit_edge.loopexit ]
+  %39 = trunc i32 %max_val.0.lcssa to i8
+  %40 = getelementptr inbounds i8, i8* %out, i32 %3
+  store i8 %39, i8* %40, align 1, !tbaa !38
   ret void
 }
 
 ; Function Attrs: nounwind
 define void @max_byte_improved_atomic(<4 x i8>* nocapture readonly %in, i8* %out, i32 signext %reduce_factor) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
-  %add.i = add nsw i32 %1, %0
-  %2 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
-  %arrayidx = getelementptr inbounds <4 x i8>, <4 x i8>* %in, i32 %add.i
-  %3 = load <4 x i8>, <4 x i8>* %arrayidx, align 4, !tbaa !38
-  %4 = extractelement <4 x i8> %3, i32 0
-  %5 = extractelement <4 x i8> %3, i32 1
-  %cmp = icmp slt i8 %5, %4
-  %.sink = select i1 %cmp, i8 %4, i8 %5
-  %conv = sext i8 %.sink to i32
-  %6 = extractelement <4 x i8> %3, i32 2
-  %conv6 = sext i8 %6 to i32
-  %cmp7 = icmp slt i32 %conv6, %conv
-  %conv.conv6 = select i1 %cmp7, i32 %conv, i32 %conv6
-  %7 = extractelement <4 x i8> %3, i32 3
-  %conv14 = sext i8 %7 to i32
-  %cmp15 = icmp slt i32 %conv14, %conv.conv6
-  %cond21 = select i1 %cmp15, i32 %conv.conv6, i32 %conv14
-  %div = lshr i32 %reduce_factor, 2
-  %cmp23.97 = icmp ugt i32 %reduce_factor, 7
-  br i1 %cmp23.97, label %for.body.preheader, label %for.end
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
+  %3 = add nsw i32 %2, %1
+  %4 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
+  %5 = getelementptr inbounds <4 x i8>, <4 x i8>* %in, i32 %3
+  %6 = load <4 x i8>, <4 x i8>* %5, align 4, !tbaa !38
+  %7 = extractelement <4 x i8> %6, i32 0
+  %8 = extractelement <4 x i8> %6, i32 1
+  %9 = icmp slt i8 %8, %7
+  %.sink = select i1 %9, i8 %7, i8 %8
+  %10 = sext i8 %.sink to i32
+  %11 = extractelement <4 x i8> %6, i32 2
+  %12 = sext i8 %11 to i32
+  %13 = icmp slt i32 %12, %10
+  %. = select i1 %13, i32 %10, i32 %12
+  %14 = extractelement <4 x i8> %6, i32 3
+  %15 = sext i8 %14 to i32
+  %16 = icmp slt i32 %15, %.
+  %17 = select i1 %16, i32 %., i32 %15
+  %18 = lshr i32 %reduce_factor, 2
+  %19 = icmp ugt i32 %reduce_factor, 7
+  br i1 %19, label %.lr.ph.preheader, label %._crit_edge
 
-for.body.preheader:                               ; preds = %entry
-  br label %for.body
+.lr.ph.preheader:                                 ; preds = %0
+  br label %.lr.ph
 
-for.body:                                         ; preds = %for.body.preheader, %for.body
-  %i.0100 = phi i32 [ %inc, %for.body ], [ 1, %for.body.preheader ]
-  %max_val.099 = phi i32 [ %cond57, %for.body ], [ %cond21, %for.body.preheader ]
-  %begin.098 = phi i32 [ %add, %for.body ], [ %add.i, %for.body.preheader ]
-  %add = add i32 %begin.098, %2
-  %arrayidx25 = getelementptr inbounds <4 x i8>, <4 x i8>* %in, i32 %add
-  %8 = load <4 x i8>, <4 x i8>* %arrayidx25, align 4, !tbaa !38
-  %9 = extractelement <4 x i8> %8, i32 0
-  %conv26 = sext i8 %9 to i32
-  %cmp27 = icmp slt i32 %conv26, %max_val.099
-  %max_val.0.conv26 = select i1 %cmp27, i32 %max_val.099, i32 %conv26
-  %10 = extractelement <4 x i8> %8, i32 1
-  %conv34 = sext i8 %10 to i32
-  %cmp35 = icmp slt i32 %conv34, %max_val.0.conv26
-  %cond41 = select i1 %cmp35, i32 %max_val.0.conv26, i32 %conv34
-  %11 = extractelement <4 x i8> %8, i32 2
-  %conv42 = sext i8 %11 to i32
-  %cmp43 = icmp slt i32 %conv42, %cond41
-  %cond41.conv42 = select i1 %cmp43, i32 %cond41, i32 %conv42
-  %12 = extractelement <4 x i8> %8, i32 3
-  %conv50 = sext i8 %12 to i32
-  %cmp51 = icmp slt i32 %conv50, %cond41.conv42
-  %cond57 = select i1 %cmp51, i32 %cond41.conv42, i32 %conv50
-  %inc = add nuw nsw i32 %i.0100, 1
-  %cmp23 = icmp ult i32 %inc, %div
-  br i1 %cmp23, label %for.body, label %for.end.loopexit
+.lr.ph:                                           ; preds = %.lr.ph.preheader, %.lr.ph
+  %i.04 = phi i32 [ %37, %.lr.ph ], [ 1, %.lr.ph.preheader ]
+  %max_val.03 = phi i32 [ %36, %.lr.ph ], [ %17, %.lr.ph.preheader ]
+  %begin.02 = phi i32 [ %20, %.lr.ph ], [ %3, %.lr.ph.preheader ]
+  %20 = add i32 %begin.02, %4
+  %21 = getelementptr inbounds <4 x i8>, <4 x i8>* %in, i32 %20
+  %22 = load <4 x i8>, <4 x i8>* %21, align 4, !tbaa !38
+  %23 = extractelement <4 x i8> %22, i32 0
+  %24 = sext i8 %23 to i32
+  %25 = icmp slt i32 %24, %max_val.03
+  %max_val.0. = select i1 %25, i32 %max_val.03, i32 %24
+  %26 = extractelement <4 x i8> %22, i32 1
+  %27 = sext i8 %26 to i32
+  %28 = icmp slt i32 %27, %max_val.0.
+  %29 = select i1 %28, i32 %max_val.0., i32 %27
+  %30 = extractelement <4 x i8> %22, i32 2
+  %31 = sext i8 %30 to i32
+  %32 = icmp slt i32 %31, %29
+  %.1 = select i1 %32, i32 %29, i32 %31
+  %33 = extractelement <4 x i8> %22, i32 3
+  %34 = sext i8 %33 to i32
+  %35 = icmp slt i32 %34, %.1
+  %36 = select i1 %35, i32 %.1, i32 %34
+  %37 = add nuw nsw i32 %i.04, 1
+  %38 = icmp ult i32 %37, %18
+  br i1 %38, label %.lr.ph, label %._crit_edge.loopexit
 
-for.end.loopexit:                                 ; preds = %for.body
-  %cond57.lcssa = phi i32 [ %cond57, %for.body ]
-  br label %for.end
+._crit_edge.loopexit:                             ; preds = %.lr.ph
+  %.lcssa = phi i32 [ %36, %.lr.ph ]
+  br label %._crit_edge
 
-for.end:                                          ; preds = %for.end.loopexit, %entry
-  %max_val.0.lcssa = phi i32 [ %cond21, %entry ], [ %cond57.lcssa, %for.end.loopexit ]
-  %13 = bitcast i8* %out to i32*
-  %14 = tail call i32 asm sideeffect "amax $0, $1, r0", "=r,r,0,~{$1}"(i32* %13, i32 %max_val.0.lcssa) #2, !srcloc !39
+._crit_edge:                                      ; preds = %._crit_edge.loopexit, %0
+  %max_val.0.lcssa = phi i32 [ %17, %0 ], [ %.lcssa, %._crit_edge.loopexit ]
+  %39 = bitcast i8* %out to i32*
+  %40 = tail call i32 asm sideeffect "amax $0, $1, r0", "=r,r,0,~{$1}"(i32* %39, i32 %max_val.0.lcssa) #2, !srcloc !39
   ret void
 }
 
 ; Function Attrs: nounwind
 define void @max_atomic(i32* nocapture readonly %in, i32* %out, i32 signext %reduce_factor) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
-  %add.i = add nsw i32 %1, %0
-  %2 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
-  %arrayidx = getelementptr inbounds i32, i32* %in, i32 %add.i
-  %3 = load i32, i32* %arrayidx, align 4, !tbaa !34
-  %cmp.23 = icmp eq i32 %reduce_factor, 1
-  br i1 %cmp.23, label %for.end, label %for.body.preheader
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
+  %3 = add nsw i32 %2, %1
+  %4 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
+  %5 = getelementptr inbounds i32, i32* %in, i32 %3
+  %6 = load i32, i32* %5, align 4, !tbaa !34
+  %7 = icmp eq i32 %reduce_factor, 1
+  br i1 %7, label %._crit_edge, label %.lr.ph.preheader
 
-for.body.preheader:                               ; preds = %entry
-  br label %for.body
+.lr.ph.preheader:                                 ; preds = %0
+  br label %.lr.ph
 
-for.body:                                         ; preds = %for.body.preheader, %for.body
-  %add.i.pn = phi i32 [ %index.026, %for.body ], [ %add.i, %for.body.preheader ]
-  %max_val.025 = phi i32 [ %.max_val.0, %for.body ], [ %3, %for.body.preheader ]
-  %i.024 = phi i32 [ %inc, %for.body ], [ 1, %for.body.preheader ]
-  %index.026 = add i32 %add.i.pn, %2
-  %arrayidx2 = getelementptr inbounds i32, i32* %in, i32 %index.026
-  %4 = load i32, i32* %arrayidx2, align 4, !tbaa !34
-  %cmp3 = icmp slt i32 %max_val.025, %4
-  %.max_val.0 = select i1 %cmp3, i32 %4, i32 %max_val.025
-  %inc = add nuw nsw i32 %i.024, 1
-  %cmp = icmp eq i32 %inc, %reduce_factor
-  br i1 %cmp, label %for.end.loopexit, label %for.body
+.lr.ph:                                           ; preds = %.lr.ph.preheader, %.lr.ph
+  %.pn = phi i32 [ %index.04, %.lr.ph ], [ %3, %.lr.ph.preheader ]
+  %max_val.03 = phi i32 [ %.max_val.0, %.lr.ph ], [ %6, %.lr.ph.preheader ]
+  %i.02 = phi i32 [ %11, %.lr.ph ], [ 1, %.lr.ph.preheader ]
+  %index.04 = add i32 %.pn, %4
+  %8 = getelementptr inbounds i32, i32* %in, i32 %index.04
+  %9 = load i32, i32* %8, align 4, !tbaa !34
+  %10 = icmp slt i32 %max_val.03, %9
+  %.max_val.0 = select i1 %10, i32 %9, i32 %max_val.03
+  %11 = add nuw nsw i32 %i.02, 1
+  %12 = icmp eq i32 %11, %reduce_factor
+  br i1 %12, label %._crit_edge.loopexit, label %.lr.ph
 
-for.end.loopexit:                                 ; preds = %for.body
-  %.max_val.0.lcssa = phi i32 [ %.max_val.0, %for.body ]
-  br label %for.end
+._crit_edge.loopexit:                             ; preds = %.lr.ph
+  %.max_val.0.lcssa = phi i32 [ %.max_val.0, %.lr.ph ]
+  br label %._crit_edge
 
-for.end:                                          ; preds = %for.end.loopexit, %entry
-  %max_val.0.lcssa = phi i32 [ %3, %entry ], [ %.max_val.0.lcssa, %for.end.loopexit ]
-  %5 = tail call i32 asm sideeffect "amax $0, $1, r0", "=r,r,0,~{$1}"(i32* %out, i32 %max_val.0.lcssa) #2, !srcloc !39
+._crit_edge:                                      ; preds = %._crit_edge.loopexit, %0
+  %max_val.0.lcssa = phi i32 [ %6, %0 ], [ %.max_val.0.lcssa, %._crit_edge.loopexit ]
+  %13 = tail call i32 asm sideeffect "amax $0, $1, r0", "=r,r,0,~{$1}"(i32* %out, i32 %max_val.0.lcssa) #2, !srcloc !39
   ret void
 }
 
 ; Function Attrs: nounwind
 define void @max_half_atomic(i16* nocapture readonly %in, i16* %out, i32 signext %reduce_factor) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
-  %add.i = add nsw i32 %1, %0
-  %2 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
-  %arrayidx = getelementptr inbounds i16, i16* %in, i32 %add.i
-  %3 = load i16, i16* %arrayidx, align 2, !tbaa !36
-  %conv = sext i16 %3 to i32
-  %cmp.27 = icmp eq i32 %reduce_factor, 1
-  br i1 %cmp.27, label %for.end, label %for.body.preheader
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
+  %3 = add nsw i32 %2, %1
+  %4 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
+  %5 = getelementptr inbounds i16, i16* %in, i32 %3
+  %6 = load i16, i16* %5, align 2, !tbaa !36
+  %7 = sext i16 %6 to i32
+  %8 = icmp eq i32 %reduce_factor, 1
+  br i1 %8, label %._crit_edge, label %.lr.ph.preheader
 
-for.body.preheader:                               ; preds = %entry
-  br label %for.body
+.lr.ph.preheader:                                 ; preds = %0
+  br label %.lr.ph
 
-for.body:                                         ; preds = %for.body.preheader, %for.body
-  %add.i.pn = phi i32 [ %index.030, %for.body ], [ %add.i, %for.body.preheader ]
-  %max_val.029 = phi i32 [ %conv4.max_val.0, %for.body ], [ %conv, %for.body.preheader ]
-  %i.028 = phi i32 [ %inc, %for.body ], [ 1, %for.body.preheader ]
-  %index.030 = add i32 %add.i.pn, %2
-  %arrayidx3 = getelementptr inbounds i16, i16* %in, i32 %index.030
-  %4 = load i16, i16* %arrayidx3, align 2, !tbaa !36
-  %conv4 = sext i16 %4 to i32
-  %cmp5 = icmp slt i32 %max_val.029, %conv4
-  %conv4.max_val.0 = select i1 %cmp5, i32 %conv4, i32 %max_val.029
-  %inc = add nuw nsw i32 %i.028, 1
-  %cmp = icmp eq i32 %inc, %reduce_factor
-  br i1 %cmp, label %for.end.loopexit, label %for.body
+.lr.ph:                                           ; preds = %.lr.ph.preheader, %.lr.ph
+  %.pn = phi i32 [ %index.04, %.lr.ph ], [ %3, %.lr.ph.preheader ]
+  %max_val.03 = phi i32 [ %.max_val.0, %.lr.ph ], [ %7, %.lr.ph.preheader ]
+  %i.02 = phi i32 [ %13, %.lr.ph ], [ 1, %.lr.ph.preheader ]
+  %index.04 = add i32 %.pn, %4
+  %9 = getelementptr inbounds i16, i16* %in, i32 %index.04
+  %10 = load i16, i16* %9, align 2, !tbaa !36
+  %11 = sext i16 %10 to i32
+  %12 = icmp slt i32 %max_val.03, %11
+  %.max_val.0 = select i1 %12, i32 %11, i32 %max_val.03
+  %13 = add nuw nsw i32 %i.02, 1
+  %14 = icmp eq i32 %13, %reduce_factor
+  br i1 %14, label %._crit_edge.loopexit, label %.lr.ph
 
-for.end.loopexit:                                 ; preds = %for.body
-  %conv4.max_val.0.lcssa = phi i32 [ %conv4.max_val.0, %for.body ]
-  br label %for.end
+._crit_edge.loopexit:                             ; preds = %.lr.ph
+  %.max_val.0.lcssa = phi i32 [ %.max_val.0, %.lr.ph ]
+  br label %._crit_edge
 
-for.end:                                          ; preds = %for.end.loopexit, %entry
-  %max_val.0.lcssa = phi i32 [ %conv, %entry ], [ %conv4.max_val.0.lcssa, %for.end.loopexit ]
-  %5 = bitcast i16* %out to i32*
-  %6 = tail call i32 asm sideeffect "amax $0, $1, r0", "=r,r,0,~{$1}"(i32* %5, i32 %max_val.0.lcssa) #2, !srcloc !39
+._crit_edge:                                      ; preds = %._crit_edge.loopexit, %0
+  %max_val.0.lcssa = phi i32 [ %7, %0 ], [ %.max_val.0.lcssa, %._crit_edge.loopexit ]
+  %15 = bitcast i16* %out to i32*
+  %16 = tail call i32 asm sideeffect "amax $0, $1, r0", "=r,r,0,~{$1}"(i32* %15, i32 %max_val.0.lcssa) #2, !srcloc !39
   ret void
 }
 
 ; Function Attrs: nounwind
 define void @max_half_improved_atomic(<2 x i16>* nocapture readonly %in, i16* %out, i32 signext %reduce_factor) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
-  %add.i = add nsw i32 %1, %0
-  %2 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
-  %arrayidx = getelementptr inbounds <2 x i16>, <2 x i16>* %in, i32 %add.i
-  %3 = load <2 x i16>, <2 x i16>* %arrayidx, align 4, !tbaa !38
-  %4 = extractelement <2 x i16> %3, i32 0
-  %5 = extractelement <2 x i16> %3, i32 1
-  %cmp = icmp slt i16 %5, %4
-  %.sink = select i1 %cmp, i16 %4, i16 %5
-  %conv = sext i16 %.sink to i32
-  %div = lshr i32 %reduce_factor, 1
-  %cmp7.49 = icmp ugt i32 %reduce_factor, 3
-  br i1 %cmp7.49, label %for.body.preheader, label %for.end
-
-for.body.preheader:                               ; preds = %entry
-  br label %for.body
-
-for.body:                                         ; preds = %for.body.preheader, %for.body
-  %i.052 = phi i32 [ %inc, %for.body ], [ 1, %for.body.preheader ]
-  %max_val.051 = phi i32 [ %cond25, %for.body ], [ %conv, %for.body.preheader ]
-  %begin.050 = phi i32 [ %add, %for.body ], [ %add.i, %for.body.preheader ]
-  %add = add i32 %begin.050, %2
-  %arrayidx9 = getelementptr inbounds <2 x i16>, <2 x i16>* %in, i32 %add
-  %6 = load <2 x i16>, <2 x i16>* %arrayidx9, align 4, !tbaa !38
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
+  %3 = add nsw i32 %2, %1
+  %4 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
+  %5 = getelementptr inbounds <2 x i16>, <2 x i16>* %in, i32 %3
+  %6 = load <2 x i16>, <2 x i16>* %5, align 4, !tbaa !38
   %7 = extractelement <2 x i16> %6, i32 0
-  %conv10 = sext i16 %7 to i32
-  %cmp11 = icmp slt i32 %conv10, %max_val.051
-  %max_val.0.conv10 = select i1 %cmp11, i32 %max_val.051, i32 %conv10
   %8 = extractelement <2 x i16> %6, i32 1
-  %conv18 = sext i16 %8 to i32
-  %cmp19 = icmp slt i32 %conv18, %max_val.0.conv10
-  %cond25 = select i1 %cmp19, i32 %max_val.0.conv10, i32 %conv18
-  %inc = add nuw nsw i32 %i.052, 1
-  %cmp7 = icmp ult i32 %inc, %div
-  br i1 %cmp7, label %for.body, label %for.end.loopexit
+  %9 = icmp slt i16 %8, %7
+  %.sink = select i1 %9, i16 %7, i16 %8
+  %10 = sext i16 %.sink to i32
+  %11 = lshr i32 %reduce_factor, 1
+  %12 = icmp ugt i32 %reduce_factor, 3
+  br i1 %12, label %.lr.ph.preheader, label %._crit_edge
 
-for.end.loopexit:                                 ; preds = %for.body
-  %cond25.lcssa = phi i32 [ %cond25, %for.body ]
-  br label %for.end
+.lr.ph.preheader:                                 ; preds = %0
+  br label %.lr.ph
 
-for.end:                                          ; preds = %for.end.loopexit, %entry
-  %max_val.0.lcssa = phi i32 [ %conv, %entry ], [ %cond25.lcssa, %for.end.loopexit ]
-  %9 = bitcast i16* %out to i32*
-  %10 = tail call i32 asm sideeffect "amax $0, $1, r0", "=r,r,0,~{$1}"(i32* %9, i32 %max_val.0.lcssa) #2, !srcloc !39
+.lr.ph:                                           ; preds = %.lr.ph.preheader, %.lr.ph
+  %i.03 = phi i32 [ %23, %.lr.ph ], [ 1, %.lr.ph.preheader ]
+  %max_val.02 = phi i32 [ %22, %.lr.ph ], [ %10, %.lr.ph.preheader ]
+  %begin.01 = phi i32 [ %13, %.lr.ph ], [ %3, %.lr.ph.preheader ]
+  %13 = add i32 %begin.01, %4
+  %14 = getelementptr inbounds <2 x i16>, <2 x i16>* %in, i32 %13
+  %15 = load <2 x i16>, <2 x i16>* %14, align 4, !tbaa !38
+  %16 = extractelement <2 x i16> %15, i32 0
+  %17 = sext i16 %16 to i32
+  %18 = icmp slt i32 %17, %max_val.02
+  %max_val.0. = select i1 %18, i32 %max_val.02, i32 %17
+  %19 = extractelement <2 x i16> %15, i32 1
+  %20 = sext i16 %19 to i32
+  %21 = icmp slt i32 %20, %max_val.0.
+  %22 = select i1 %21, i32 %max_val.0., i32 %20
+  %23 = add nuw nsw i32 %i.03, 1
+  %24 = icmp ult i32 %23, %11
+  br i1 %24, label %.lr.ph, label %._crit_edge.loopexit
+
+._crit_edge.loopexit:                             ; preds = %.lr.ph
+  %.lcssa = phi i32 [ %22, %.lr.ph ]
+  br label %._crit_edge
+
+._crit_edge:                                      ; preds = %._crit_edge.loopexit, %0
+  %max_val.0.lcssa = phi i32 [ %10, %0 ], [ %.lcssa, %._crit_edge.loopexit ]
+  %25 = bitcast i16* %out to i32*
+  %26 = tail call i32 asm sideeffect "amax $0, $1, r0", "=r,r,0,~{$1}"(i32* %25, i32 %max_val.0.lcssa) #2, !srcloc !39
   ret void
 }
 
 ; Function Attrs: nounwind
 define void @max_byte_atomic(i8* nocapture readonly %in, i8* %out, i32 signext %reduce_factor) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
-  %add.i = add nsw i32 %1, %0
-  %2 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
-  %arrayidx = getelementptr inbounds i8, i8* %in, i32 %add.i
-  %3 = load i8, i8* %arrayidx, align 1, !tbaa !38
-  %conv = sext i8 %3 to i32
-  %cmp.27 = icmp eq i32 %reduce_factor, 1
-  br i1 %cmp.27, label %for.end, label %for.body.preheader
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !27
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !28
+  %3 = add nsw i32 %2, %1
+  %4 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #2, !srcloc !29
+  %5 = getelementptr inbounds i8, i8* %in, i32 %3
+  %6 = load i8, i8* %5, align 1, !tbaa !38
+  %7 = sext i8 %6 to i32
+  %8 = icmp eq i32 %reduce_factor, 1
+  br i1 %8, label %._crit_edge, label %.lr.ph.preheader
 
-for.body.preheader:                               ; preds = %entry
-  br label %for.body
+.lr.ph.preheader:                                 ; preds = %0
+  br label %.lr.ph
 
-for.body:                                         ; preds = %for.body.preheader, %for.body
-  %add.i.pn = phi i32 [ %index.030, %for.body ], [ %add.i, %for.body.preheader ]
-  %max_val.029 = phi i32 [ %conv4.max_val.0, %for.body ], [ %conv, %for.body.preheader ]
-  %i.028 = phi i32 [ %inc, %for.body ], [ 1, %for.body.preheader ]
-  %index.030 = add i32 %add.i.pn, %2
-  %arrayidx3 = getelementptr inbounds i8, i8* %in, i32 %index.030
-  %4 = load i8, i8* %arrayidx3, align 1, !tbaa !38
-  %conv4 = sext i8 %4 to i32
-  %cmp5 = icmp slt i32 %max_val.029, %conv4
-  %conv4.max_val.0 = select i1 %cmp5, i32 %conv4, i32 %max_val.029
-  %inc = add nuw nsw i32 %i.028, 1
-  %cmp = icmp eq i32 %inc, %reduce_factor
-  br i1 %cmp, label %for.end.loopexit, label %for.body
+.lr.ph:                                           ; preds = %.lr.ph.preheader, %.lr.ph
+  %.pn = phi i32 [ %index.04, %.lr.ph ], [ %3, %.lr.ph.preheader ]
+  %max_val.03 = phi i32 [ %.max_val.0, %.lr.ph ], [ %7, %.lr.ph.preheader ]
+  %i.02 = phi i32 [ %13, %.lr.ph ], [ 1, %.lr.ph.preheader ]
+  %index.04 = add i32 %.pn, %4
+  %9 = getelementptr inbounds i8, i8* %in, i32 %index.04
+  %10 = load i8, i8* %9, align 1, !tbaa !38
+  %11 = sext i8 %10 to i32
+  %12 = icmp slt i32 %max_val.03, %11
+  %.max_val.0 = select i1 %12, i32 %11, i32 %max_val.03
+  %13 = add nuw nsw i32 %i.02, 1
+  %14 = icmp eq i32 %13, %reduce_factor
+  br i1 %14, label %._crit_edge.loopexit, label %.lr.ph
 
-for.end.loopexit:                                 ; preds = %for.body
-  %conv4.max_val.0.lcssa = phi i32 [ %conv4.max_val.0, %for.body ]
-  br label %for.end
+._crit_edge.loopexit:                             ; preds = %.lr.ph
+  %.max_val.0.lcssa = phi i32 [ %.max_val.0, %.lr.ph ]
+  br label %._crit_edge
 
-for.end:                                          ; preds = %for.end.loopexit, %entry
-  %max_val.0.lcssa = phi i32 [ %conv, %entry ], [ %conv4.max_val.0.lcssa, %for.end.loopexit ]
-  %5 = bitcast i8* %out to i32*
-  %6 = tail call i32 asm sideeffect "amax $0, $1, r0", "=r,r,0,~{$1}"(i32* %5, i32 %max_val.0.lcssa) #2, !srcloc !39
+._crit_edge:                                      ; preds = %._crit_edge.loopexit, %0
+  %max_val.0.lcssa = phi i32 [ %7, %0 ], [ %.max_val.0.lcssa, %._crit_edge.loopexit ]
+  %15 = bitcast i8* %out to i32*
+  %16 = tail call i32 asm sideeffect "amax $0, $1, r0", "=r,r,0,~{$1}"(i32* %15, i32 %max_val.0.lcssa) #2, !srcloc !39
   ret void
 }
 
@@ -693,7 +675,7 @@ attributes #2 = { nounwind }
 !23 = !{void (i16*, i16*, i32)* @max_half_atomic, !1, !2, !10, !11, !5}
 !24 = !{void (<2 x i16>*, i16*, i32)* @max_half_improved_atomic, !1, !2, !13, !14, !5}
 !25 = !{void (i8*, i8*, i32)* @max_byte_atomic, !1, !2, !16, !17, !5}
-!26 = !{!"clang version 3.7.0 (tags/RELEASE_371/final)"}
+!26 = !{!"clang version 3.7.1 (tags/RELEASE_371/final)"}
 !27 = !{i32 16419}
 !28 = !{i32 16559}
 !29 = !{i32 16198}

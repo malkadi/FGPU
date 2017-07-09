@@ -4,300 +4,293 @@ target triple = "mips-unknown-uknown"
 
 ; Function Attrs: nounwind readnone
 define float @__addsf3(float %a, float %b) #0 {
-entry:
-  %0 = bitcast float %a to i32
-  %1 = bitcast float %b to i32
-  %and = and i32 %0, 2147483647
-  %and2 = and i32 %1, 2147483647
-  %sub = add nsw i32 %and, -1
-  %cmp = icmp ugt i32 %sub, 2139095038
-  %sub3 = add nsw i32 %and2, -1
-  %cmp4 = icmp ugt i32 %sub3, 2139095038
-  %or.cond = or i1 %cmp, %cmp4
-  br i1 %or.cond, label %if.then, label %if.end.31
+  %1 = bitcast float %a to i32
+  %2 = bitcast float %b to i32
+  %3 = and i32 %1, 2147483647
+  %4 = and i32 %2, 2147483647
+  %5 = add nsw i32 %3, -1
+  %6 = icmp ugt i32 %5, 2139095038
+  %7 = add nsw i32 %4, -1
+  %8 = icmp ugt i32 %7, 2139095038
+  %or.cond = or i1 %6, %8
+  br i1 %or.cond, label %9, label %28
 
-if.then:                                          ; preds = %entry
-  %cmp5 = icmp ugt i32 %and, 2139095040
-  %cmp6 = icmp ugt i32 %and2, 2139095040
-  %2 = or i1 %cmp5, %cmp6
-  %cmp7 = icmp eq i32 %and, 2139095040
-  %xor = xor i32 %1, %0
-  %cmp10 = icmp eq i32 %xor, -2147483648
-  %3 = and i1 %cmp7, %cmp10
-  %or234 = or i1 %2, %3
-  %brmerge = or i1 %cmp7, %2
-  %.mux = select i1 %or234, float 0x7FF8000000000000, float %a
-  br i1 %brmerge, label %cleanup.163, label %if.end.15
+; <label>:9                                       ; preds = %0
+  %10 = icmp ugt i32 %3, 2139095040
+  %11 = icmp ugt i32 %4, 2139095040
+  %12 = or i1 %10, %11
+  %13 = icmp eq i32 %3, 2139095040
+  %14 = xor i32 %2, %1
+  %15 = icmp eq i32 %14, -2147483648
+  %16 = and i1 %13, %15
+  %17 = or i1 %12, %16
+  %brmerge = or i1 %13, %12
+  %.mux = select i1 %17, float 0x7FF8000000000000, float %a
+  br i1 %brmerge, label %.thread, label %18
 
-if.end.15:                                        ; preds = %if.then
-  %cmp16 = icmp eq i32 %and2, 2139095040
-  br i1 %cmp16, label %cleanup.163, label %if.end.18
+; <label>:18                                      ; preds = %9
+  %19 = icmp eq i32 %4, 2139095040
+  br i1 %19, label %.thread, label %20
 
-if.end.18:                                        ; preds = %if.end.15
-  %tobool19 = icmp eq i32 %and, 0
-  %tobool28 = icmp ne i32 %and2, 0
-  br i1 %tobool19, label %if.then.20, label %cleanup
+; <label>:20                                      ; preds = %18
+  %21 = icmp eq i32 %3, 0
+  %22 = icmp ne i32 %4, 0
+  br i1 %21, label %23, label %27
 
-if.then.20:                                       ; preds = %if.end.18
-  br i1 %tobool28, label %cleanup.163, label %if.then.22
+; <label>:23                                      ; preds = %20
+  br i1 %22, label %.thread, label %24
 
-if.then.22:                                       ; preds = %if.then.20
-  %and25 = and i32 %1, %0
-  %4 = bitcast i32 %and25 to float
-  br label %cleanup.163
+; <label>:24                                      ; preds = %23
+  %25 = and i32 %2, %1
+  %26 = bitcast i32 %25 to float
+  br label %.thread
 
-cleanup:                                          ; preds = %if.end.18
-  br i1 %tobool28, label %if.end.31, label %cleanup.163
+; <label>:27                                      ; preds = %20
+  br i1 %22, label %28, label %.thread
 
-if.end.31:                                        ; preds = %entry, %cleanup
-  %cmp32 = icmp ugt i32 %and2, %and
-  %cond = select i1 %cmp32, i32 %0, i32 %1
-  %cond38 = select i1 %cmp32, i32 %1, i32 %0
-  %shr = lshr i32 %cond38, 23
-  %and39 = and i32 %shr, 255
-  %shr40 = lshr i32 %cond, 23
-  %and41 = and i32 %shr40, 255
-  %and42 = and i32 %cond38, 8388607
-  %and43 = and i32 %cond, 8388607
-  %cmp44 = icmp eq i32 %and39, 0
-  br i1 %cmp44, label %if.then.46, label %if.end.48
+; <label>:28                                      ; preds = %0, %27
+  %29 = icmp ugt i32 %4, %3
+  %30 = select i1 %29, i32 %1, i32 %2
+  %31 = select i1 %29, i32 %2, i32 %1
+  %32 = lshr i32 %31, 23
+  %33 = and i32 %32, 255
+  %34 = lshr i32 %30, 23
+  %35 = and i32 %34, 255
+  %36 = and i32 %31, 8388607
+  %37 = and i32 %30, 8388607
+  %38 = icmp eq i32 %33, 0
+  br i1 %38, label %39, label %45
 
-if.then.46:                                       ; preds = %if.end.31
-  %5 = tail call i32 @llvm.ctlz.i32(i32 %and42, i1 false) #3
-  %sub.i.235 = add nuw nsw i32 %5, 24
-  %shl.mask.i.236 = and i32 %sub.i.235, 31
-  %shl.i.237 = shl i32 %and42, %shl.mask.i.236
-  %sub2.i.238 = sub nsw i32 9, %5
-  br label %if.end.48
+; <label>:39                                      ; preds = %28
+  %40 = tail call i32 @llvm.ctlz.i32(i32 %36, i1 false) #3
+  %41 = add nuw nsw i32 %40, 24
+  %42 = and i32 %41, 31
+  %43 = shl i32 %36, %42
+  %44 = sub nsw i32 9, %40
+  br label %45
 
-if.end.48:                                        ; preds = %if.then.46, %if.end.31
-  %aSignificand.0 = phi i32 [ %shl.i.237, %if.then.46 ], [ %and42, %if.end.31 ]
-  %aExponent.0 = phi i32 [ %sub2.i.238, %if.then.46 ], [ %and39, %if.end.31 ]
-  %cmp49 = icmp eq i32 %and41, 0
-  br i1 %cmp49, label %if.then.51, label %if.end.53
+; <label>:45                                      ; preds = %39, %28
+  %aSignificand.0 = phi i32 [ %43, %39 ], [ %36, %28 ]
+  %aExponent.0 = phi i32 [ %44, %39 ], [ %33, %28 ]
+  %46 = icmp eq i32 %35, 0
+  br i1 %46, label %47, label %53
 
-if.then.51:                                       ; preds = %if.end.48
-  %6 = tail call i32 @llvm.ctlz.i32(i32 %and43, i1 false) #3
-  %sub.i = add nuw nsw i32 %6, 24
-  %shl.mask.i = and i32 %sub.i, 31
-  %shl.i = shl i32 %and43, %shl.mask.i
-  %sub2.i = sub nsw i32 9, %6
-  br label %if.end.53
+; <label>:47                                      ; preds = %45
+  %48 = tail call i32 @llvm.ctlz.i32(i32 %37, i1 false) #3
+  %49 = add nuw nsw i32 %48, 24
+  %50 = and i32 %49, 31
+  %51 = shl i32 %37, %50
+  %52 = sub nsw i32 9, %48
+  br label %53
 
-if.end.53:                                        ; preds = %if.then.51, %if.end.48
-  %bSignificand.0 = phi i32 [ %shl.i, %if.then.51 ], [ %and43, %if.end.48 ]
-  %bExponent.0 = phi i32 [ %sub2.i, %if.then.51 ], [ %and41, %if.end.48 ]
-  %and54 = and i32 %cond38, -2147483648
-  %xor55 = xor i32 %cond38, %cond
-  %tobool57 = icmp slt i32 %xor55, 0
-  %or58 = shl i32 %aSignificand.0, 3
-  %shl = or i32 %or58, 67108864
-  %or59 = shl i32 %bSignificand.0, 3
-  %shl60 = or i32 %or59, 67108864
-  %sub61 = sub nsw i32 %aExponent.0, %bExponent.0
-  %tobool62 = icmp eq i32 %aExponent.0, %bExponent.0
-  br i1 %tobool62, label %if.end.77, label %if.then.63
+; <label>:53                                      ; preds = %47, %45
+  %bSignificand.0 = phi i32 [ %51, %47 ], [ %37, %45 ]
+  %bExponent.0 = phi i32 [ %52, %47 ], [ %35, %45 ]
+  %54 = and i32 %31, -2147483648
+  %55 = xor i32 %31, %30
+  %56 = icmp slt i32 %55, 0
+  %57 = shl i32 %aSignificand.0, 3
+  %58 = or i32 %57, 67108864
+  %59 = shl i32 %bSignificand.0, 3
+  %60 = or i32 %59, 67108864
+  %61 = sub nsw i32 %aExponent.0, %bExponent.0
+  %62 = icmp eq i32 %aExponent.0, %bExponent.0
+  br i1 %62, label %74, label %63
 
-if.then.63:                                       ; preds = %if.end.53
-  %cmp64 = icmp ult i32 %sub61, 32
-  br i1 %cmp64, label %if.then.66, label %if.end.77
+; <label>:63                                      ; preds = %53
+  %64 = icmp ult i32 %61, 32
+  br i1 %64, label %65, label %74
 
-if.then.66:                                       ; preds = %if.then.63
-  %7 = sub nsw i32 0, %sub61
-  %shl.mask = and i32 %7, 31
-  %shl68 = shl i32 %shl60, %shl.mask
-  %tobool69 = icmp ne i32 %shl68, 0
-  %shr.mask = and i32 %sub61, 31
-  %shr71 = lshr i32 %shl60, %shr.mask
-  %conv73 = zext i1 %tobool69 to i32
-  %or74 = or i32 %conv73, %shr71
-  br label %if.end.77
+; <label>:65                                      ; preds = %63
+  %66 = sub nsw i32 0, %61
+  %67 = and i32 %66, 31
+  %68 = shl i32 %60, %67
+  %69 = icmp ne i32 %68, 0
+  %70 = and i32 %61, 31
+  %71 = lshr i32 %60, %70
+  %72 = zext i1 %69 to i32
+  %73 = or i32 %72, %71
+  br label %74
 
-if.end.77:                                        ; preds = %if.then.63, %if.end.53, %if.then.66
-  %bSignificand.1 = phi i32 [ %shl60, %if.end.53 ], [ %or74, %if.then.66 ], [ 1, %if.then.63 ]
-  br i1 %tobool57, label %if.then.79, label %if.else.96
+; <label>:74                                      ; preds = %63, %53, %65
+  %bSignificand.1 = phi i32 [ %60, %53 ], [ %73, %65 ], [ 1, %63 ]
+  br i1 %56, label %75, label %86
 
-if.then.79:                                       ; preds = %if.end.77
-  %sub80 = sub i32 %shl, %bSignificand.1
-  %cmp81 = icmp eq i32 %shl, %bSignificand.1
-  br i1 %cmp81, label %cleanup.163, label %if.end.85
+; <label>:75                                      ; preds = %74
+  %76 = sub i32 %58, %bSignificand.1
+  %77 = icmp eq i32 %58, %bSignificand.1
+  br i1 %77, label %.thread, label %78
 
-if.end.85:                                        ; preds = %if.then.79
-  %cmp86 = icmp ult i32 %sub80, 67108864
-  br i1 %cmp86, label %if.then.88, label %if.end.110
+; <label>:78                                      ; preds = %75
+  %79 = icmp ult i32 %76, 67108864
+  br i1 %79, label %80, label %95
 
-if.then.88:                                       ; preds = %if.end.85
-  %8 = tail call i32 @llvm.ctlz.i32(i32 %sub80, i1 false) #3
-  %sub91 = add nsw i32 %8, -5
-  %shl.mask92 = and i32 %sub91, 31
-  %shl93 = shl i32 %sub80, %shl.mask92
-  %sub94 = sub nsw i32 %aExponent.0, %sub91
-  br label %if.end.110
+; <label>:80                                      ; preds = %78
+  %81 = tail call i32 @llvm.ctlz.i32(i32 %76, i1 false) #3
+  %82 = add nsw i32 %81, -5
+  %83 = and i32 %82, 31
+  %84 = shl i32 %76, %83
+  %85 = sub nsw i32 %aExponent.0, %82
+  br label %95
 
-if.else.96:                                       ; preds = %if.end.77
-  %add = add i32 %bSignificand.1, %shl
-  %and97 = and i32 %add, 134217728
-  %tobool98 = icmp eq i32 %and97, 0
-  br i1 %tobool98, label %if.end.110, label %if.then.99
+; <label>:86                                      ; preds = %74
+  %87 = add i32 %bSignificand.1, %58
+  %88 = and i32 %87, 134217728
+  %89 = icmp eq i32 %88, 0
+  br i1 %89, label %95, label %90
 
-if.then.99:                                       ; preds = %if.else.96
-  %fold = add i32 %bSignificand.1, %or58
-  %and101 = and i32 %fold, 1
-  %shr104 = lshr i32 %add, 1
-  %or107 = or i32 %shr104, %and101
-  %add108 = add nsw i32 %aExponent.0, 1
-  br label %if.end.110
+; <label>:90                                      ; preds = %86
+  %fold = add i32 %bSignificand.1, %57
+  %91 = and i32 %fold, 1
+  %92 = lshr i32 %87, 1
+  %93 = or i32 %92, %91
+  %94 = add nsw i32 %aExponent.0, 1
+  br label %95
 
-if.end.110:                                       ; preds = %if.else.96, %if.then.99, %if.end.85, %if.then.88
-  %aSignificand.1 = phi i32 [ %shl93, %if.then.88 ], [ %sub80, %if.end.85 ], [ %add, %if.else.96 ], [ %or107, %if.then.99 ]
-  %aExponent.1 = phi i32 [ %sub94, %if.then.88 ], [ %aExponent.0, %if.end.85 ], [ %aExponent.0, %if.else.96 ], [ %add108, %if.then.99 ]
-  %cmp111 = icmp sgt i32 %aExponent.1, 254
-  br i1 %cmp111, label %if.then.113, label %if.end.116
+; <label>:95                                      ; preds = %86, %90, %78, %80
+  %aSignificand.1 = phi i32 [ %84, %80 ], [ %76, %78 ], [ %87, %86 ], [ %93, %90 ]
+  %aExponent.1 = phi i32 [ %85, %80 ], [ %aExponent.0, %78 ], [ %aExponent.0, %86 ], [ %94, %90 ]
+  %96 = icmp sgt i32 %aExponent.1, 254
+  br i1 %96, label %97, label %100
 
-if.then.113:                                      ; preds = %if.end.110
-  %or114 = or i32 %and54, 2139095040
-  %9 = bitcast i32 %or114 to float
-  br label %cleanup.163
+; <label>:97                                      ; preds = %95
+  %98 = or i32 %54, 2139095040
+  %99 = bitcast i32 %98 to float
+  br label %.thread
 
-if.end.116:                                       ; preds = %if.end.110
-  %cmp117 = icmp slt i32 %aExponent.1, 1
-  br i1 %cmp117, label %if.then.119, label %if.end.133
+; <label>:100                                     ; preds = %95
+  %101 = icmp slt i32 %aExponent.1, 1
+  br i1 %101, label %102, label %112
 
-if.then.119:                                      ; preds = %if.end.116
-  %sub121 = sub nsw i32 1, %aExponent.1
-  %10 = sub nsw i32 0, %sub121
-  %shl.mask124 = and i32 %10, 31
-  %shl125 = shl i32 %aSignificand.1, %shl.mask124
-  %tobool126 = icmp ne i32 %shl125, 0
-  %shr.mask128 = and i32 %sub121, 31
-  %shr129 = lshr i32 %aSignificand.1, %shr.mask128
-  %conv131 = zext i1 %tobool126 to i32
-  %or132 = or i32 %conv131, %shr129
-  br label %if.end.133
+; <label>:102                                     ; preds = %100
+  %103 = sub nsw i32 1, %aExponent.1
+  %104 = sub nsw i32 0, %103
+  %105 = and i32 %104, 31
+  %106 = shl i32 %aSignificand.1, %105
+  %107 = icmp ne i32 %106, 0
+  %108 = and i32 %103, 31
+  %109 = lshr i32 %aSignificand.1, %108
+  %110 = zext i1 %107 to i32
+  %111 = or i32 %110, %109
+  br label %112
 
-if.end.133:                                       ; preds = %if.then.119, %if.end.116
-  %aSignificand.2 = phi i32 [ %or132, %if.then.119 ], [ %aSignificand.1, %if.end.116 ]
-  %aExponent.2 = phi i32 [ 0, %if.then.119 ], [ %aExponent.1, %if.end.116 ]
-  %and134 = and i32 %aSignificand.2, 7
-  %shr135 = lshr i32 %aSignificand.2, 3
-  %and136 = and i32 %shr135, 8388607
-  %shl137 = shl i32 %aExponent.2, 23
-  %or138 = or i32 %shl137, %and54
-  %or139 = or i32 %or138, %and136
-  %cmp140 = icmp ugt i32 %and134, 4
-  %inc = zext i1 %cmp140 to i32
-  %inc.or139 = add i32 %or139, %inc
-  %cmp144 = icmp eq i32 %and134, 4
-  %and147 = and i32 %inc.or139, 1
-  %add148 = select i1 %cmp144, i32 %and147, i32 0
-  %result.1 = add i32 %add148, %inc.or139
-  %11 = bitcast i32 %result.1 to float
-  br label %cleanup.163
+; <label>:112                                     ; preds = %102, %100
+  %aSignificand.2 = phi i32 [ %111, %102 ], [ %aSignificand.1, %100 ]
+  %aExponent.2 = phi i32 [ 0, %102 ], [ %aExponent.1, %100 ]
+  %113 = and i32 %aSignificand.2, 7
+  %114 = lshr i32 %aSignificand.2, 3
+  %115 = and i32 %114, 8388607
+  %116 = shl i32 %aExponent.2, 23
+  %117 = or i32 %116, %54
+  %118 = or i32 %117, %115
+  %119 = icmp ugt i32 %113, 4
+  %120 = zext i1 %119 to i32
+  %.6 = add i32 %118, %120
+  %121 = icmp eq i32 %113, 4
+  %122 = and i32 %.6, 1
+  %123 = select i1 %121, i32 %122, i32 0
+  %result.1 = add i32 %123, %.6
+  %124 = bitcast i32 %result.1 to float
+  br label %.thread
 
-cleanup.163:                                      ; preds = %if.then, %if.then.20, %if.end.15, %if.then.22, %if.then.113, %if.end.133, %if.then.79, %cleanup
-  %retval.2 = phi float [ %a, %cleanup ], [ %9, %if.then.113 ], [ %11, %if.end.133 ], [ 0.000000e+00, %if.then.79 ], [ %.mux, %if.then ], [ %b, %if.then.20 ], [ %b, %if.end.15 ], [ %4, %if.then.22 ]
-  ret float %retval.2
+.thread:                                          ; preds = %9, %23, %18, %24, %97, %112, %75, %27
+  %.2 = phi float [ %a, %27 ], [ %99, %97 ], [ %124, %112 ], [ 0.000000e+00, %75 ], [ %.mux, %9 ], [ %b, %23 ], [ %b, %18 ], [ %26, %24 ]
+  ret float %.2
 }
 
 ; Function Attrs: nounwind
 define void @vec_add(i32* nocapture readonly %in1, i32* nocapture readonly %in2, i32* nocapture %out) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
-  %add.i = add nsw i32 %1, %0
-  %arrayidx = getelementptr inbounds i32, i32* %in1, i32 %add.i
-  %2 = load i32, i32* %arrayidx, align 4, !tbaa !24
-  %arrayidx1 = getelementptr inbounds i32, i32* %in2, i32 %add.i
-  %3 = load i32, i32* %arrayidx1, align 4, !tbaa !24
-  %add = add nsw i32 %3, %2
-  %arrayidx2 = getelementptr inbounds i32, i32* %out, i32 %add.i
-  store i32 %add, i32* %arrayidx2, align 4, !tbaa !24
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
+  %3 = add nsw i32 %2, %1
+  %4 = getelementptr inbounds i32, i32* %in1, i32 %3
+  %5 = load i32, i32* %4, align 4, !tbaa !24
+  %6 = getelementptr inbounds i32, i32* %in2, i32 %3
+  %7 = load i32, i32* %6, align 4, !tbaa !24
+  %8 = add nsw i32 %7, %5
+  %9 = getelementptr inbounds i32, i32* %out, i32 %3
+  store i32 %8, i32* %9, align 4, !tbaa !24
   ret void
 }
 
 ; Function Attrs: nounwind
 define void @vec_add_half(i16* nocapture readonly %in1, i16* nocapture readonly %in2, i16* nocapture %out) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
-  %add.i = add nsw i32 %1, %0
-  %arrayidx = getelementptr inbounds i16, i16* %in1, i32 %add.i
-  %2 = load i16, i16* %arrayidx, align 2, !tbaa !28
-  %conv.8 = zext i16 %2 to i32
-  %arrayidx1 = getelementptr inbounds i16, i16* %in2, i32 %add.i
-  %3 = load i16, i16* %arrayidx1, align 2, !tbaa !28
-  %conv2.9 = zext i16 %3 to i32
-  %add = add nuw nsw i32 %conv2.9, %conv.8
-  %conv3 = trunc i32 %add to i16
-  %arrayidx4 = getelementptr inbounds i16, i16* %out, i32 %add.i
-  store i16 %conv3, i16* %arrayidx4, align 2, !tbaa !28
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
+  %3 = add nsw i32 %2, %1
+  %4 = getelementptr inbounds i16, i16* %in1, i32 %3
+  %5 = load i16, i16* %4, align 2, !tbaa !28
+  %6 = zext i16 %5 to i32
+  %7 = getelementptr inbounds i16, i16* %in2, i32 %3
+  %8 = load i16, i16* %7, align 2, !tbaa !28
+  %9 = zext i16 %8 to i32
+  %10 = add nuw nsw i32 %9, %6
+  %11 = trunc i32 %10 to i16
+  %12 = getelementptr inbounds i16, i16* %out, i32 %3
+  store i16 %11, i16* %12, align 2, !tbaa !28
   ret void
 }
 
 ; Function Attrs: nounwind
 define void @vec_add_half_improved(<2 x i16>* nocapture readonly %in1, <2 x i16>* nocapture readonly %in2, <2 x i16>* nocapture %out) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
-  %add.i = add nsw i32 %1, %0
-  %arrayidx = getelementptr inbounds <2 x i16>, <2 x i16>* %in1, i32 %add.i
-  %2 = load <2 x i16>, <2 x i16>* %arrayidx, align 4, !tbaa !30
-  %arrayidx1 = getelementptr inbounds <2 x i16>, <2 x i16>* %in2, i32 %add.i
-  %3 = load <2 x i16>, <2 x i16>* %arrayidx1, align 4, !tbaa !30
-  %add = add <2 x i16> %3, %2
-  %arrayidx2 = getelementptr inbounds <2 x i16>, <2 x i16>* %out, i32 %add.i
-  store <2 x i16> %add, <2 x i16>* %arrayidx2, align 4, !tbaa !30
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
+  %3 = add nsw i32 %2, %1
+  %4 = getelementptr inbounds <2 x i16>, <2 x i16>* %in1, i32 %3
+  %5 = load <2 x i16>, <2 x i16>* %4, align 4, !tbaa !30
+  %6 = getelementptr inbounds <2 x i16>, <2 x i16>* %in2, i32 %3
+  %7 = load <2 x i16>, <2 x i16>* %6, align 4, !tbaa !30
+  %8 = add <2 x i16> %7, %5
+  %9 = getelementptr inbounds <2 x i16>, <2 x i16>* %out, i32 %3
+  store <2 x i16> %8, <2 x i16>* %9, align 4, !tbaa !30
   ret void
 }
 
 ; Function Attrs: nounwind
 define void @vec_add_byte(i8* nocapture readonly %in1, i8* nocapture readonly %in2, i8* nocapture %out) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
-  %add.i = add nsw i32 %1, %0
-  %arrayidx = getelementptr inbounds i8, i8* %in1, i32 %add.i
-  %2 = load i8, i8* %arrayidx, align 1, !tbaa !30
-  %conv.8 = zext i8 %2 to i32
-  %arrayidx1 = getelementptr inbounds i8, i8* %in2, i32 %add.i
-  %3 = load i8, i8* %arrayidx1, align 1, !tbaa !30
-  %conv2.9 = zext i8 %3 to i32
-  %add = add nuw nsw i32 %conv2.9, %conv.8
-  %conv3 = trunc i32 %add to i8
-  %arrayidx4 = getelementptr inbounds i8, i8* %out, i32 %add.i
-  store i8 %conv3, i8* %arrayidx4, align 1, !tbaa !30
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
+  %3 = add nsw i32 %2, %1
+  %4 = getelementptr inbounds i8, i8* %in1, i32 %3
+  %5 = load i8, i8* %4, align 1, !tbaa !30
+  %6 = zext i8 %5 to i32
+  %7 = getelementptr inbounds i8, i8* %in2, i32 %3
+  %8 = load i8, i8* %7, align 1, !tbaa !30
+  %9 = zext i8 %8 to i32
+  %10 = add nuw nsw i32 %9, %6
+  %11 = trunc i32 %10 to i8
+  %12 = getelementptr inbounds i8, i8* %out, i32 %3
+  store i8 %11, i8* %12, align 1, !tbaa !30
   ret void
 }
 
 ; Function Attrs: nounwind
 define void @vec_add_byte_improved(<4 x i8>* nocapture readonly %in1, <4 x i8>* nocapture readonly %in2, <4 x i8>* nocapture %out) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
-  %add.i = add nsw i32 %1, %0
-  %arrayidx = getelementptr inbounds <4 x i8>, <4 x i8>* %in1, i32 %add.i
-  %2 = load <4 x i8>, <4 x i8>* %arrayidx, align 4, !tbaa !30
-  %arrayidx1 = getelementptr inbounds <4 x i8>, <4 x i8>* %in2, i32 %add.i
-  %3 = load <4 x i8>, <4 x i8>* %arrayidx1, align 4, !tbaa !30
-  %add = add <4 x i8> %3, %2
-  %arrayidx2 = getelementptr inbounds <4 x i8>, <4 x i8>* %out, i32 %add.i
-  store <4 x i8> %add, <4 x i8>* %arrayidx2, align 4, !tbaa !30
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
+  %3 = add nsw i32 %2, %1
+  %4 = getelementptr inbounds <4 x i8>, <4 x i8>* %in1, i32 %3
+  %5 = load <4 x i8>, <4 x i8>* %4, align 4, !tbaa !30
+  %6 = getelementptr inbounds <4 x i8>, <4 x i8>* %in2, i32 %3
+  %7 = load <4 x i8>, <4 x i8>* %6, align 4, !tbaa !30
+  %8 = add <4 x i8> %7, %5
+  %9 = getelementptr inbounds <4 x i8>, <4 x i8>* %out, i32 %3
+  store <4 x i8> %8, <4 x i8>* %9, align 4, !tbaa !30
   ret void
 }
 
 ; Function Attrs: nounwind
 define void @add_float(float* nocapture readonly %in1, float* nocapture readonly %in2, float* nocapture %out) #1 {
-entry:
-  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
-  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
-  %add.i = add nsw i32 %1, %0
-  %arrayidx = getelementptr inbounds float, float* %in1, i32 %add.i
-  %2 = load float, float* %arrayidx, align 4, !tbaa !31
-  %arrayidx1 = getelementptr inbounds float, float* %in2, i32 %add.i
-  %3 = load float, float* %arrayidx1, align 4, !tbaa !31
-  %add = fadd float %2, %3
-  %arrayidx2 = getelementptr inbounds float, float* %out, i32 %add.i
-  store float %add, float* %arrayidx2, align 4, !tbaa !31
+  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !22
+  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #3, !srcloc !23
+  %3 = add nsw i32 %2, %1
+  %4 = getelementptr inbounds float, float* %in1, i32 %3
+  %5 = load float, float* %4, align 4, !tbaa !31
+  %6 = getelementptr inbounds float, float* %in2, i32 %3
+  %7 = load float, float* %6, align 4, !tbaa !31
+  %8 = fadd float %5, %7
+  %9 = getelementptr inbounds float, float* %out, i32 %3
+  store float %8, float* %9, align 4, !tbaa !31
   ret void
 }
 
@@ -333,7 +326,7 @@ attributes #3 = { nounwind }
 !18 = !{void (float*, float*, float*)* @add_float, !1, !2, !19, !20, !5}
 !19 = !{!"kernel_arg_type", !"float*", !"float*", !"float*"}
 !20 = !{!"kernel_arg_base_type", !"float*", !"float*", !"float*"}
-!21 = !{!"clang version 3.7.0 (tags/RELEASE_371/final)"}
+!21 = !{!"clang version 3.7.1 (tags/RELEASE_371/final)"}
 !22 = !{i32 12426}
 !23 = !{i32 12566}
 !24 = !{!25, !25, i64 0}

@@ -40,4 +40,4 @@ unsigned int ludecomposition_hard_float[] = {
 	0x7c000402,
 	0x92000000
 };
-unsigned *code_hard_float = ludecomposition_hard_float;
+unsigned *code = ludecomposition_hard_float;
