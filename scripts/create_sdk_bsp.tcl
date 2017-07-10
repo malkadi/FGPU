@@ -1,10 +1,10 @@
 set name [lindex $argv 0]
 # check parameters
 if { $name == "power_measurement" } {
-  if {$argc != 2} {puts "wrong number of arguments to create_bsp.tcl"; puts $argc;exit 1}
+  if {$argc != 2} {puts "wrong number of arguments to create_sdk_bsp.tcl"; puts $argc;exit 1}
   set path [lindex $argv 1]
 } else {
-  if {$argc != 3} {puts "wrong number of arguments to create_bsp.tcl"; puts $argc;exit 1}
+  if {$argc != 3} {puts "wrong number of arguments to create_sdk_bsp.tcl"; puts $argc;exit 1}
   set hdf  [lindex $argv 1]
   set path [lindex $argv 2]
 }

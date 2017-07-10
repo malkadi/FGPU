@@ -32,12 +32,12 @@ if [ $# -eq 0 ]; then
       cp lscript_MicroBlaze.ld $BENCHMARK_DIR/MicroBlaze/src/lscript.ld
     elif [ $benchmark = "power_measurement" ]; then
       # create power_measurement project
-      xsct -quiet create_project.tcl $benchmark $VERSION "ARM_CORE_1" $BENCHMARK_DIR
+      xsct -quiet create_sdk_project.tcl $benchmark $VERSION "ARM_CORE_1" $BENCHMARK_DIR
       #replace the linking script
       cp lscript_power_measurement.ld $BENCHMARK_DIR/$benchmark/src/lscript.ld
     else
       # create an ARM/FGPU benchmark
-      xsct -quiet create_project.tcl $benchmark $VERSION "ARM_CORE_0" $BENCHMARK_DIR
+      xsct -quiet create_sdk_project.tcl $benchmark $VERSION "ARM_CORE_0" $BENCHMARK_DIR
       #replace the linking script
       cp lscript.ld $BENCHMARK_DIR/$benchmark/src/
     fi
@@ -60,12 +60,12 @@ else
     cp lscript_MicroBlaze.ld $BENCHMARK_DIR/MicroBlaze/src/lscript.ld
   elif [ "$benchmark" = "power_measurement" ]; then
     # create power_measurement project
-    xsct -quiet create_project.tcl $benchmark $VERSION "ARM_CORE_1" $BENCHMARK_DIR
+    xsct -quiet create_sdk_project.tcl $benchmark $VERSION "ARM_CORE_1" $BENCHMARK_DIR
     #replace the linking script
     cp lscript_power_measurement.ld $BENCHMARK_DIR/$benchmark/src/lscript.ld
   else
     # create an ARM/FGPU benchmark
-    xsct -quiet create_project.tcl $benchmark $VERSION "ARM_CORE_0" $BENCHMARK_DIR
+    xsct -quiet create_sdk_project.tcl $benchmark $VERSION "ARM_CORE_0" $BENCHMARK_DIR
     #replace the linking script
     cp lscript.ld $BENCHMARK_DIR/$benchmark/src/lscript.ld
   fi

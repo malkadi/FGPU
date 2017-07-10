@@ -1,4 +1,4 @@
-if {$argc != 4} {puts "wrong number of arguments to create_project.tcl"; puts $argc;exit 1}
+if {$argc != 4} {puts "wrong number of arguments to create_sdk_project.tcl"; puts $argc;exit 1}
 set name [lindex $argv 0]
 set version [lindex $argv 1]
 set arm_core [lindex $argv 2]
