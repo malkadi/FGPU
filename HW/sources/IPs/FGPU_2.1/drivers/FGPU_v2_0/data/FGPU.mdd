@@ -1,0 +1,10 @@
+
+
+OPTION psf_version = 2.1;
+
+BEGIN DRIVER FGPU
+	OPTION supported_peripherals = (FGPU);
+	OPTION copyfiles = all;
+	OPTION VERSION = 2.0;
+	OPTION NAME = FGPU;
+END DRIVER
