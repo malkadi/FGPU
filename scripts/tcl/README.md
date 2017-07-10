@@ -1,11 +1,11 @@
+**IMPORTANT NOTICE:**
 Most of the files in this folder are based on the reference design of the Xilinx Design Suite Tutorial, Partial Reconfiguration 
 [(vUG947, v2016.1)](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2016_1/ug947-vivado-partial-reconfiguration-tutorial.pdf).
+
 
 + create_FGPU_block_design.tcl  - used to create an FGPU block diagram design with a PS, clock generator, etc.
 + implement_FGPU_V3.tcl         - used to implement a pratially reconfigurable FGPU
 + implement_FGPU.tcl            - used to implement a normal FGPU
-
-Script Version: 2014.1
 + design.tcl
     The scripts are designed so that this is the only file that should need to be modified.
     This file is used to describe the various synthesis (modules) and implementation runs
@@ -150,7 +150,7 @@ Script Version: 2014.1
 
 #################################################################
   The following section define information about the additional 
-  Tcl scripts provided in the "./Tcl" directory
+  Tcl scripts provided in the "tcl" directory
 #################################################################
 + design_utils.tcl - Defines the following procs used by design.tcl
     - add_module
