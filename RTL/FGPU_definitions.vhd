@@ -8,23 +8,58 @@ use std.textio.all;
 package FGPU_definitions is
   constant N_CU_W                         : natural := 0; --0 to 3
     -- Bitwidth of # of CUs
+
   constant LMEM_ADDR_W                    : natural := 10;
       -- bitwidth of local memory address for a single PE
+
   constant N_AXI_W                        : natural := 0;
     -- Bitwidth of # of AXI data ports
+
   constant SUB_INTEGER_IMPLEMENT          : natural := 0;
     -- implement sub-integer store operations
+
   constant N_STATIONS_ALU                 : natural := 4;
     -- # stations to store memory requests sourced by a single ALU
+
   constant ATOMIC_IMPLEMENT               : natural := 0;
     -- implement global atomic operations
+  constant AADD_ATOMIC                    : natural := 1;
+  constant AMAX_ATOMIC                    : natural := 1;
+
   constant LMEM_IMPLEMENT                 : natural := 1;
     -- implement local scratchpad
-  constant N_TAG_MANAGERS_W               : natural := N_CU_W+1; -- 0 to 1
-    -- Bitwidth of # tag controllers per CU
-  constant RD_CACHE_N_WORDS_W             : natural := 0;
-  constant RD_CACHE_FIFO_PORTB_ADDR_W     : natural := 8;
 
+  constant N_TAG_MANAGERS_W               : natural := N_CU_W+0; -- 0 to 1
+    -- Bitwidth of # tag controllers per CU
+
+  constant RD_CACHE_N_WORDS_W             : natural := 0;
+    -- Bitwidth of # of words the global read bus cache -> CUs
+
+  constant RD_CACHE_FIFO_PORTB_ADDR_W     : natural := 8;
+  -- Bitwidth of the fifo buffer for the data read out of the cache. A fifo is implemented in each CU.
+
+  constant CACHE_N_BANKS_W                : natural := 2;
+    -- Bitwidth of # words within a cache line. Minimum is 2
+
+  constant N_RECEIVERS_CU_W               : natural := 6-N_CU_W;
+    -- Bitwidth of # of receivers inside the global memory controller per CU. (6-N_CU_W) will lead to 64 receivers whatever the # of CU is.
+
+  constant BURST_WORDS_W                  : natural := 5;
+    -- Bitwidth # of words within a single AXI burst (only 5 is tested intensively, 4 & 6 should work but needs testing)
+
+  constant ENABLE_READ_PRIORIRY_PIPE      : boolean := false;
+  -- Implements a priority pipeline for the stations of the global memory controller which prioritizes waiting stations when more time is elapsed
+
+  constant FIFO_ADDR_W                    : natural := 3;
+    -- Bitwidth of the fifo size to store outgoing memory requests from a CU
+
+  constant FINISH_FIFO_ADDR_W             : natural := 3;
+    -- Bitwidth of the fifo depth to mark dirty cache lines to be cleared at the end
+
+  constant CV_W                           : natural := 3;
+      -- bitwidth of # of PEs within a CV (only 3 was tested, i.e. 8 PEs/CU)
+
+  -- Floating-point hardware support:
   constant FLOAT_IMPLEMENT                : natural := 0;
   constant FADD_IMPLEMENT                 : integer := 1;
   constant FMUL_IMPLEMENT                 : integer := 1;
@@ -43,22 +78,6 @@ package FGPU_definitions is
   constant MAX_FPU_DELAY                  : integer := FDIV_DELAY;
   
   
-  constant CACHE_N_BANKS_W                : natural := 2;
-    -- Bitwidth of # words within a cache line. Minimum is 2
-  constant N_RECEIVERS_CU_W               : natural := 6-N_CU_W;
-    -- Bitwidth of # of receivers inside the global memory controller per CU. (6-N_CU_W) will lead to 64 receivers whatever the # of CU is.
-  constant BURST_WORDS_W                  : natural := 5;
-    -- Bitwidth # of words within a single AXI burst
-  constant ENABLE_READ_PRIORIRY_PIPE      : boolean := false;
-  constant FIFO_ADDR_W                    : natural := 3;
-    -- Bitwidth of the fifo size to store outgoing memory requests from a CU
-  constant N_RD_FIFOS_TAG_MANAGER_W       : natural := 0;
-  constant FINISH_FIFO_ADDR_W             : natural := 3;
-    -- Bitwidth of the fifo depth to mark dirty cache lines to be cleared at the end
-  -- constant CRAM_BLOCKS                    : natural := 1;
-    -- # of CRAM replicates. Each replicate will serve some CUs (1 or 2 supported only)
-  constant CV_W                           : natural := 3;
-      -- bitwidth of # of PEs within a CV
   constant CV_TO_CACHE_SLICE              : natural := 3;
   constant INSTR_READ_SLICE               : boolean := true;
   constant RTM_WRITE_SLICE                : boolean := true;
@@ -69,14 +88,19 @@ package FGPU_definitions is
 
   constant N_WF_CU_W                      : natural := 3;
       -- bitwidth of # of WFs that can be simultaneously managed within a CU
-  constant AADD_ATOMIC                    : natural := 1;
-  constant AMAX_ATOMIC                    : natural := 1;
 
 
+  constant N_RD_FIFOS_TAG_MANAGER_W       : natural := 0; -- one fifo to store data read out of global memory for each tag manager (now, only 0 makes sense)
+
+  -- constant CRAM_BLOCKS                    : natural := 1;
+    -- # of CRAM replicates. Each replicate will serve some CUs (1 or 2 supported only)
 
   constant GMEM_N_BANK_W                  : natural := 1;
+    -- Bitwidth of the number of words of a single AXI data interface, i.e. the global memory bus
   constant ID_WIDTH                       : natural := 6;
-  constant PHASE_W                        : natural := 3;
+    -- Bitwidth of the read & write id channels of AXI4 
+  constant PHASE_W                        : natural := 3; 
+    -- # of clock cycles when executing the same instruction on the a CV (only 3 is tested)
 
   constant CV_SIZE                        : natural := 2**CV_W;
 
