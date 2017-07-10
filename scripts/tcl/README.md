@@ -1,13 +1,74 @@
 **IMPORTANT NOTICE:**
-Most of the files in this folder are based on the reference design of the Xilinx Design Suite Tutorial, Partial Reconfiguration 
+Most of the files in this folder are based on the reference design in the Xilinx Design Suite Tutorial, Partial Reconfiguration 
 [(vUG947, v2016.1)](https://www.xilinx.com/support/documentation/sw_manuals/xilinx2016_1/ug947-vivado-partial-reconfiguration-tutorial.pdf).
 
 
-+ create_FGPU_block_design.tcl  - used to create an FGPU block diagram design with a PS, clock generator, etc.
-+ implement_FGPU_V3.tcl         - used to implement a pratially reconfigurable FGPU
-+ implement_FGPU.tcl            - used to implement a normal FGPU
-+ design.tcl
-    The scripts are designed so that this is the only file that should need to be modified.
++ create_FGPU_block_design.tcl - used to create an FGPU block diagram design with a PS, clock generator, etc.
++ implement_FGPU_V3.tcl - used to implement a pratially reconfigurable FGPU
++ implement_FGPU.tcl - used to implement a normal FGPU
++ design_utils.tcl - Defines the following procs used by design.tcl
+    - add_module
+    - add_ooc_implementation
+    - add_implementation
+    - add_configuration
+    - set_attribute
+    - get_attribute
+    - check_attribute
+    - check_attribute_value
+    - check_list
+    - set_directives
+    - sort_configurations
+    - set_paramaters
+
++ hd_floorplan_utils.tcl - Defines the following procs used to generate OOC constraints
+    - create_ooc_clock
+    - create_set_logic
+    - write_hd_xdc
+    - highlight_partpins
+    - hd_floorplan
+
++ synth_utils.tcl - Defines the following procs used for synthesis flows
+    - add_prj
+    - add_ip
+    - add_sysvlog
+    - add_vlog
+    - add_vhdl
+    - add_bd
+
++ impl_utils.tcl - Defines the following procs used for implementation flows
+    - get_module_file
+    - get_ooc_results
+    - generate_pr_bitstreams
+    - verify_configs
+    - add_xdc
+    - readXDC
+    - add_cores
+    - report_final_drc
+    - get_bad_pins
+    - get_bad_ports
+    - insert_proxy_flop
+
++ eco_utils.tcl - Not currently used by any flow, provides a couple quick examples of how to edit the in-memory design to add or delete cells.  
+    - insert_global_buffer
+    - remover_buffer
+    - replace_iobuf_bibuf
+    - swap_clock_buffers
+
++ log.tcl - Defined the following procs used for logging the commands, critical messages, and results
+    - log_time
+    - log_data
+    - command
+    - parse_log
+
++ log.tcl - Defined the following procs used for logging the commands, critical messages, and results
+    - log_time
++ run.tcl      - Called from design.tcl; controls the flows that are run
++ synth.tcl    - Proc used to run all synthesis runs
++ ooc_impl.tcl - Proc used to run OOC implementations
++ pr_impl.tcl  - Proc used to run PR configurations
++ impl.tcl     - Proc used to run TopDown, Assembly, or Flat implementations
++ step.tcl     - Proc used to call each step of implementation
++ The scripts are designed so that this is the only file that should need to be modified.
     This file is used to describe the various synthesis (modules) and implementation runs
     for a given design. The following commands are used to define the design in this file.
 
@@ -148,70 +209,4 @@ Most of the files in this folder are based on the reference design of the Xilinx
     - "bitstream_settings"  -> Specify configuration bitstream settings (UG908 - Table A-1)
     - "writeHdf"            -> Specify if writeHdf should be run (Default is 0)
 
-#################################################################
-  The following section define information about the additional 
-  Tcl scripts provided in the "tcl" directory
-#################################################################
-+ design_utils.tcl - Defines the following procs used by design.tcl
-    - add_module
-    - add_ooc_implementation
-    - add_implementation
-    - add_configuration
-    - set_attribute
-    - get_attribute
-    - check_attribute
-    - check_attribute_value
-    - check_list
-    - set_directives
-    - sort_configurations
-    - set_paramaters
-
-+ hd_floorplan_utils.tcl - Defines the following procs used to generate OOC constraints
-    - create_ooc_clock
-    - create_set_logic
-    - write_hd_xdc
-    - highlight_partpins
-    - hd_floorplan
-
-+ synth_utils.tcl - Defines the following procs used for synthesis flows
-    - add_prj
-    - add_ip
-    - add_sysvlog
-    - add_vlog
-    - add_vhdl
-    - add_bd
-
-+ impl_utils.tcl - Defines the following procs used for implementation flows
-    - get_module_file
-    - get_ooc_results
-    - generate_pr_bitstreams
-    - verify_configs
-    - add_xdc
-    - readXDC
-    - add_cores
-    - report_final_drc
-    - get_bad_pins
-    - get_bad_ports
-    - insert_proxy_flop
-
-+ eco_utils.tcl - Not currently used by any flow, provides a couple quick examples of how to edit the in-memory design to add or delete cells.  
-    - insert_global_buffer
-    - remover_buffer
-    - replace_iobuf_bibuf
-    - swap_clock_buffers
-
-+ log.tcl - Defined the following procs used for logging the commands, critical messages, and results
-    - log_time
-    - log_data
-    - command
-    - parse_log
-
-+ log.tcl - Defined the following procs used for logging the commands, critical messages, and results
-    - log_time
-+ run.tcl      - Called from design.tcl; controls the flows that are run
-+ synth.tcl    - Proc used to run all synthesis runs
-+ ooc_impl.tcl - Proc used to run OOC implementations
-+ pr_impl.tcl  - Proc used to run PR configurations
-+ impl.tcl     - Proc used to run TopDown, Assembly, or Flat implementations
-+ step.tcl     - Proc used to call each step of implementation
 
