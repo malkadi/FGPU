@@ -29,17 +29,17 @@ if [ $# -eq 0 ]; then
       # create MicroBlaze benchmark
       xsct -quiet create_MicroBlaze_project.tcl $BENCHMARK_DIR
       #replace the linking script
-      cp lscript_MicroBlaze.ld $BENCHMARK_DIR/MicroBlaze/src/lscript.ld
+      cp lscript/lscript_MicroBlaze.ld $BENCHMARK_DIR/MicroBlaze/src/lscript.ld
     elif [ $benchmark = "power_measurement" ]; then
       # create power_measurement project
       xsct -quiet create_sdk_project.tcl $benchmark $VERSION "ARM_CORE_1" $BENCHMARK_DIR
       #replace the linking script
-      cp lscript_power_measurement.ld $BENCHMARK_DIR/$benchmark/src/lscript.ld
+      cp lscript/lscript_power_measurement.ld $BENCHMARK_DIR/$benchmark/src/lscript.ld
     else
       # create an ARM/FGPU benchmark
       xsct -quiet create_sdk_project.tcl $benchmark $VERSION "ARM_CORE_0" $BENCHMARK_DIR
       #replace the linking script
-      cp lscript.ld $BENCHMARK_DIR/$benchmark/src/
+      cp lscript/lscript.ld $BENCHMARK_DIR/$benchmark/src/
     fi
     # delete some unnecessary files that are generated on project creation
     rm -f $BENCHMARK_DIR/$benchmark/src/main.cc
@@ -57,17 +57,17 @@ else
     # create MicroBlaze benchmark
     xsct -quiet create_MicroBlaze_project.tcl $BENCHMARK_DIR
     #replace the linking script
-    cp lscript_MicroBlaze.ld $BENCHMARK_DIR/MicroBlaze/src/lscript.ld
+    cp lscript/lscript_MicroBlaze.ld $BENCHMARK_DIR/MicroBlaze/src/lscript.ld
   elif [ "$benchmark" = "power_measurement" ]; then
     # create power_measurement project
     xsct -quiet create_sdk_project.tcl $benchmark $VERSION "ARM_CORE_1" $BENCHMARK_DIR
     #replace the linking script
-    cp lscript_power_measurement.ld $BENCHMARK_DIR/$benchmark/src/lscript.ld
+    cp lscript/lscript_power_measurement.ld $BENCHMARK_DIR/$benchmark/src/lscript.ld
   else
     # create an ARM/FGPU benchmark
     xsct -quiet create_sdk_project.tcl $benchmark $VERSION "ARM_CORE_0" $BENCHMARK_DIR
     #replace the linking script
-    cp lscript.ld $BENCHMARK_DIR/$benchmark/src/lscript.ld
+    cp lscript/lscript.ld $BENCHMARK_DIR/$benchmark/src/lscript.ld
   fi
 
   # delete some unnecessary files that are generated on project creation
