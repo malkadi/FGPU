@@ -79,7 +79,7 @@ set_attribute module $static top_level      1
 set_attribute module $static ipRepo         $ipDir
 # set_attribute module $static bd             [list $bdDir/$bd_name.bd]
 set_attribute module $static vhdl           [list $bdDir/hdl/$bd_name\_wrapper.vhd]
-set_attribute module $static ip             [list [glob $ipDir/*.xcix]]
+# set_attribute module $static ip             [list [glob $ipDir/*.xcix]]
 set_attribute module $static synth          ${run.topSynth}
 set_attribute module $static synth_options  "-flatten_hierarchy rebuilt -fanout_limit 400 -keep_equivalent_registers \
                                             -resource_sharing off -no_lc -shreg_min_size 5 -fsm_extraction one_hot"

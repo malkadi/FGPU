@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This script creates and compile an FGPU design in Vivado 
 # It can be called with the name of the design to be generated as a parameter. The default name is FGPU_V2
@@ -9,7 +9,7 @@
 # The implemented FGPU features can be adjusted by editing  ../RTL/FGPU_definitions.sh
 # The implementation settings, e.g. operation frequency of FGPU and place and route strategy, can be adjusted in tcl/implement_FGPU.tcl
 
-source ./set_paths.sh
+source set_paths.sh
 
 cd `dirname $0`/../HW
 
@@ -22,6 +22,6 @@ else
 fi
 
 cp implement/Config_implement/bd_design_wrapper.bit outputs/$name.bit
-cp -p .srcs/sources_1/bd/bd_design/ipshared/user.org/fgpu_v2_1/hdl/FGPU_definitions.vhd outputs/$name.vhd
+cp -p ../RTL/FGPU_definitions.vhd outputs/$name.vhd
 cp implement/Config_implement/reports/bd_design_wrapper_utilization_route_design.rpt outputs/$name\_utilization.rpt
 chmod -x outputs/$name.vhd

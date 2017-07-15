@@ -19,8 +19,13 @@ proc create_FGPU_block_design { bd_name FGPU_ver FREQ} {
   create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0
 
   create_bd_cell -type ip -vlnv user.org:user:FGPU:$FGPU_ver FGPU_0
-
-  create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:5.3 clk_wiz_0
+  set ver [version -short]
+  if { $ver == "2017.2" } {
+    set clk_wiz_ver "5.4"
+  } else {
+    set clk_wiz_ver "5.3"
+  }
+  create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:$clk_wiz_ver clk_wiz_0
 
   set_property -dict [list \
     CONFIG.USE_PHASE_ALIGNMENT {false} \
