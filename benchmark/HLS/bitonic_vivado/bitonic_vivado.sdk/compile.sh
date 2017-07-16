@@ -7,6 +7,6 @@ benchmark=`basename $1`
 path=`dirname $1`
 path=`realpath $path`
 cd `dirname $0`
-source ./set_paths.sh
+source ../../../../scripts/set_paths.sh
 xsct -quiet -eval "setws $path; projects -build -type app -name $benchmark"
 

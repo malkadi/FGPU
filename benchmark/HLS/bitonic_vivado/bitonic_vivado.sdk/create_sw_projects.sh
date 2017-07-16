@@ -1,6 +1,6 @@
 #!/bin/sh
 cd `dirname $0`
-source ./set_paths.sh
+source ../../../../scripts/set_paths.sh
 SCRIPT_DIR=`pwd`
 BENCHMARK_DIR=`pwd`
 cd $SCRIPT_DIR
