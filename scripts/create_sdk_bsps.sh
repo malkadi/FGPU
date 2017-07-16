@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 # This script creates all HW and BSP projects in Xilinx SDK to run the FGPU benchmarks

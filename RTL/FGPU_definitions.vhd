@@ -6,6 +6,7 @@ use ieee.std_logic_textio.all;
 use std.textio.all;
 ------------------------------------------------------------------------------------------------- }}}
 package FGPU_definitions is
+  -- Begin of Configurable FGPU Parameters ----------------------------------------------------------------{{{
   constant N_CU_W                         : natural := 0; --0 to 3
     -- Bitwidth of # of CUs
 
@@ -86,24 +87,31 @@ package FGPU_definitions is
     -- This incrmenetation should help to balance serving the receivers
   constant RCV_PRIORITY_W                 : natural := 3;
 
+
+
+
+
+  -- End of Configurable FGPU Parameters ------------------------------------------------------------------}}}
+
   constant N_WF_CU_W                      : natural := 3;
-      -- bitwidth of # of WFs that can be simultaneously managed within a CU
+    -- bitwidth of # of WFs that can be simultaneously managed within a CU
 
-
-  constant N_RD_FIFOS_TAG_MANAGER_W       : natural := 0; -- one fifo to store data read out of global memory for each tag manager (now, only 0 makes sense)
-
-  -- constant CRAM_BLOCKS                    : natural := 1;
-    -- # of CRAM replicates. Each replicate will serve some CUs (1 or 2 supported only)
+  constant N_RD_FIFOS_TAG_MANAGER_W       : natural := 0; 
+    -- one fifo to store data read out of global memory for each tag manager (now, only 0 makes sense)
 
   constant GMEM_N_BANK_W                  : natural := 1;
     -- Bitwidth of the number of words of a single AXI data interface, i.e. the global memory bus
+
   constant ID_WIDTH                       : natural := 6;
     -- Bitwidth of the read & write id channels of AXI4 
+
   constant PHASE_W                        : natural := 3; 
     -- # of clock cycles when executing the same instruction on the a CV (only 3 is tested)
 
   constant CV_SIZE                        : natural := 2**CV_W;
 
+  -- constant CRAM_BLOCKS                    : natural := 1;
+    -- # of CRAM replicates. Each replicate will serve some CUs (1 or 2 supported only)
 
   constant RD_CACHE_N_WORDS               : natural := 2**RD_CACHE_N_WORDS_W;
   constant WF_SIZE_W                      : natural  := PHASE_W + CV_W;

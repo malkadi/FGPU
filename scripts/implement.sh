@@ -25,3 +25,4 @@ cp implement/Config_implement/bd_design_wrapper.bit outputs/$name.bit
 cp -p ../RTL/FGPU_definitions.vhd outputs/$name.vhd
 cp implement/Config_implement/reports/bd_design_wrapper_utilization_route_design.rpt outputs/$name\_utilization.rpt
 chmod -x outputs/$name.vhd
+rm *.mif

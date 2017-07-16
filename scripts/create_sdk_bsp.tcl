@@ -27,15 +27,18 @@ if { $name == "power_measurement" } {
 } else {
   set hw_proj .$name\_hw
   set bsp_proj .$name\_bsp
-  
+
   #delete hw and bsp projects if already exists
   catch {
-    deleteprojects -name $bsp_proj
     deleteprojects -name $hw_proj
   }
 
   # Create the HW project
   createhw -name $hw_proj -hwspec $hdf
+
+  catch {
+    deleteprojects -name $bsp_proj
+  }
 
   # Create  BSP projects
   if { $name == "MicroBlaze" } {
@@ -44,7 +47,6 @@ if { $name == "power_measurement" } {
     createbsp -name $bsp_proj -hwproject $hw_proj -proc ps7_cortexa9_0 -os standalone
   }
 }
-
 
 # Build bsp
 projects -build -type bsp -name $bsp_proj

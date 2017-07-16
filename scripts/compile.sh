@@ -1,4 +1,8 @@
-#!/bin/sh
+#!/bin/bash
+
+# Compile an FGPU benchmark in Xilinx SDK
+
+#arg0: path to the benchmark, e.g. benchmarks/copy
 if [ $# -ne 1 ]; then
   echo "Please give the project path!"
   exit 1
