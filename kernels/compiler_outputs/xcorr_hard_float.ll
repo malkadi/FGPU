@@ -4,30 +4,31 @@ target triple = "mips-unknown-uknown"
 
 ; Function Attrs: nounwind
 define void @xcorr_float_hard_float(float* nocapture readonly %in1, float* nocapture readonly %in2, float* nocapture %out) #0 {
-  %1 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !7
-  %2 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !8
-  %3 = add nsw i32 %2, %1
-  %4 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !9
-  br label %5
+entry:
+  %0 = tail call i32 asm sideeffect "lid $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !7
+  %1 = tail call i32 asm sideeffect "wgoff $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !8
+  %add.i = add nsw i32 %1, %0
+  %2 = tail call i32 asm sideeffect "size $0, $1", "=r,I,~{$1}"(i32 0) #1, !srcloc !9
+  br label %do.body
 
-; <label>:5                                       ; preds = %5, %0
-  %i.0 = phi i32 [ 0, %0 ], [ %13, %5 ]
-  %res.0 = phi float [ 0.000000e+00, %0 ], [ %12, %5 ]
-  %6 = getelementptr inbounds float, float* %in1, i32 %i.0
-  %7 = load float, float* %6, align 4, !tbaa !10
-  %8 = add nsw i32 %i.0, %3
-  %9 = getelementptr inbounds float, float* %in2, i32 %8
-  %10 = load float, float* %9, align 4, !tbaa !10
-  %11 = fmul float %7, %10
-  %12 = fadd float %res.0, %11
-  %13 = add nuw nsw i32 %i.0, 1
-  %14 = icmp eq i32 %13, %4
-  br i1 %14, label %15, label %5
+do.body:                                          ; preds = %do.body, %entry
+  %i.0 = phi i32 [ 0, %entry ], [ %inc, %do.body ]
+  %res.0 = phi float [ 0.000000e+00, %entry ], [ %add3, %do.body ]
+  %arrayidx = getelementptr inbounds float, float* %in1, i32 %i.0
+  %3 = load float, float* %arrayidx, align 4, !tbaa !10
+  %add = add nsw i32 %i.0, %add.i
+  %arrayidx2 = getelementptr inbounds float, float* %in2, i32 %add
+  %4 = load float, float* %arrayidx2, align 4, !tbaa !10
+  %mul = fmul float %3, %4
+  %add3 = fadd float %res.0, %mul
+  %inc = add nuw nsw i32 %i.0, 1
+  %cmp = icmp eq i32 %inc, %2
+  br i1 %cmp, label %do.end, label %do.body
 
-; <label>:15                                      ; preds = %5
-  %.lcssa = phi float [ %12, %5 ]
-  %16 = getelementptr inbounds float, float* %out, i32 %3
-  store float %.lcssa, float* %16, align 4, !tbaa !10
+do.end:                                           ; preds = %do.body
+  %add3.lcssa = phi float [ %add3, %do.body ]
+  %arrayidx4 = getelementptr inbounds float, float* %out, i32 %add.i
+  store float %add3.lcssa, float* %arrayidx4, align 4, !tbaa !10
   ret void
 }
 

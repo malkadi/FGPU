@@ -11,7 +11,7 @@ __addsf3:
 	.mask 	0x00000600,-4
 	.set	noreorder
 	.set	nomacro
-# BB#0:
+# BB#0:                                 # %entry
 	addi	sp, sp, -2
 	lswi	r9, sp[4]               # 4-byte Folded Spill
 	lswi	r10, sp[0]              # 4-byte Folded Spill
@@ -24,13 +24,13 @@ __addsf3:
 	sltu	r6, r6, r5
 	and	r5, r2, r3
 	bne	r6, r0, LBB0_2
-# BB#1:
+# BB#1:                                 # %entry
 	addi	r3, r5, -1
 	li	r6, 65535
 	lui	r6, 32639
 	sltu	r3, r3, r6
 	bne	r3, r0, LBB0_9
-LBB0_2:
+LBB0_2:                                 # %if.then
 	xor	r3, r2, r1
 	li	r6, 0
 	lui	r6, 32768
@@ -49,18 +49,18 @@ LBB0_2:
 	or	r7, r9, r7
 	movn	r3, r8, r7
 	beq	r4, r6, LBB0_27
-# BB#3:
+# BB#3:                                 # %if.then
 	bne	r7, r0, LBB0_27
-# BB#4:
+# BB#4:                                 # %if.end.15
 	add	r3, r0, r2
 	beq	r5, r6, LBB0_27
-# BB#5:
+# BB#5:                                 # %if.end.18
 	bne	r4, r0, LBB0_8
 	beq	r0, r0, LBB0_6
-LBB0_8:
+LBB0_8:                                 # %cleanup
 	add	r3, r0, r1
 	beq	r5, r0, LBB0_27
-LBB0_9:
+LBB0_9:                                 # %if.end.31
 	sltu	r3, r4, r5
 	add	r4, r0, r1
 	movn	r4, r2, r3
@@ -73,7 +73,7 @@ LBB0_9:
 	srli	r5, r4, 23
 	andi	r5, r5, 255
 	bne	r5, r0, LBB0_11
-# BB#10:
+# BB#10:                                # %if.then.46
 	srli	r5, r3, 1
 	or	r5, r3, r5
 	srli	r7, r5, 2
@@ -109,10 +109,10 @@ LBB0_9:
 	addi	r7, r7, 24
 	andi	r7, r7, 31
 	sll	r3, r3, r7
-LBB0_11:
+LBB0_11:                                # %if.end.48
 	and	r7, r2, r1
 	bne	r6, r0, LBB0_13
-# BB#12:
+# BB#12:                                # %if.then.51
 	srli	r6, r7, 1
 	or	r6, r7, r6
 	srli	r8, r6, 2
@@ -148,7 +148,7 @@ LBB0_11:
 	addi	r8, r8, 24
 	andi	r8, r8, 31
 	sll	r7, r7, r8
-LBB0_13:
+LBB0_13:                                # %if.end.53
 	xor	r2, r4, r2
 	slli	r7, r7, 3
 	li	r8, 0
@@ -157,13 +157,13 @@ LBB0_13:
 	slli	r3, r3, 3
 	add	r7, r0, r9
 	beq	r5, r6, LBB0_16
-# BB#14:
+# BB#14:                                # %if.then.63
 	sub	r6, r5, r6
 	addi	r7, r0, 31
 	sltu	r10, r7, r6
 	addi	r7, r0, 1
 	bne	r10, r0, LBB0_16
-# BB#15:
+# BB#15:                                # %if.then.66
 	andi	r7, r6, 31
 	srl	r7, r9, r7
 	sub	r6, r0, r6
@@ -172,29 +172,29 @@ LBB0_13:
 	xor	r6, r6, r0
 	sltu	r6, r0, r6
 	or	r7, r6, r7
-LBB0_16:
+LBB0_16:                                # %if.end.77
 	or	r6, r3, r8
 	addi	r8, r0, -1
 	slt	r2, r8, r2
 	bne	r2, r0, LBB0_20
 	beq	r0, r0, LBB0_17
-LBB0_20:
+LBB0_20:                                # %if.else.96
 	add	r2, r7, r6
 	li	r6, 0
 	lui	r6, 2048
 	and	r6, r2, r6
 	beq	r6, r0, LBB0_22
 	beq	r0, r0, LBB0_21
-LBB0_17:
+LBB0_17:                                # %if.then.79
 	addi	r3, r0, 0
 	beq	r6, r7, LBB0_27
-# BB#18:
+# BB#18:                                # %if.end.85
 	sub	r2, r6, r7
 	li	r3, 65535
 	lui	r3, 1023
 	sltu	r3, r3, r2
 	bne	r3, r0, LBB0_22
-# BB#19:
+# BB#19:                                # %if.then.88
 	srli	r3, r2, 1
 	or	r3, r2, r3
 	srli	r6, r3, 2
@@ -230,35 +230,35 @@ LBB0_17:
 	andi	r3, r3, 31
 	sll	r2, r2, r3
 	beq	r0, r0, LBB0_22
-LBB0_21:
+LBB0_21:                                # %if.then.99
 	add	r3, r7, r3
 	andi	r3, r3, 1
 	srli	r2, r2, 1
 	or	r2, r2, r3
 	addi	r5, r5, 1
-LBB0_22:
+LBB0_22:                                # %if.end.110
 	li	r3, 0
 	lui	r3, 32768
 	and	r3, r4, r3
 	addi	r4, r0, 255
 	slt	r4, r5, r4
 	bne	r4, r0, LBB0_24
-# BB#23:
+# BB#23:                                # %if.then.113
 	li	r1, 0
 	lui	r1, 32640
 	or	r3, r3, r1
 	beq	r0, r0, LBB0_27
-LBB0_24:
+LBB0_24:                                # %if.end.116
 	slt	r4, r0, r5
 	bne	r4, r0, LBB0_26
 	beq	r0, r0, LBB0_25
-LBB0_6:
+LBB0_6:                                 # %if.then.20
 	add	r3, r0, r2
 	bne	r5, r0, LBB0_27
-# BB#7:
+# BB#7:                                 # %if.then.22
 	and	r3, r2, r1
 	beq	r0, r0, LBB0_27
-LBB0_25:
+LBB0_25:                                # %if.then.119
 	addi	r4, r0, 1
 	sub	r4, r4, r5
 	andi	r5, r4, 31
@@ -270,7 +270,7 @@ LBB0_25:
 	xor	r2, r2, r0
 	sltu	r2, r0, r2
 	or	r2, r2, r6
-LBB0_26:
+LBB0_26:                                # %if.end.133
 	srli	r4, r2, 3
 	and	r1, r4, r1
 	slli	r4, r5, 23
@@ -285,7 +285,7 @@ LBB0_26:
 	addi	r4, r0, 0
 	movz	r4, r3, r2
 	add	r3, r4, r1
-LBB0_27:                                # %.thread
+LBB0_27:                                # %cleanup.163
 	add	r1, r0, r3
 	llwi	r10, sp[0]              # 4-byte Folded Reload
 	llwi	r9, sp[4]               # 4-byte Folded Reload
@@ -306,7 +306,7 @@ __muldsi3:
 	.mask 	0x00000000,0
 	.set	noreorder
 	.set	nomacro
-# BB#0:
+# BB#0:                                 # %entry
 	li	r3, 65535
 	lui	r3, 0
 	and	r4, r1, r3
@@ -342,7 +342,7 @@ __muldi3:
 	.mask 	0x00000600,-4
 	.set	noreorder
 	.set	nomacro
-# BB#0:
+# BB#0:                                 # %entry
 	addi	sp, sp, -2
 	lswi	r9, sp[4]               # 4-byte Folded Spill
 	lswi	r10, sp[0]              # 4-byte Folded Spill
@@ -387,7 +387,7 @@ __mulsf3:
 	.mask 	0x0001fe00,-4
 	.set	noreorder
 	.set	nomacro
-# BB#0:
+# BB#0:                                 # %entry
 	addi	sp, sp, -8
 	lswi	r9, sp[28]              # 4-byte Folded Spill
 	lswi	r10, sp[24]             # 4-byte Folded Spill
@@ -413,13 +413,13 @@ __mulsf3:
 	srli	r6, r2, 23
 	andi	r14, r6, 255
 	bne	r5, r0, LBB3_2
-# BB#1:
+# BB#1:                                 # %entry
 	addi	r15, r0, 0
 	addi	r5, r14, -1
 	addi	r6, r0, 254
 	sltu	r5, r5, r6
 	bne	r5, r0, LBB3_14
-LBB3_2:
+LBB3_2:                                 # %if.then
 	li	r7, 65535
 	lui	r7, 32767
 	and	r5, r1, r7
@@ -429,25 +429,25 @@ LBB3_2:
 	lui	r6, 32640
 	sltu	r8, r6, r5
 	bne	r8, r0, LBB3_20
-# BB#3:
+# BB#3:                                 # %if.then
 	and	r2, r2, r7
 	sltu	r7, r6, r2
 	bne	r7, r0, LBB3_20
-# BB#4:
+# BB#4:                                 # %if.end
 	beq	r5, r6, LBB3_6
-# BB#5:
+# BB#5:                                 # %if.end
 	bne	r2, r6, LBB3_7
 	beq	r0, r0, LBB3_6
-LBB3_7:
+LBB3_7:                                 # %if.end.35
 	beq	r5, r0, LBB3_9
-# BB#8:
+# BB#8:                                 # %if.end.35
 	bne	r2, r0, LBB3_10
 	beq	r0, r0, LBB3_9
-LBB3_10:
+LBB3_10:                                # %if.end.44
 	sltu	r1, r12, r5
 	addi	r15, r0, 0
 	bne	r1, r0, LBB3_12
-# BB#11:
+# BB#11:                                # %if.then.46
 	srli	r1, r3, 1
 	or	r1, r3, r1
 	srli	r5, r1, 2
@@ -483,10 +483,10 @@ LBB3_10:
 	addi	r1, r1, 24
 	andi	r1, r1, 31
 	sll	r3, r3, r1
-LBB3_12:
+LBB3_12:                                # %if.end.48
 	sltu	r1, r12, r2
 	bne	r1, r0, LBB3_14
-# BB#13:
+# BB#13:                                # %if.then.50
 	srli	r1, r4, 1
 	or	r1, r4, r1
 	srli	r2, r1, 2
@@ -522,7 +522,7 @@ LBB3_12:
 	addi	r1, r1, 24
 	andi	r1, r1, 31
 	sll	r4, r4, r1
-LBB3_14:                                # %.thread11
+LBB3_14:                                # %if.end.59
 	slli	r1, r4, 8
 	or	r1, r1, r11
 	li	r16, 0
@@ -546,17 +546,17 @@ LBB3_14:                                # %.thread11
 	addi	r2, r2, -127
 	slt	r4, r0, r2
 	bne	r4, r0, LBB3_18
-# BB#15:
+# BB#15:                                # %if.then.85
 	addi	r4, r0, 1
 	sub	r4, r4, r2
 	addi	r5, r0, 31
 	sltu	r5, r5, r4
 	bne	r5, r0, LBB3_17
 	beq	r0, r0, LBB3_16
-LBB3_17:
+LBB3_17:                                # %cleanup.91
 	add	r1, r0, r10
 	beq	r0, r0, LBB3_20
-LBB3_6:
+LBB3_6:                                 # %if.then.28
 	xor	r1, r5, r6
 	movz	r5, r2, r1
 	or	r2, r10, r6
@@ -564,7 +564,7 @@ LBB3_6:
 	lui	r1, 32704
 	movn	r1, r2, r5
 	beq	r0, r0, LBB3_20
-LBB3_16:                                # %.thread13
+LBB3_16:                                # %cleanup.91.thread
 	sub	r5, r0, r4
 	andi	r5, r5, 31
 	andi	r4, r4, 31
@@ -577,14 +577,14 @@ LBB3_16:                                # %.thread13
 	or	r1, r6, r1
 	srl	r3, r3, r4
 	beq	r0, r0, LBB3_19
-LBB3_9:
+LBB3_9:                                 # %if.then.42
 	add	r1, r0, r10
 	beq	r0, r0, LBB3_20
-LBB3_18:
+LBB3_18:                                # %if.else
 	and	r3, r3, r12
 	slli	r4, r2, 23
 	or	r3, r3, r4
-LBB3_19:
+LBB3_19:                                # %if.end.97
 	or	r3, r3, r10
 	sltu	r4, r11, r1
 	add	r3, r4, r3
@@ -598,7 +598,7 @@ LBB3_19:
 	lui	r3, 32640
 	or	r3, r10, r3
 	movn	r1, r3, r2
-LBB3_20:                                # %.thread
+LBB3_20:                                # %cleanup.123
 	llwi	r16, sp[0]              # 4-byte Folded Reload
 	llwi	r15, sp[4]              # 4-byte Folded Reload
 	llwi	r14, sp[8]              # 4-byte Folded Reload
@@ -624,7 +624,7 @@ xcorr:
 	.mask 	0x00000000,0
 	.set	noreorder
 	.set	nomacro
-# BB#0:
+# BB#0:                                 # %entry
 	lp	r2, 2
 	lp	r3, 0
 	lp	r5, 1
@@ -641,7 +641,8 @@ xcorr:
 	#APP
 	size r7, 0
 	#NO_APP
-LBB4_1:                                 # =>This Inner Loop Header: Depth=1
+LBB4_1:                                 # %do.body
+                                        # =>This Inner Loop Header: Depth=1
 	lw	r1, r3[r0]
 	lw	r8, r6[r0]
 	macc	r5, r8, r1
@@ -649,7 +650,7 @@ LBB4_1:                                 # =>This Inner Loop Header: Depth=1
 	addi	r6, r6, 4
 	addi	r7, r7, -1
 	bne	r7, r0, LBB4_1
-# BB#2:
+# BB#2:                                 # %do.end
 	sw	r5, r2[r4]
 	ret
 	.set	macro
@@ -667,7 +668,7 @@ xcorr_improved:
 	.mask 	0x00000000,0
 	.set	noreorder
 	.set	nomacro
-# BB#0:
+# BB#0:                                 # %entry
 	lp	r2, 2
 	lp	r3, 0
 	lp	r4, 1
@@ -693,7 +694,8 @@ xcorr_improved:
 	add	r12, r0, r4
 	add	r11, r0, r4
 	add	r9, r0, r4
-LBB5_1:                                 # =>This Inner Loop Header: Depth=1
+LBB5_1:                                 # %do.body
+                                        # =>This Inner Loop Header: Depth=1
 	lw	r13, r3[r0]
 	lw	r14, r6[r0]
 	macc	r11, r14, r13
@@ -707,7 +709,7 @@ LBB5_1:                                 # =>This Inner Loop Header: Depth=1
 	addi	r6, r6, 4
 	addi	r5, r5, -1
 	bne	r5, r0, LBB5_1
-# BB#2:
+# BB#2:                                 # %do.end
 	sw	r4, r2[r1]
 	ori	r3, r1, 1
 	sw	r12, r2[r3]
@@ -731,7 +733,7 @@ xcorr_half:
 	.mask 	0x00000000,0
 	.set	noreorder
 	.set	nomacro
-# BB#0:
+# BB#0:                                 # %entry
 	lp	r2, 2
 	lp	r3, 0
 	lp	r5, 1
@@ -748,7 +750,8 @@ xcorr_half:
 	#APP
 	size r7, 0
 	#NO_APP
-LBB6_1:                                 # =>This Inner Loop Header: Depth=1
+LBB6_1:                                 # %do.body
+                                        # =>This Inner Loop Header: Depth=1
 	xori	r1, r6, 30
 	slli	r1, r1, 3
 	lw	r8, r6[r0]
@@ -764,7 +767,7 @@ LBB6_1:                                 # =>This Inner Loop Header: Depth=1
 	addi	r6, r6, 2
 	addi	r7, r7, -1
 	bne	r7, r0, LBB6_1
-# BB#2:
+# BB#2:                                 # %do.end
 	sh	r5, r2[r4]
 	ret
 	.set	macro
@@ -782,7 +785,7 @@ xcorr_half_improved:
 	.mask 	0x00000000,0
 	.set	noreorder
 	.set	nomacro
-# BB#0:
+# BB#0:                                 # %entry
 	lp	r2, 2
 	lp	r3, 0
 	lp	r5, 1
@@ -802,7 +805,8 @@ xcorr_half_improved:
 	addi	r1, r7, 4
 	addi	r7, r0, -4
 	add	r8, r0, r5
-LBB7_1:                                 # =>This Inner Loop Header: Depth=1
+LBB7_1:                                 # %do.body
+                                        # =>This Inner Loop Header: Depth=1
 	lb	r9, r1[r7]
 	slli	r10, r9, 16
 	srai	r10, r10, 16
@@ -822,7 +826,7 @@ LBB7_1:                                 # =>This Inner Loop Header: Depth=1
 	addi	r1, r1, 4
 	addi	r6, r6, -1
 	bne	r6, r0, LBB7_1
-# BB#2:
+# BB#2:                                 # %do.end
 	add	r1, r2, r4
 	sh	r5, r1[r0]
 	addi	r1, r1, 2
@@ -843,7 +847,7 @@ xcorr_byte:
 	.mask 	0x00000000,0
 	.set	noreorder
 	.set	nomacro
-# BB#0:
+# BB#0:                                 # %entry
 	lp	r2, 2
 	lp	r3, 0
 	lp	r5, 1
@@ -859,7 +863,8 @@ xcorr_byte:
 	#APP
 	size r7, 0
 	#NO_APP
-LBB8_1:                                 # =>This Inner Loop Header: Depth=1
+LBB8_1:                                 # %do.body
+                                        # =>This Inner Loop Header: Depth=1
 	xori	r1, r6, 31
 	slli	r1, r1, 3
 	lw	r8, r6[r0]
@@ -875,7 +880,7 @@ LBB8_1:                                 # =>This Inner Loop Header: Depth=1
 	addi	r6, r6, 1
 	addi	r7, r7, -1
 	bne	r7, r0, LBB8_1
-# BB#2:
+# BB#2:                                 # %do.end
 	sb	r5, r2[r4]
 	ret
 	.set	macro
@@ -893,7 +898,7 @@ xcorr_byte_improved:
 	.mask 	0x00000000,0
 	.set	noreorder
 	.set	nomacro
-# BB#0:
+# BB#0:                                 # %entry
 	lp	r2, 2
 	lp	r3, 0
 	lp	r5, 1
@@ -915,7 +920,8 @@ xcorr_byte_improved:
 	add	r1, r0, r5
 	add	r8, r0, r5
 	add	r10, r0, r5
-LBB9_1:                                 # =>This Inner Loop Header: Depth=1
+LBB9_1:                                 # %do.body
+                                        # =>This Inner Loop Header: Depth=1
 	lb	r11, r7[r9]
 	slli	r12, r11, 24
 	srai	r12, r12, 24
@@ -959,7 +965,7 @@ LBB9_1:                                 # =>This Inner Loop Header: Depth=1
 	addi	r7, r7, 4
 	addi	r6, r6, -1
 	bne	r6, r0, LBB9_1
-# BB#2:
+# BB#2:                                 # %do.end
 	sb	r5, r2[r4]
 	add	r2, r2, r4
 	addi	r3, r0, 3
@@ -984,7 +990,7 @@ xcorr_float:
 	.mask 	0x00000000,0
 	.set	noreorder
 	.set	nomacro
-# BB#0:
+# BB#0:                                 # %entry
 	lp	r10, 2
 	lp	r11, 0
 	lp	r2, 1
@@ -1001,7 +1007,8 @@ xcorr_float:
 	#APP
 	size r14, 0
 	#NO_APP
-LBB10_1:                                # =>This Inner Loop Header: Depth=1
+LBB10_1:                                # %do.body
+                                        # =>This Inner Loop Header: Depth=1
 	lw	r1, r11[r0]
 	lw	r2, r13[r0]
 	jsub	__mulsf3
@@ -1013,7 +1020,7 @@ LBB10_1:                                # =>This Inner Loop Header: Depth=1
 	addi	r13, r13, 4
 	addi	r14, r14, -1
 	bne	r14, r0, LBB10_1
-# BB#2:
+# BB#2:                                 # %do.end
 	sw	r9, r10[r12]
 	ret
 	.set	macro

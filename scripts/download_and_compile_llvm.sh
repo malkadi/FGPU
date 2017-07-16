@@ -1,7 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
 DOWNLOAD_DIR="/tmp"       # tempral directory to download the source files
-N_THREADS=3               # number of threads for compilation
+N_THREADS=2               # number of threads for compilation
 COMPILE_STRATEGY="Debug"  # Set at "Release" for shorter compilation times. Set to "Debug" for debugging your LLVM code.
 
 SCRIPTS_DIR=`dirname $0`
@@ -79,6 +79,9 @@ if [ $a != 0 ]; then
   exit $a
 fi
 
+if [ ! -d $LLVM_BUILD_DIR ]; then
+  mkdir $LLVM_BUILD_DIR
+fi
 
 cd $LLVM_BUILD_DIR
 echo "Generating makefiles for LLVM with clang for MIPS without FGPU!"

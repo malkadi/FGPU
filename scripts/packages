@@ -1,2 +1,5 @@
 git
 ctags
+cmake
+g++
+gawk
