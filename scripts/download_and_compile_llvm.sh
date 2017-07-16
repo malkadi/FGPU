@@ -1,8 +1,10 @@
 #!/bin/bash
 
+# This script downloads and compiles LLVM v3.7.1 with FGPU support
+
 DOWNLOAD_DIR="/tmp"       # tempral directory to download the source files
 N_THREADS=2               # number of threads for compilation
-COMPILE_STRATEGY="Debug"  # Set at "Release" for shorter compilation times. Set to "Debug" for debugging your LLVM code.
+COMPILE_STRATEGY="Debug"  # set at "Release" for shorter compilation times. Set to "Debug" for debugging your LLVM code.
 
 SCRIPTS_DIR=`dirname $0`
 

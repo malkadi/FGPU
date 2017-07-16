@@ -4,8 +4,8 @@ Most of the files in this folder are based on the reference design in the Xilinx
 
 
 + create_FGPU_block_design.tcl - used to create an FGPU block diagram design with a PS, clock generator, etc.
-+ implement_FGPU_V3.tcl - used to implement a pratially reconfigurable FGPU
-+ implement_FGPU.tcl - used to implement a normal FGPU
++ implement_FGPU_V3.tcl - used to implement a pratially reconfigurable FGPU (V3)
++ implement_FGPU.tcl - used to implement a normal FGPU (V2)
 + design_utils.tcl - Defines the following procs used by design.tcl
     - add_module
     - add_ooc_implementation

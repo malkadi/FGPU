@@ -1,5 +1,6 @@
-git
 ctags
 cmake
 g++
 gawk
+gcc-multilib
+zlib1g-dev:i386
