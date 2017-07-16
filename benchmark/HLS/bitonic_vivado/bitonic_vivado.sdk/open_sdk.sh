@@ -11,7 +11,7 @@ if [ "$#" -ne 1 ];then
   exit 1
 fi
 
-source ./set_paths.sh
+source ../../../../scripts/set_paths.sh
 WORKSPACE=`dirname $0`
 benchmark=`basename $1`
 xsct -quiet -interactive -eval "setws $WORKSPACE; set benchmark $benchmark"
