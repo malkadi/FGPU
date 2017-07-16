@@ -4,7 +4,7 @@ FGPU is a soft GPU-like architecture for FPGAs. It can be programmed using OpenC
 The PYNQ interface of FGPU can be accessed on this [link](https://github.com/malkadi/FGPU_IPython).
 
 
-##Repository Structure
+## Repository Structure
 + Setup information is available in the `scripts` folder
 + Benchmarks are available in the `benchmark` folder
 + Source VHDL files for FGPU and simulation files are located in the `RTL` folder
@@ -13,7 +13,7 @@ The PYNQ interface of FGPU can be accessed on this [link](https://github.com/mal
 + `bitstreams` contains pre-generated bitstreams
 + OpenCL kernels and their compilation scripts are located in the `kernels` folder
 
-##Supported Boards
+## Supported Boards
 + ZC706
 
 ## Puplications
