@@ -122,7 +122,7 @@ Finally, the whole LLVM code can be compiled to generate the compiler executable
 All these steps are automated in \colorbox{lightGray}{scripts/download\_and\_compile\_llvm.sh}.
 
 \subsection{Compile FGPU Benchmarks in Xilinx SDK}
-Before running the FGPU benchmarks located in \colorbox{lightGray}{benhcmarks}, you need to:
+Before running the FGPU benchmarks located in \colorbox{lightGray}{benchmark}, you need to:
 \begin{enumerate}
   \item Create the HW and BSP projects by executing \colorbox{lightGray}{scripts/create\_sdk\_bsps.sh}
   \item Create and compile the FGPU benchmarks by executing \colorbox{lightGray}{scripts/create\_sdk\_project.sh}
@@ -156,17 +156,17 @@ Before running the FGPU benchmarks located in \colorbox{lightGray}{benhcmarks}, 
 
 \section{Write and Compile the Host Code}
 \begin{itemize}
-  \item Write your C/C++ in a \colorbox{lightGray}{benchmarks/<benchmark>/src/}.
+  \item Write your C/C++ in a \colorbox{lightGray}{benchmark/<benchmark>/src/}.
     You may need to copy the compiled device code from \colorbox{lightGray}{kernels/outputs/<benchmark>{.h,.c}} next to your C/C++ files.
   \item It is highly recommended to have a look at other given benchmarks, e.g. xcorr.
   \item You may compile your code by executing \colorbox{lightGray}{scripts/compile.sh}.
-    Alternatively, you may execute \colorbox{lightGray}{make} from \colorbox{lightGray}{benchmarks/<benchmark>/Release}.
+    Alternatively, you may execute \colorbox{lightGray}{make} from \colorbox{lightGray}{benchmark/<benchmark>/Release}.
 \end{itemize}
 
 \section{Download and Execute}
 \begin{itemize}
   \item Set the bitstream you want to download in \colorbox{lightGray}{benchmraks/program\_bitstream.tcl}
-  \item From the \colorbox{lightGray}{benchmarks} directory, you may open the SDK project you compiled in the last step \\
+  \item From the \colorbox{lightGray}{benchmark} directory, you may open the SDK project you compiled in the last step \\
       \centering \colorbox{lightGray}{./open\_sdk.sh <benchmark>} \\
   \raggedright 
   This will open an xsct terminal.
