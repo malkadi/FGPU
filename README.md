@@ -7,11 +7,11 @@ The PYNQ interface of FGPU can be accessed on this [link](https://github.com/mal
 ## Repository Structure
 + Setup information is available in the `scripts` folder
 + Benchmarks are available in the `benchmark` folder
-+ Source VHDL files for FGPU and simulation files are located in the `RTL` folder
-+ The LLVM backend files are stored in the `llvm-3.7.1.src.fgpu` folder
-+ All synthesis and implementation files and reports with the generated bitsream can be found in `HW`
-+ `bitstreams` contains pre-generated bitstreams
-+ OpenCL kernels and their compilation scripts are located in the `kernels` folder
++ Source VHDL files for synthesis and simulation are located in the `RTL` folder
++ The LLVM backend files are located in the `llvm-3.7.1.src.fgpu` folder
++ All synthesis and implementation files and reports can be found in `HW`
++ `bitstreams` contains some pre-generated bitstreams
++ OpenCL kernels are located in the `kernels` folder
 
 ## Supported Boards
 + ZC706
