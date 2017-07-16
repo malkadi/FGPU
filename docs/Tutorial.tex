@@ -1,0 +1,184 @@
+\documentclass[11pt]{article}
+
+
+\usepackage{multirow}
+\usepackage[T1]{fontenc}
+\usepackage[nomarginpar,hmargin=2.5cm, vmargin=3cm]{geometry}
+\usepackage[colorlinks=false]{hyperref}      
+\usepackage{cleveref}     
+\usepackage{xcolor}
+\usepackage{listings}
+
+\definecolor{listinggray}{gray}{0.9}
+
+\definecolor{lightGray}{rgb}{.92,.92,.92}
+\lstset{
+  backgroundcolor=\color{lightGray},
+  frame=lines,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=5pt,
+  breaklines=true,
+  showstringspaces=false,
+  basicstyle=\footnotesize,
+  escapeinside={<@}{@>},
+  % identifierstyle=\color{magenta},
+  % keywordstyle=\color[rgb]{0,0,1},
+  % commentstyle=\color{DarkGreen},
+  % stringstyle=\color{red}
+}
+
+\hypersetup{pdftex,colorlinks=true,allcolors=blue}
+\renewcommand*\rmdefault{ppl}
+
+\title{FGPU Tutorial \\ \large version 1.0}
+\author{Muhammed Al Kadi}
+\begin{document}
+\maketitle
+
+This tutorial helps new FGPU users to get used to its tool flow.
+It offers a quick guide to configure, synthesize and program an FGPU core.
+In addition, it describes how to install the required tools, e.g. the FGPU compiler and how to run standard benchmarks in Xilinx SDK.
+\section{Introduction}
+Development with FGPU goes through the following steps:
+\begin{itemize}
+  \item On the hardware side:
+    \begin{itemize}
+      \item The FGPU features are defined in a \emph{.vhd} file, e.g. \# of CUs and \# of AXI data interfaces.
+      \item Then, a script implements the corresponding FGPU core with Vivado and generates:
+      \begin{itemize}
+        \item A hardware description file (\emph{.hdf}) that is needed to generate an SDK project.
+        \item A bitstream to program the FPGA.
+      \end{itemize}
+    \end{itemize}
+  \item On the hardware side:
+    \begin{itemize}
+      \item An OpenCL kernel is written and compiled with the FGPU compiler to run on FGPU. 
+        A script generates \emph{.h} and \emph{.c} files to be included in an SDK project.
+      \item A C/C++ application is written to run on the ARM Cortex-A9.
+      This program interfaces and controls FGPU.
+    \end{itemize}
+\end{itemize}
+
+3 versions of FGPU have been developed:
+\begin{enumerate}
+  \item \emph{V1} has two clock domains. It is less scalable and has no thread-divergence support.
+    The development of FGPU-V1 is discontinued.
+  \item \emph{V2} works on a single clock domain. It is the most recent FGPU core.
+  \item \emph{V3} is a branch of V2 and it supports partial configuration of floating-point logic.
+\end{enumerate}
+At the time of writing this tutorial, only V2 is added to the repository.
+
+\section{Requirements}
+Make sure you have a computer with the following software:
+\begin{itemize}
+  \item \emph{Operating System:} you should have a Linux OS.
+    The FGPU tool flow has been verified on Ubuntu 16.04.2 LTS 64bit and Fedora Workstation 22-25 64bit.
+    It will definitely not work on Windows.
+  \item \emph{Vivado Design Suite:} FGPU has been synthesized with the versions 2016.1-3 and 2017.2.
+    Only Zynq-SoC device support is required and the Xilinx SDK should be included.
+  \item \emph{ModelSim or QuestaSim:}
+    only needed for RTL simulations.
+  \item \emph{A terminal emulator:} to communicate with the HW during execution, e.g. minicom.
+\end{itemize}
+
+\begin{table}[t]
+  \centering
+  \caption{Required packages to setup an FGPU tool flow}
+  \label{tab:packages}
+  \begin{tabular}{c|c}
+    OS    & Required Packages \\ \hline
+    Ubuntu 16.04 - 64bit & ctags, cmake, g++, gawk, gcc-multilib, zlib1g-dev:i386\\ \hline
+  \end{tabular}
+  
+\end{table}
+
+\section{Setup}
+Please ignore this section if you are using the FGPU-VM.
+
+\subsection{Download the FGPU Repository}
+If you have \emph{git} installed, you may checkout the FGPU repository from github with:
+
+\centering \colorbox{lightGray}{ git clone https://github.com/malkadi/FGPU}
+
+\raggedright
+Otherwise, you may download and extract it manually to any local directory.
+Any paths given in the rest of this tutorial are relative to to the chosen installation directory.
+\subsection{Install the Required OS Packages}
+    For Ubuntu 16.04.2 64bit, you have to install the packages listed in \Cref{tab:packages}.
+    This can be achieved by executing: \\
+    \centering \colorbox{lightGray}{ sudo apt install \$(cat scripts/packages) }\\
+    \raggedright
+    Otherwise, you have to install the equivalent packages for your OS
+
+\subsection{Configure the Vivado Installation Path}
+Please edit \colorbox{lightGray}{script/set\_paths.sh} to source the \colorbox{lightGray}{settings64.sh} script
+which is included in your Vivado installation.
+
+\subsection{Download and Compile LLVM}
+First, the LLVM source code v3.7.1 with the clang compiler should be downloaded and extracted.
+Then, the FGPU backend files in \colorbox{lightGray}{llvm-3.7.1.src.fgpu} can be copied to the LLVM source directory.
+Finally, the whole LLVM code can be compiled to generate the compiler executables.
+All these steps are automated in \colorbox{lightGray}{scripts/download\_and\_compile\_llvm.sh}.
+
+\subsection{Compile FGPU Benchmarks in Xilinx SDK}
+Before running the FGPU benchmarks located in \colorbox{lightGray}{benhcmarks}, you need to:
+\begin{enumerate}
+  \item Create the HW and BSP projects by executing \colorbox{lightGray}{scripts/create\_sdk\_bsps.sh}
+  \item Create and compile the FGPU benchmarks by executing \colorbox{lightGray}{scripts/create\_sdk\_project.sh}
+\end{enumerate}
+
+\section{HW Synthesis}
+
+\begin{itemize}
+  \item Configure your FGPU HW parameters in \colorbox{lightGray}{RTL/FGPU\_definitions.vhd}
+  \item Set the target clock frequency in \colorbox{lightGray}{scripts/tcl/implement\_FGPU.tcl}. 
+    In addition, you may modify the synthesis and implementation settings and the number of maximum number of threads used by Vivado.
+    FGPU may be synthesized at frequencies up to 250MHz.
+  \item Run the implementation script \colorbox{lightGray}{scripts/tcl/implement\_FGPU.tcl}. 
+    It calls \colorbox{lightGray}{scripts/tcl/create\_FGPU\_block\_design.tcl} 
+    which creates a block diagram that connects FGPU to the ARM processor\footnote{
+      The block diagram can be found in \colorbox{lightGray}{HW/.srcs/sources\_1/bd/bd\_design}}.
+    It uses the four available AXI4-HP interfaces. 
+    However, only the number of interfaces configured in \colorbox{lightGray}{RTL/FGPU\_definitions.vhd} will be used.
+    All synthesis and implementation files can be found in 
+    \colorbox{lightGray}{HW/synth} and \colorbox{lightGray}{HW/implement}, respectively.
+    Al outputs, e.g. bitstream and \emph{.hdf} files, are stored in \colorbox{lightGray}{HW/outputs}.
+\end{itemize}
+
+\section{Write and Compile the Device Code}
+\begin{itemize}
+  \item Write your device code in OpenCL in a \emph{<benchmark>.cl} file in \colorbox{lightGray}{kernels} directory.
+  \item Compile it with \colorbox{lightGray}{compile.sh} or \colorbox{lightGray}{compile\_and\_log.sh}. 
+    The compilation outputs can be found in \colorbox{lightGray}{kernels/outputs}.
+    If hard floating-point support is desired, compile your code with the \colorbox{lightGray}{-hard-float} feature.
+\end{itemize}
+
+\section{Write and Compile the Host Code}
+\begin{itemize}
+  \item Write your C/C++ in a \colorbox{lightGray}{benchmarks/<benchmark>/src/}.
+    You may need to copy the compiled device code from \colorbox{lightGray}{kernels/outputs/<benchmark>{.h,.c}} next to your C/C++ files.
+  \item It is highly recommended to have a look at other given benchmarks, e.g. xcorr.
+  \item You may compile your code by executing \colorbox{lightGray}{scripts/compile.sh}.
+    Alternatively, you may execute \colorbox{lightGray}{make} from \colorbox{lightGray}{benchmarks/<benchmark>/Release}.
+\end{itemize}
+
+\section{Download and Execute}
+\begin{itemize}
+  \item Set the bitstream you want to download in \colorbox{lightGray}{benchmraks/program\_bitstream.tcl}
+  \item From the \colorbox{lightGray}{benchmarks} directory, you may open the SDK project you compiled in the last step \\
+      \centering \colorbox{lightGray}{./open\_sdk.sh <benchmark>} \\
+  \raggedright 
+  This will open an xsct terminal.
+  \item Make sure you have opened the terminal emulator and a connection to the board is established.
+  \item Source the following scripts in the xsct terminal \\
+      \centering \colorbox{lightGray}{source program\_bitstream.tcl; source download\_elf.tcl} \\
+    \raggedright 
+    This will program the desired bitstream and download the \emph{.elf} file of the corresponding SDK project.
+  \item You may begin the host code execution by executing the following command in the xsct terminal\\
+    \centering \colorbox{lightGray}{con} \\
+    \raggedright 
+      Now you may observe the terminal output.
+\end{itemize}
+
+\end{document}
