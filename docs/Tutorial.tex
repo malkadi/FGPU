@@ -7,26 +7,11 @@
 \usepackage[colorlinks=false]{hyperref}      
 \usepackage{cleveref}     
 \usepackage{xcolor}
-\usepackage{listings}
+\usepackage[document]{ragged2e}
 
 \definecolor{listinggray}{gray}{0.9}
 
 \definecolor{lightGray}{rgb}{.92,.92,.92}
-\lstset{
-  backgroundcolor=\color{lightGray},
-  frame=lines,
-  numbers=left,
-  numberstyle=\tiny,
-  numbersep=5pt,
-  breaklines=true,
-  showstringspaces=false,
-  basicstyle=\footnotesize,
-  escapeinside={<@}{@>},
-  % identifierstyle=\color{magenta},
-  % keywordstyle=\color[rgb]{0,0,1},
-  % commentstyle=\color{DarkGreen},
-  % stringstyle=\color{red}
-}
 
 \hypersetup{pdftex,colorlinks=true,allcolors=blue}
 \renewcommand*\rmdefault{ppl}
@@ -38,48 +23,50 @@
 
 This tutorial helps new FGPU users to get used to its tool flow.
 It offers a quick guide to configure, synthesize and program an FGPU core.
-In addition, it describes how to install the required tools, e.g. the FGPU compiler and how to run standard benchmarks in Xilinx SDK.
+In addition, it describes how to install the required tools, e.g. the FGPU compiler and how to run the standard FGPU benchmarks in Xilinx SDK.
 \section{Introduction}
-Development with FGPU goes through the following steps:
+Programming an application for FGPU goes through the following steps:
 \begin{itemize}
   \item On the hardware side:
     \begin{itemize}
-      \item The FGPU features are defined in a \emph{.vhd} file, e.g. \# of CUs and \# of AXI data interfaces.
-      \item Then, a script implements the corresponding FGPU core with Vivado and generates:
+      \item The features of the FGPU core are to configured first in RTL (a \emph{.vhd} file), e.g. \# of CUs or 
+        supported floating-point instructions.
+      \item Then, a script implements FGPU with Vivado and generates:
       \begin{itemize}
         \item A hardware description file (\emph{.hdf}) that is needed to generate an SDK project.
         \item A bitstream to program the FPGA.
       \end{itemize}
     \end{itemize}
-  \item On the hardware side:
+  \item On the software side:
     \begin{itemize}
-      \item An OpenCL kernel is written and compiled with the FGPU compiler to run on FGPU. 
-        A script generates \emph{.h} and \emph{.c} files to be included in an SDK project.
-      \item A C/C++ application is written to run on the ARM Cortex-A9.
-      This program interfaces and controls FGPU.
+      \item An OpenCL kernel is written to run on FGPU. 
+        A script compiles it and generates some C files (\emph{.h} and \emph{.c}) to be included in an SDK project.
+      \item A C/C++ host application is written to run on the ARM Cortex-A9.
+      It should interface and control the FGPU processor.
     \end{itemize}
 \end{itemize}
 
-3 versions of FGPU have been developed:
+There are 3 versions of FGPU:
 \begin{enumerate}
-  \item \emph{V1} has two clock domains. It is less scalable and has no thread-divergence support.
+  \item \emph{V1} has two clock domains. It is less scalable than the others and has no thread-divergence support.
     The development of FGPU-V1 is discontinued.
-  \item \emph{V2} works on a single clock domain. It is the most recent FGPU core.
+  \item \emph{V2} works on a single clock domain. It is the most recent version.
   \item \emph{V3} is a branch of V2 and it supports partial configuration of floating-point logic.
 \end{enumerate}
-At the time of writing this tutorial, only V2 is added to the repository.
+At the time of writing this tutorial, only V2 is added to the FGPU Github repository.
 
-\section{Requirements}
-Make sure you have a computer with the following software:
+\section{Software Requirements}
+Before you begin with this tutorial, 
+make sure you have the following software installed on your computer:
 \begin{itemize}
   \item \emph{Operating System:} you should have a Linux OS.
     The FGPU tool flow has been verified on Ubuntu 16.04.2 LTS 64bit and Fedora Workstation 22-25 64bit.
     It will definitely not work on Windows.
   \item \emph{Vivado Design Suite:} FGPU has been synthesized with the versions 2016.1-3 and 2017.2.
-    Only Zynq-SoC device support is required and the Xilinx SDK should be included.
+    Only Zynq-SoC device support is required and the Xilinx SDK should be installed as well.
   \item \emph{ModelSim or QuestaSim:}
     only needed for RTL simulations.
-  \item \emph{A terminal emulator:} to communicate with the HW during execution, e.g. minicom.
+  \item \emph{A terminal emulator:} to communicate with the host application during execution, e.g. \emph{minicom}.
 \end{itemize}
 
 \begin{table}[t]
@@ -93,23 +80,22 @@ Make sure you have a computer with the following software:
   
 \end{table}
 
-\section{Setup}
-Please ignore this section if you are using the FGPU-VM.
+\section{Tool Setup}
+You may ignore this section if you are using the FGPU-VM.
 
 \subsection{Download the FGPU Repository}
-If you have \emph{git} installed, you may checkout the FGPU repository from github with:
+If you have \emph{git} installed, you may begin with checking out the FGPU repository from Github:
 
 \centering \colorbox{lightGray}{ git clone https://github.com/malkadi/FGPU}
-
-\raggedright
-Otherwise, you may download and extract it manually to any local directory.
-Any paths given in the rest of this tutorial are relative to to the chosen installation directory.
+\justify
+Otherwise, you can download and extract it manually to any local directory.
+Any paths given in the rest of this tutorial are relative your installation directory.
 \subsection{Install the Required OS Packages}
     For Ubuntu 16.04.2 64bit, you have to install the packages listed in \Cref{tab:packages}.
     This can be achieved by executing: \\
     \centering \colorbox{lightGray}{ sudo apt install \$(cat scripts/packages) }\\
-    \raggedright
-    Otherwise, you have to install the equivalent packages for your OS
+\justify
+Otherwise, you have to install the equivalent packages for your OS.
 
 \subsection{Configure the Vivado Installation Path}
 Please edit \colorbox{lightGray}{script/set\_paths.sh} to source the \colorbox{lightGray}{settings64.sh} script
@@ -121,11 +107,21 @@ Then, the FGPU backend files in \colorbox{lightGray}{llvm-3.7.1.src.fgpu} can be
 Finally, the whole LLVM code can be compiled to generate the compiler executables.
 All these steps are automated in \colorbox{lightGray}{scripts/download\_and\_compile\_llvm.sh}.
 
-\subsection{Compile FGPU Benchmarks in Xilinx SDK}
-Before running the FGPU benchmarks located in \colorbox{lightGray}{benchmark}, you need to:
+\subsection{Compile FGPU Benchmarks for Xilinx SDK}
+Before running any application located in the directory \colorbox{lightGray}{benchmark}, you need to:
 \begin{enumerate}
-  \item Create the HW and BSP projects by executing \colorbox{lightGray}{scripts/create\_sdk\_bsps.sh}
-  \item Create and compile the FGPU benchmarks by executing \colorbox{lightGray}{scripts/create\_sdk\_project.sh}
+  \item Create the HW and BSP projects by executing \colorbox{lightGray}{scripts/create\_sdk\_bsps.sh}.
+    These projects will be created in hidden directories, e.g. \emph{.FGPU\_V2\_bsp}.
+  \item Create and compile all FGPU benchmarks by executing \colorbox{lightGray}{scripts/create\_sdk\_project.sh}
+\end{enumerate}
+Moreover, the \colorbox{lightGray}{benchmark} folder includes two non-FGPU-relevant folders:
+\begin{enumerate}
+  \item \colorbox{lightGray}{benchmark/MicroBlaze} includes an SDK project that can be used to execute any of the FGPU benchmarks 
+    on a MicroBlaze processor.
+    The MicroBlaze runs on 180MHz and it has been optimized for best performance.
+  \item \colorbox{lightGray}{benchmark/HLS} includes some of the FGPU benchmarks but programmed for Vivado HLS.
+  \item \colorbox{lightGray}{benchmark/power\_measurement} is an ARM C application that should run on the second ARM core.
+    It measures the power consumption during execution.
 \end{enumerate}
 
 \section{HW Synthesis}
@@ -133,52 +129,67 @@ Before running the FGPU benchmarks located in \colorbox{lightGray}{benchmark}, y
 \begin{itemize}
   \item Configure your FGPU HW parameters in \colorbox{lightGray}{RTL/FGPU\_definitions.vhd}
   \item Set the target clock frequency in \colorbox{lightGray}{scripts/tcl/implement\_FGPU.tcl}. 
-    In addition, you may modify the synthesis and implementation settings and the number of maximum number of threads used by Vivado.
-    FGPU may be synthesized at frequencies up to 250MHz.
+    You may also modify the synthesis and implementation settings and the number of maximum number of threads used by Vivado in this file.
+    FGPU can be synthesized at frequencies up to 250MHz.
   \item Run the implementation script \colorbox{lightGray}{scripts/tcl/implement\_FGPU.tcl}. 
-    It calls \colorbox{lightGray}{scripts/tcl/create\_FGPU\_block\_design.tcl} 
-    which creates a block diagram that connects FGPU to the ARM processor\footnote{
+    At the beginning, it calls \colorbox{lightGray}{scripts/tcl/create\_FGPU\_block\_design.tcl} 
+    which creates a block diagram that connects FGPU to a clock generator and to the ARM processor\footnote{
       The block diagram can be found in \colorbox{lightGray}{HW/.srcs/sources\_1/bd/bd\_design}}.
-    It uses the four available AXI4-HP interfaces. 
+    It uses the four available AXI4-HP interfaces to connect FGPU to the external SDRAM memory. 
     However, only the number of interfaces configured in \colorbox{lightGray}{RTL/FGPU\_definitions.vhd} will be used.
     All synthesis and implementation files can be found in 
     \colorbox{lightGray}{HW/synth} and \colorbox{lightGray}{HW/implement}, respectively.
-    Al outputs, e.g. bitstream and \emph{.hdf} files, are stored in \colorbox{lightGray}{HW/outputs}.
+    The generated bitstream and \emph{.hdf} files are stored in \colorbox{lightGray}{HW/outputs}.
 \end{itemize}
 
 \section{Write and Compile the Device Code}
 \begin{itemize}
   \item Write your device code in OpenCL in a \emph{<benchmark>.cl} file in \colorbox{lightGray}{kernels} directory.
-  \item Compile it with \colorbox{lightGray}{compile.sh} or \colorbox{lightGray}{compile\_and\_log.sh}. 
+  \item Compile it with the \colorbox{lightGray}{compile.sh} or \colorbox{lightGray}{compile\_and\_log.sh} located in the same directory. 
     The compilation outputs can be found in \colorbox{lightGray}{kernels/outputs}.
-    If hard floating-point support is desired, compile your code with the \colorbox{lightGray}{-hard-float} feature.
+    If hard floating-point support is desired, compile your code with the \colorbox{lightGray}{-hard-float} option.
 \end{itemize}
 
 \section{Write and Compile the Host Code}
 \begin{itemize}
-  \item Write your C/C++ in a \colorbox{lightGray}{benchmark/<benchmark>/src/}.
-    You may need to copy the compiled device code from \colorbox{lightGray}{kernels/outputs/<benchmark>{.h,.c}} next to your C/C++ files.
-  \item It is highly recommended to have a look at other given benchmarks, e.g. xcorr.
+  \item Write your C/C++ application in a \colorbox{lightGray}{benchmark/<benchmark>/src/}.
+    It should run on the first ARM core and it has to control FGPU.
+    Please have a look at other benchmarks, e.g. \emph{xcorr}, and try to use the existing methods.
+    Do not forget to copy the compiled device code from \colorbox{lightGray}{kernels/outputs/<benchmark>{.h,.c}} next to your C/C++ files.
+    It will be downloaded to FGPU by the host application.
   \item You may compile your code by executing \colorbox{lightGray}{scripts/compile.sh}.
     Alternatively, you may execute \colorbox{lightGray}{make} from \colorbox{lightGray}{benchmark/<benchmark>/Release}.
+    If you would like to use the GUI of Xilinx SDK, you should set the workspace to \colorbox{lightGray}{benchmark}.
 \end{itemize}
 
-\section{Download and Execute}
+\section{Download and Run}
+  Unless you want to use the Xilinx SDK in GUI mode, you can run FGPU applications as follows:
 \begin{itemize}
   \item Set the bitstream you want to download in \colorbox{lightGray}{benchmraks/program\_bitstream.tcl}
-  \item From the \colorbox{lightGray}{benchmark} directory, you may open the SDK project you compiled in the last step \\
-      \centering \colorbox{lightGray}{./open\_sdk.sh <benchmark>} \\
-  \raggedright 
+  \item From the \colorbox{lightGray}{benchmark} directory, open the SDK project you have compiled in the last step \\
+    \centerline{\colorbox{lightGray}{./open\_sdk.sh <benchmark>}} \\
   This will open an xsct terminal.
   \item Make sure you have opened the terminal emulator and a connection to the board is established.
-  \item Source the following scripts in the xsct terminal \\
-      \centering \colorbox{lightGray}{source program\_bitstream.tcl; source download\_elf.tcl} \\
-    \raggedright 
-    This will program the desired bitstream and download the \emph{.elf} file of the corresponding SDK project.
-  \item You may begin the host code execution by executing the following command in the xsct terminal\\
-    \centering \colorbox{lightGray}{con} \\
-    \raggedright 
-      Now you may observe the terminal output.
+  \item Source the following scripts in the xsct terminal (Xilinx Software Command-Line Tool) \footnote{
+    For further information about xsct, have a look at UG1208 (v2016.2)}\\
+    \centerline{\colorbox{lightGray}{source program\_bitstream.tcl}} \\
+    This will program the desired bitstream .
+  \item Download the \emph{.elf} file of the corresponding SDK project by executing\\
+    \centerline{\colorbox{lightGray}{source download\_elf.tcl}} \\
+  Now you may observe the terminal output.
+  \item If you would like to measure the power consumption during execution you have to:
+    \begin{itemize}
+      \item Activate the power measurement in the \emph{main.cpp} file of your application as follows \\
+      \centerline{\colorbox{lightGray}{const unsigned sync\_power\_measurement = 1; }} \\
+      This will enable the communication between the host application running on the first ARM core 
+      and the power measurement running on the second one.
+      Please pay attention that a single power measurement takes about 1.7ms to finish.
+      Therefore, it does not make sense to compute small problems if a power measurement is being done.
+    \item Recompile your host code.
+    \item If you are using the GUI, you may download and execute the power measurement program before you do the same with the host application.
+      Otherwise, it suffices to execute: \\
+      \centerline{\colorbox{lightGray}{source measure\_power.tcl }} \\
+    \end{itemize}
 \end{itemize}
 
 \end{document}
