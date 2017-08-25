@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Syntax: open_sdk project_name
 # open xsct console to program bitstreams and download executables
