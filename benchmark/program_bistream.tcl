@@ -68,7 +68,8 @@ switch $benchmark {
   {
     # set bitstream ../bitstreams/V2_4CUs_8Stations_2AXI_2TAGM.bit
     # set bitstream ../bitstreams/V2_4CUs_8Stations_2AXI_2CACHE_W.bit
-    set bitstream ../bitstreams/V2_8CUs_fadd_fmul_2AXI.bit
+    # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_2AXI.bit
+    set bitstream ../bitstreams/V2_8CUs.bit
     # set bitstream ../bitstreams/V2_8CUs_fadd_fmul_2AXI_4CACHE_WORDS.bit
   }
   "power_measurement" {

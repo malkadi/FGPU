@@ -4,7 +4,7 @@
 # It can be called with the name of the design to be generated as a parameter. The default name is FGPU_V2
 # e.g. ./implement.sh <design name>
 # After a successful implementation, the script generates a bitstream in HW/outputs/<design name>.bit
-# In addition, an hdf file to generate a HW SDK project is generated in HW/outputs/<design name>.bit
+# In addition, an hdf file to generate a HW SDK project is generated in HW/outputs/<design name>.hdf
 
 # The implemented FGPU features can be adjusted by editing  ../RTL/FGPU_definitions.sh
 # The implementation settings, e.g. operation frequency of FGPU and place and route strategy, can be adjusted in tcl/implement_FGPU.tcl

@@ -6,7 +6,8 @@ DOWNLOAD_DIR="/tmp"       # tempral directory to download the source files
 N_THREADS=2               # number of threads for compilation
 COMPILE_STRATEGY="Debug"  # set at "Release" for shorter compilation times. Set to "Debug" for debugging your LLVM code.
 
-SCRIPTS_DIR=`dirname $0`
+cd `dirname $0`
+SCRIPTS_DIR=`pwd`
 
 LOG_FILE=$SCRIPTS_DIR"/download_and_compile_llvm.log"
 LLVM_SRC_NAME="llvm-3.7.1"
